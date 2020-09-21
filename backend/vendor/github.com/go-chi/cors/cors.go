@@ -1,23 +1,21 @@
-/*
-Package cors is net/http handler to handle CORS related requests
-as defined by http://www.w3.org/TR/cors/
-
-You can configure it by passing an option struct to cors.New:
-
-    c := cors.New(cors.Options{
-        AllowedOrigins:   []string{"foo.com"},
-        AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},
-        AllowCredentials: true,
-    })
-
-Then insert the handler in the chain:
-
-    handler = c.Handler(handler)
-
-See Options documentation for more options.
-
-The resulting handler is a standard net/http handler.
-*/
+// cors package is net/http handler to handle CORS related requests
+// as defined by http://www.w3.org/TR/cors/
+//
+// You can configure it by passing an option struct to cors.New:
+//
+//     c := cors.New(cors.Options{
+//         AllowedOrigins: []string{"foo.com"},
+//         AllowedMethods: []string{"GET", "POST", "DELETE"},
+//         AllowCredentials: true,
+//     })
+//
+// Then insert the handler in the chain:
+//
+//     handler = c.Handler(handler)
+//
+// See Options documentation for more options.
+//
+// The resulting handler is a standard net/http handler.
 package cors
 
 import (
@@ -37,34 +35,38 @@ type Options struct {
 	// Only one wildcard can be used per origin.
 	// Default value is ["*"]
 	AllowedOrigins []string
-	// AllowOriginFunc is a custom function to validate the origin. It take the origin
+
+	// AllowOriginFunc is a custom function to validate the origin. It takes the origin
 	// as argument and returns true if allowed or false otherwise. If this option is
 	// set, the content of AllowedOrigins is ignored.
-	AllowOriginFunc func(origin string) bool
-	// AllowOriginFunc is a custom function to validate the origin. It takes the HTTP Request object and the origin as
-	// argument and returns true if allowed or false otherwise. If this option is set, the content of `AllowedOrigins`
-	// and `AllowOriginFunc` is ignored.
-	AllowOriginRequestFunc func(r *http.Request, origin string) bool
+	AllowOriginFunc func(r *http.Request, origin string) bool
+
 	// AllowedMethods is a list of methods the client is allowed to use with
 	// cross-domain requests. Default value is simple methods (HEAD, GET and POST).
 	AllowedMethods []string
+
 	// AllowedHeaders is list of non simple headers the client is allowed to use with
 	// cross-domain requests.
 	// If the special "*" value is present in the list, all headers will be allowed.
 	// Default value is [] but "Origin" is always appended to the list.
 	AllowedHeaders []string
+
 	// ExposedHeaders indicates which headers are safe to expose to the API of a CORS
 	// API specification
 	ExposedHeaders []string
-	// MaxAge indicates how long (in seconds) the results of a preflight request
-	// can be cached
-	MaxAge int
+
 	// AllowCredentials indicates whether the request can include user credentials like
 	// cookies, HTTP authentication or client side SSL certificates.
 	AllowCredentials bool
+
+	// MaxAge indicates how long (in seconds) the results of a preflight request
+	// can be cached
+	MaxAge int
+
 	// OptionsPassthrough instructs preflight to let other potential next handlers to
 	// process the OPTIONS method. Turn this on if your application handles OPTIONS.
 	OptionsPassthrough bool
+
 	// Debugging flag adds additional output to debug server side CORS issues
 	Debug bool
 }
@@ -78,25 +80,32 @@ type Logger interface {
 type Cors struct {
 	// Debug logger
 	Log Logger
+
 	// Normalized list of plain allowed origins
 	allowedOrigins []string
+
 	// List of allowed origins containing wildcards
 	allowedWOrigins []wildcard
+
 	// Optional origin validator function
-	allowOriginFunc func(origin string) bool
-	// Optional origin validator (with request) function
-	allowOriginRequestFunc func(r *http.Request, origin string) bool
+	allowOriginFunc func(r *http.Request, origin string) bool
+
 	// Normalized list of allowed headers
 	allowedHeaders []string
+
 	// Normalized list of allowed methods
 	allowedMethods []string
+
 	// Normalized list of exposed headers
 	exposedHeaders []string
 	maxAge         int
+
 	// Set to true when allowed origins contains a "*"
 	allowedOriginsAll bool
+
 	// Set to true when allowed headers contains a "*"
 	allowedHeadersAll bool
+
 	allowCredentials  bool
 	optionPassthrough bool
 }
@@ -104,12 +113,11 @@ type Cors struct {
 // New creates a new Cors handler with the provided options.
 func New(options Options) *Cors {
 	c := &Cors{
-		exposedHeaders:         convert(options.ExposedHeaders, http.CanonicalHeaderKey),
-		allowOriginFunc:        options.AllowOriginFunc,
-		allowOriginRequestFunc: options.AllowOriginRequestFunc,
-		allowCredentials:       options.AllowCredentials,
-		maxAge:                 options.MaxAge,
-		optionPassthrough:      options.OptionsPassthrough,
+		exposedHeaders:    convert(options.ExposedHeaders, http.CanonicalHeaderKey),
+		allowOriginFunc:   options.AllowOriginFunc,
+		allowCredentials:  options.AllowCredentials,
+		maxAge:            options.MaxAge,
+		optionPassthrough: options.OptionsPassthrough,
 	}
 	if options.Debug && c.Log == nil {
 		c.Log = log.New(os.Stdout, "[cors] ", log.LstdFlags)
@@ -121,7 +129,7 @@ func New(options Options) *Cors {
 
 	// Allowed Origins
 	if len(options.AllowedOrigins) == 0 {
-		if options.AllowOriginFunc == nil && options.AllowOriginRequestFunc == nil {
+		if options.AllowOriginFunc == nil {
 			// Default is all origins
 			c.allowedOriginsAll = true
 		}
@@ -150,7 +158,7 @@ func New(options Options) *Cors {
 	// Allowed Headers
 	if len(options.AllowedHeaders) == 0 {
 		// Use sensible defaults
-		c.allowedHeaders = []string{"Origin", "Accept", "Content-Type", "X-Requested-With"}
+		c.allowedHeaders = []string{"Origin", "Accept", "Content-Type"}
 	} else {
 		// Origin is always appended as some browsers will always request for this header at preflight
 		c.allowedHeaders = convert(append(options.AllowedHeaders, "Origin"), http.CanonicalHeaderKey)
@@ -174,9 +182,10 @@ func New(options Options) *Cors {
 	return c
 }
 
-// Default creates a new Cors handler with default options.
-func Default() *Cors {
-	return New(Options{})
+// Handler creates a new Cors handler with passed options.
+func Handler(options Options) func(next http.Handler) http.Handler {
+	c := New(options)
+	return c.Handler
 }
 
 // AllowAll create a new Cors handler with permissive configuration allowing all
@@ -199,7 +208,7 @@ func AllowAll() *Cors {
 
 // Handler apply the CORS specification on the request, and add relevant CORS headers
 // as necessary.
-func (c *Cors) Handler(h http.Handler) http.Handler {
+func (c *Cors) Handler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodOptions && r.Header.Get("Access-Control-Request-Method") != "" {
 			c.logf("Handler: Preflight request")
@@ -209,48 +218,16 @@ func (c *Cors) Handler(h http.Handler) http.Handler {
 			// is authentication middleware ; OPTIONS requests won't carry authentication
 			// headers (see #1)
 			if c.optionPassthrough {
-				h.ServeHTTP(w, r)
+				next.ServeHTTP(w, r)
 			} else {
 				w.WriteHeader(http.StatusOK)
 			}
 		} else {
 			c.logf("Handler: Actual request")
 			c.handleActualRequest(w, r)
-			h.ServeHTTP(w, r)
+			next.ServeHTTP(w, r)
 		}
 	})
-}
-
-// HandlerFunc provides Martini compatible handler
-func (c *Cors) HandlerFunc(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodOptions && r.Header.Get("Access-Control-Request-Method") != "" {
-		c.logf("HandlerFunc: Preflight request")
-		c.handlePreflight(w, r)
-	} else {
-		c.logf("HandlerFunc: Actual request")
-		c.handleActualRequest(w, r)
-	}
-}
-
-// Negroni compatible interface
-func (c *Cors) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	if r.Method == http.MethodOptions && r.Header.Get("Access-Control-Request-Method") != "" {
-		c.logf("ServeHTTP: Preflight request")
-		c.handlePreflight(w, r)
-		// Preflight requests are standalone and should stop the chain as some other
-		// middleware may not handle OPTIONS requests correctly. One typical example
-		// is authentication middleware ; OPTIONS requests won't carry authentication
-		// headers (see #1)
-		if c.optionPassthrough {
-			next(w, r)
-		} else {
-			w.WriteHeader(http.StatusOK)
-		}
-	} else {
-		c.logf("ServeHTTP: Actual request")
-		c.handleActualRequest(w, r)
-		next(w, r)
-	}
 }
 
 // handlePreflight handles pre-flight CORS requests
@@ -259,7 +236,7 @@ func (c *Cors) handlePreflight(w http.ResponseWriter, r *http.Request) {
 	origin := r.Header.Get("Origin")
 
 	if r.Method != http.MethodOptions {
-		c.logf("  Preflight aborted: %s!=OPTIONS", r.Method)
+		c.logf("Preflight aborted: %s!=OPTIONS", r.Method)
 		return
 	}
 	// Always set Vary headers
@@ -270,22 +247,22 @@ func (c *Cors) handlePreflight(w http.ResponseWriter, r *http.Request) {
 	headers.Add("Vary", "Access-Control-Request-Headers")
 
 	if origin == "" {
-		c.logf("  Preflight aborted: empty origin")
+		c.logf("Preflight aborted: empty origin")
 		return
 	}
 	if !c.isOriginAllowed(r, origin) {
-		c.logf("  Preflight aborted: origin '%s' not allowed", origin)
+		c.logf("Preflight aborted: origin '%s' not allowed", origin)
 		return
 	}
 
 	reqMethod := r.Header.Get("Access-Control-Request-Method")
 	if !c.isMethodAllowed(reqMethod) {
-		c.logf("  Preflight aborted: method '%s' not allowed", reqMethod)
+		c.logf("Preflight aborted: method '%s' not allowed", reqMethod)
 		return
 	}
 	reqHeaders := parseHeaderList(r.Header.Get("Access-Control-Request-Headers"))
 	if !c.areHeadersAllowed(reqHeaders) {
-		c.logf("  Preflight aborted: headers '%v' not allowed", reqHeaders)
+		c.logf("Preflight aborted: headers '%v' not allowed", reqHeaders)
 		return
 	}
 	if c.allowedOriginsAll {
@@ -308,7 +285,7 @@ func (c *Cors) handlePreflight(w http.ResponseWriter, r *http.Request) {
 	if c.maxAge > 0 {
 		headers.Set("Access-Control-Max-Age", strconv.Itoa(c.maxAge))
 	}
-	c.logf("  Preflight response headers: %v", headers)
+	c.logf("Preflight response headers: %v", headers)
 }
 
 // handleActualRequest handles simple cross-origin requests, actual request or redirects
@@ -319,11 +296,11 @@ func (c *Cors) handleActualRequest(w http.ResponseWriter, r *http.Request) {
 	// Always set Vary, see https://github.com/rs/cors/issues/10
 	headers.Add("Vary", "Origin")
 	if origin == "" {
-		c.logf("  Actual request no headers added: missing origin")
+		c.logf("Actual request no headers added: missing origin")
 		return
 	}
 	if !c.isOriginAllowed(r, origin) {
-		c.logf("  Actual request no headers added: origin '%s' not allowed", origin)
+		c.logf("Actual request no headers added: origin '%s' not allowed", origin)
 		return
 	}
 
@@ -332,7 +309,7 @@ func (c *Cors) handleActualRequest(w http.ResponseWriter, r *http.Request) {
 	// spec doesn't instruct to check the allowed methods for simple cross-origin requests.
 	// We think it's a nice feature to be able to have control on those methods though.
 	if !c.isMethodAllowed(r.Method) {
-		c.logf("  Actual request no headers added: method '%s' not allowed", r.Method)
+		c.logf("Actual request no headers added: method '%s' not allowed", r.Method)
 
 		return
 	}
@@ -347,7 +324,7 @@ func (c *Cors) handleActualRequest(w http.ResponseWriter, r *http.Request) {
 	if c.allowCredentials {
 		headers.Set("Access-Control-Allow-Credentials", "true")
 	}
-	c.logf("  Actual response added headers: %v", headers)
+	c.logf("Actual response added headers: %v", headers)
 }
 
 // convenience method. checks if a logger is set.
@@ -360,11 +337,8 @@ func (c *Cors) logf(format string, a ...interface{}) {
 // isOriginAllowed checks if a given origin is allowed to perform cross-domain requests
 // on the endpoint
 func (c *Cors) isOriginAllowed(r *http.Request, origin string) bool {
-	if c.allowOriginRequestFunc != nil {
-		return c.allowOriginRequestFunc(r, origin)
-	}
 	if c.allowOriginFunc != nil {
-		return c.allowOriginFunc(origin)
+		return c.allowOriginFunc(r, origin)
 	}
 	if c.allowedOriginsAll {
 		return true
@@ -384,7 +358,7 @@ func (c *Cors) isOriginAllowed(r *http.Request, origin string) bool {
 }
 
 // isMethodAllowed checks if a given method can be used as part of a cross-domain request
-// on the endpoing
+// on the endpoint
 func (c *Cors) isMethodAllowed(method string) bool {
 	if len(c.allowedMethods) == 0 {
 		// If no method allowed, always return false, even for preflight request
@@ -415,6 +389,7 @@ func (c *Cors) areHeadersAllowed(requestedHeaders []string) bool {
 		for _, h := range c.allowedHeaders {
 			if h == header {
 				found = true
+				break
 			}
 		}
 		if !found {

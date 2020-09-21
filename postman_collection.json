@@ -1,0 +1,193 @@
+{
+	"info": {
+		"_postman_id": "8224e55d-a0c5-4723-8653-4ed13e6db4f2",
+		"name": "Image Randomizer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"rl404\",\n    \"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{IR_URL}}/user/register",
+					"host": [
+						"{{IR_URL}}"
+					],
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"rl404\",\n    \"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{IR_URL}}/user/login",
+					"host": [
+						"{{IR_URL}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "5B7EmZ9nWDohggL7",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    \"https://raw.githubusercontent.com/rl404/MyAnimeList/master/Expander/bg/2.jpg\",\n    \"https://raw.githubusercontent.com/rl404/MyAnimeList/master/Expander/bg/45.jpg\",\n    \"https://raw.githubusercontent.com/rl404/MyAnimeList/master/Expander/bg/198.jpg\"\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{IR_URL}}/user/update",
+					"host": [
+						"{{IR_URL}}"
+					],
+					"path": [
+						"user",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"type": "text",
+						"value": "5B7EmZ9nWDohggL7"
+					}
+				],
+				"url": {
+					"raw": "{{IR_URL}}/user/:username",
+					"host": [
+						"{{IR_URL}}"
+					],
+					"path": [
+						"user",
+						":username"
+					],
+					"variable": [
+						{
+							"key": "username",
+							"value": "rl404"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Random",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{IR_URL}}/user/:username/image.jpg",
+					"host": [
+						"{{IR_URL}}"
+					],
+					"path": [
+						"user",
+						":username",
+						"image.jpg"
+					],
+					"variable": [
+						{
+							"key": "username",
+							"value": "rl404"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "92c5d9fc-4b60-4fa6-8146-2f830ee28f44",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b524d266-3a25-404c-a7d6-0d31da10b96e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "fddbcf34-c742-426d-8ef1-264c61713fd1",
+			"key": "IR_URL",
+			"value": "http://localhost:31001"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

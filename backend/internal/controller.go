@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"math/rand"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -134,8 +135,13 @@ func (uh *UserHandler) login(w http.ResponseWriter, r *http.Request) {
 
 	// Get user.
 	var user User
-	uh.DB.Where("username = ? and password = ?", Encrypt(request.Username, uh.Config.Masterkey), Encrypt(request.Password, uh.Config.Masterkey)).First(&user)
+	uh.DB.Where("username = ?", Encrypt(request.Username, uh.Config.Masterkey)).First(&user)
 	if user.ID == 0 {
+		RespondWithJSON(w, http.StatusNotFound, ErrNotFound.Error(), nil)
+		return
+	}
+
+	if user.Password != Encrypt(request.Password, uh.Config.Masterkey) {
 		RespondWithJSON(w, http.StatusBadRequest, ErrWrongUserPass.Error(), nil)
 		return
 	}
@@ -190,10 +196,13 @@ func (uh *UserHandler) update(w http.ResponseWriter, r *http.Request) {
 		// Prepare new data.
 		var data []Image
 		for _, i := range request {
-			data = append(data, Image{
-				UserID: user.ID,
-				Image:  Encrypt(i, uh.Config.Masterkey),
-			})
+			i = strings.TrimSpace(i)
+			if i != "" {
+				data = append(data, Image{
+					UserID: user.ID,
+					Image:  Encrypt(i, uh.Config.Masterkey),
+				})
+			}
 		}
 
 		err := uh.DB.Create(&data).Error
@@ -230,9 +239,9 @@ func (uh *UserHandler) list(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var images []Image
-	uh.DB.Where("user_id = ?", user.ID).Find(&images)
+	uh.DB.Where("user_id = ?", user.ID).Order("id asc").Find(&images)
 
-	var list []string
+	list := []string{}
 	for _, i := range images {
 		list = append(list, Decrypt(i.Image, uh.Config.Masterkey))
 	}
@@ -253,6 +262,9 @@ func (uh *UserHandler) random(w http.ResponseWriter, r *http.Request) {
 
 	var images []Image
 	uh.DB.Where("user_id = ?", user.ID).Find(&images)
+	if len(images) == 0 {
+		return
+	}
 
 	randIndex := rand.Intn(len(images))
 	image := Decrypt(images[randIndex].Image, uh.Config.Masterkey)

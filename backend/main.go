@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/rs/cors"
+	"github.com/go-chi/cors"
 )
 
 // startHTTP to start serving HTTP.
@@ -21,7 +21,7 @@ func startHTTP(cfg internal.Config) error {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Logger)
-	r.Use(cors.Default().Handler)
+	r.Use(cors.AllowAll().Handler)
 
 	// Register base routes.
 	internal.RegisterBaseRoutes(r)
