@@ -43,7 +43,7 @@ spec:
         app: randomizer-back
     spec:
       containers:
-        - name: randomizer_back
+        - name: randomizer-back
           image: randomizerback:0.1.0
           imagePullPolicy: IfNotPresent
           ports:
@@ -64,7 +64,7 @@ spec:
       metadata:
         generateName: randomizer-front-pod-
         labels:
-          app: randomizer_front
+          app: randomizer-front
       spec:
         containers:
           - name: randomizer-front

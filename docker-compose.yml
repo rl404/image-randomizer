@@ -2,7 +2,7 @@ version: '2.4'
 
 services:
   randomizer-front:
-    container_name: randomizer_front
+    container_name: randomizer-front
     image: randomizerfront:0.1.0
     build: ./frontend
     ports:
@@ -11,7 +11,7 @@ services:
     depends_on:
       - randomizer-back
   randomizer-back:
-    container_name: randomizer_back
+    container_name: randomizer-back
     image: randomizerback:0.1.0
     build: ./backend
     ports:
