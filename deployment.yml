@@ -30,14 +30,14 @@ kind: Secret
 metadata:
   name: randomizer-secret
 type: Opaque
-data:
-  IR_MASTERKEY: masterkey
-  IR_PORT: 31001
-  IR_ADDRESS: localhost:5432
-  IR_DB: postgres
-  IR_SCHEMA: randomizer
-  IR_USER: postgres
-  IR_PASSWORD: random123
+stringData:
+  IR_MASTERKEY: "masterkey"
+  IR_PORT: "31001"
+  IR_ADDRESS: "localhost:5432"
+  IR_DB: "postgres"
+  IR_SCHEMA: "randomizer"
+  IR_USER: "postgres"
+  IR_PASSWORD: "random123"
 ---
 apiVersion: apps/v1
 kind: Deployment
