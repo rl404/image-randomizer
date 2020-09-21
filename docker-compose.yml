@@ -2,17 +2,16 @@ version: '2.4'
 
 services:
   randomizer-front:
-    container_name: randomizer-front
+    container_name: randomizer_front
     image: randomizerfront:0.1.0
     build: ./frontend
     ports:
       - 31002:80
     restart: unless-stopped
-    network_mode: host
     depends_on:
       - randomizer-back
   randomizer-back:
-    container_name: randomizer-back
+    container_name: randomizer_back
     image: randomizerback:0.1.0
     build: ./backend
     ports:
