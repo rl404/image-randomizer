@@ -3,7 +3,7 @@ version: '2.4'
 services:
   randomizer-front:
     container_name: randomizer-front
-    image: randomizerfront:0.1.0
+    image: randomizerfront:0.2.0
     build: ./frontend
     ports:
       - 31002:80
@@ -12,7 +12,7 @@ services:
       - randomizer-back
   randomizer-back:
     container_name: randomizer-back
-    image: randomizerback:0.1.0
+    image: randomizerback:0.2.0
     build: ./backend
     ports:
       - 31001:31001

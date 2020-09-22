@@ -88,7 +88,7 @@ const List = (props) => {
         </Grid>
         <Grid item xs={12} container spacing={1} direction="row-reverse">
           <Grid item md={4} xs={12}>
-            <img src={state.preview} style={{ width: '100%' }} alt='preview' />
+            <img src={state.preview} style={{ width: '100%', position: 'sticky', top: 20 }} alt='preview' />
           </Grid>
           <Grid item md={8} xs={12} container spacing={1}>
             {state.data.map((image, i) => {

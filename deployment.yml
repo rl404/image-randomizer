@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
         - name: randomizer-back
-          image: randomizerback:0.1.0
+          image: randomizerback:0.2.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 31001
@@ -85,7 +85,7 @@ spec:
       spec:
         containers:
           - name: randomizer-front
-            image: randomizerfront:0.1.0
+            image: randomizerfront:0.2.0
             imagePullPolicy: IfNotPresent
             ports:
               - containerPort: 80
