@@ -1,0 +1,9 @@
+version: "2.4"
+
+services:
+  image-randomizer-lint:
+    container_name: image-randomizer-lint
+    image: golangci/golangci-lint:latest
+    working_dir: /image-randomizer
+    volumes:
+      - ../:/image-randomizer

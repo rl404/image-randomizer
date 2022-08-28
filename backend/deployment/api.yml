@@ -1,0 +1,10 @@
+version: "2.4"
+
+services:
+  image-randomizer-api:
+    container_name: image-randomizer-api
+    image: rl404/image-randomizer:latest
+    command: ./image-randomizer server
+    restart: always
+    env_file: ./../.env
+    network_mode: host
