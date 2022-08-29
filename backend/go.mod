@@ -12,6 +12,7 @@ require (
 	github.com/rl404/fairy v0.20.0
 	github.com/spf13/cobra v1.5.0
 	github.com/swaggo/http-swagger v1.3.3
+	github.com/swaggo/swag v1.8.1
 	golang.org/x/text v0.3.7
 	gorm.io/driver/postgres v1.3.9
 	gorm.io/gorm v1.23.8
@@ -57,7 +58,6 @@ require (
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
-	github.com/swaggo/swag v1.8.1 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.22.0 // indirect

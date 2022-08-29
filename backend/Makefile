@@ -68,3 +68,49 @@ migrate: build
 run: build
 	@cd $(CMD_PATH); \
 	./$(BINARY_NAME) server
+
+
+# Docker base command.
+DOCKER_CMD   := docker
+DOCKER_IMAGE := $(DOCKER_CMD) image
+
+# Docker-compose base command and docker-compose.yml path.
+COMPOSE_CMD     := docker-compose
+COMPOSE_BUILD   := deployment/build.yml
+COMPOSE_API     := deployment/api.yml
+COMPOSE_MIGRATE := deployment/migrate.yml
+COMPOSE_LINT    := deployment/lint.yml
+
+# Build docker images and container for the project
+# then delete builder image.
+.PHONY: docker-build
+docker-build:
+	@$(COMPOSE_CMD) -f $(COMPOSE_BUILD) build
+	@$(DOCKER_IMAGE) prune -f --filter label=stage=image_randomizer_be_builder
+
+# Start built docker containers for api.
+.PHONY: docker-api
+docker-api:
+	@$(COMPOSE_CMD) -f $(COMPOSE_API) -p image-randomizer-be-api up -d
+	@$(COMPOSE_CMD) -f $(COMPOSE_API) -p image-randomizer-be-api logs --follow --tail 20
+
+# Start built docker containers for migrate.
+.PHONY: docker-migrate
+docker-migrate:
+	@$(COMPOSE_CMD) -f $(COMPOSE_MIGRATE) -p image-randomizer-be-migrate up
+
+# Start docker to run lint check.
+.PHONY: docker-lint
+docker-lint:
+	@$(COMPOSE_CMD) -f $(COMPOSE_LINT) -p image-randomizer-be-lint run --rm image-randomizer-be-lint $(GCL_RUN) -D errcheck --timeout 5m
+
+# Update docker containers.
+.PHONY: docker-update
+docker-update:
+	@$(COMPOSE_CMD) -f $(COMPOSE_API) -p image-randomizer-be-api up -d
+	@$(DOCKER_IMAGE) prune -f --filter label=stage=image-randomizer-be_binary
+
+# Stop running docker containers.
+.PHONY: docker-stop
+docker-stop:
+	@$(COMPOSE_CMD) -f $(COMPOSE_API) -p image-randomizer-be-api stop
