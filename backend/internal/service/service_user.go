@@ -85,7 +85,7 @@ func (s *service) Login(ctx context.Context, data LoginRequest) (*Token, int, er
 	user, code, err := s.user.GetByUsername(ctx, data.Username)
 	if err != nil {
 		if code == http.StatusNotFound {
-			return nil, http.StatusBadRequest, errors.Wrap(ctx, errors.ErrInvalidLogin)
+			return nil, http.StatusNotFound, errors.Wrap(ctx, errors.ErrInvalidLogin)
 		}
 		return nil, code, errors.Wrap(ctx, err)
 	}
