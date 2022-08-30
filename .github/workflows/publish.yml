@@ -32,12 +32,12 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.CR_PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push image backend
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./backend
-          file: ./build/package/Dockerfile
+          file: ./backend/build/package/Dockerfile
           push: true
           tags: |
             rl404/image-randomizer:be-latest
@@ -45,10 +45,10 @@ jobs:
             ghcr.io/rl404/image-randomizer:be-latest
             ghcr.io/rl404/image-randomizer:be-${{ env.IMG_TAG }}
       - name: Build and push image frontend
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./frontend
-          file: ./Dockerfile
+          file: ./frontend/Dockerfile
           push: true
           tags: |
             rl404/image-randomizer:fe-latest
