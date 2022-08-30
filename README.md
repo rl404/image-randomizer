@@ -21,17 +21,17 @@ Inspired by [sig.grumpybumpers](http://sig.grumpybumpers.com/).
     ```
     git clone https://github.com/rl404/image-randomizer
     ```
-2. Rename `backend/sample.env` to `.env` and modify according to your configuration.
-3. Modify `frontend/.env` according to backend host and port.
+2. Rename `backend/.env.sample` to `.env` and modify according to your configuration.
+3. Rename `frontend/.env.sample` to `.env` and modify according to your configuration.
 4. Start the backend service. (Assumed the database is ready to use).
     ```
     cd backend
-    go run main.go
+    make
     ```
 5. Open new console/terminal and start the frontend service.
     ```
     cd frontend
-    npm start
+    npm run dev
     ```
 6. [http://localhost:31001](http://localhost:31001) and [http://localhost:31002](http://localhost:31002) are ready to use*.
 
@@ -49,4 +49,4 @@ Inspired by [sig.grumpybumpers](http://sig.grumpybumpers.com/).
 
 MIT License
 
-Copyright (c) 2020 Axel
+Copyright (c) 2022 Axel

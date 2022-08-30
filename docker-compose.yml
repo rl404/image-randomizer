@@ -1,21 +1,22 @@
 version: '2.4'
 
 services:
-  randomizer-front:
-    container_name: randomizer-front
-    image: randomizerfront:0.2.0
+  image-randomizer-fe:
+    container_name: image-randomizer-fe
+    image: rl404/image-randomizer:fe-latest
     build: ./frontend
-    ports:
-      - 31002:80
     restart: unless-stopped
+    env_file: ./frontend/.env
+    network_mode: host
     depends_on:
-      - randomizer-back
-  randomizer-back:
-    container_name: randomizer-back
-    image: randomizerback:0.2.0
-    build: ./backend
-    ports:
-      - 31001:31001
+      - image-randomizer-be
+  image-randomizer-be:
+    container_name: image-randomizer-be
+    image: rl404/image-randomizer:be-latest
+    build:
+      context: ./backend
+      dockerfile: ./build/package/Dockerfile
+    command: ./image-randomizer server
     restart: unless-stopped
     network_mode: host
     env_file: ./backend/.env

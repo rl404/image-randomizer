@@ -1,0 +1,9 @@
+version: "2.4"
+
+services:
+  image-randomizer-be-migrate:
+    container_name: image-randomizer-be-migrate
+    image: rl404/image-randomizer-be:latest
+    command: ./image-randomizer migrate
+    env_file: ./../.env
+    network_mode: host

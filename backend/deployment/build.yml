@@ -1,0 +1,8 @@
+version: "2.4"
+
+services:
+  image-randomizer-be-build:
+    image: rl404/image-randomizer-be:latest
+    build:
+      context: ./..
+      dockerfile: ./build/package/Dockerfile

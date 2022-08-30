@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  image-randomizer-fe:
+    container_name: image-randomizer-fe
+    image: rl404/image-randomizer:fe-latest
+    build: .
+    restart: always
+    env_file: .env
+    network_mode: host
+
