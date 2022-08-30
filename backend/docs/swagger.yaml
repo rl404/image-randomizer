@@ -69,25 +69,6 @@ info:
   description: Image randomizer API.
   title: Image Randomizer API
 paths:
-  /{username}/image.jpg:
-    get:
-      produces:
-      - application/json
-      - image/jpeg
-      responses:
-        "200":
-          description: ""
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/utils.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/utils.Response'
-      summary: Get random image.
-      tags:
-      - Image
   /images:
     get:
       parameters:
@@ -364,6 +345,25 @@ paths:
       summary: Refresh Token
       tags:
       - Token
+  /user/{username}/image.jpg:
+    get:
+      produces:
+      - application/json
+      - image/jpeg
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Response'
+      summary: Get random image.
+      tags:
+      - User
 schemes:
 - http
 - https

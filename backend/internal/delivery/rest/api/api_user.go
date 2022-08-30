@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-chi/chi"
 	"github.com/rl404/image-randomizer/internal/errors"
 	"github.com/rl404/image-randomizer/internal/service"
 	"github.com/rl404/image-randomizer/internal/utils"
@@ -45,4 +46,21 @@ func (api *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 
 	token, code, err := api.service.Login(r.Context(), request)
 	utils.ResponseWithJSON(w, code, token, errors.Wrap(r.Context(), err))
+}
+
+// @summary Get random image.
+// @tags User
+// @produce json,jpeg
+// @success 200
+// @failure 404 {object} utils.Response
+// @failure 500 {object} utils.Response
+// @router /user/{username}/image.jpg [get]
+func (api *API) handleRandomImage(w http.ResponseWriter, r *http.Request) {
+	image, code, err := api.service.GetRandomImage(r.Context(), chi.URLParam(r, "username"))
+	if err != nil {
+		utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+		return
+	}
+
+	utils.ResponseWithImage(r.Context(), w, image)
 }

@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"math/rand"
 	"net/http"
 
 	"github.com/rl404/image-randomizer/internal/domain/image/entity"
@@ -107,25 +106,4 @@ func (s *service) DeleteImage(ctx context.Context, data DeleteImageRequest) (int
 	}
 
 	return http.StatusOK, nil
-}
-
-// GetRandomImage to get random image.
-func (s *service) GetRandomImage(ctx context.Context, username string) (string, int, error) {
-	user, code, err := s.user.GetByUsername(ctx, username)
-	if err != nil {
-		return "", code, errors.Wrap(ctx, err)
-	}
-
-	images, code, err := s.image.Get(ctx, user.ID)
-	if err != nil {
-		return "", code, errors.Wrap(ctx, err)
-	}
-
-	if len(images) == 0 {
-		return "", http.StatusNotFound, errors.Wrap(ctx, errors.ErrNotFoundImage)
-	}
-
-	randIndex := rand.Intn(len(images))
-
-	return images[randIndex].Image, http.StatusOK, nil
 }

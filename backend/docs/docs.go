@@ -465,19 +465,19 @@ const docTemplate = `{
                 }
             }
         },
-        "/{username}/image.jpg": {
+        "/user/{username}/image.jpg": {
             "get": {
                 "produces": [
                     "application/json",
                     "image/jpeg"
                 ],
                 "tags": [
-                    "Image"
+                    "User"
                 ],
                 "summary": "Get random image.",
                 "responses": {
                     "200": {
-                        "description": ""
+                        "description": "OK"
                     },
                     "404": {
                         "description": "Not Found",

@@ -127,20 +127,3 @@ func (api *API) handleDeleteImage(w http.ResponseWriter, r *http.Request) {
 
 	utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
 }
-
-// @summary Get random image.
-// @tags Image
-// @produce json,jpeg
-// @success 200
-// @failure 404 {object} utils.Response
-// @failure 500 {object} utils.Response
-// @router /{username}/image.jpg [get]
-func (api *API) handleRandomImage(w http.ResponseWriter, r *http.Request) {
-	image, code, err := api.service.GetRandomImage(r.Context(), chi.URLParam(r, "username"))
-	if err != nil {
-		utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
-		return
-	}
-
-	utils.ResponseWithImage(r.Context(), w, image)
-}

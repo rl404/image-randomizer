@@ -51,6 +51,6 @@ func (api *API) Register(r chi.Router, nrApp *newrelic.Application) {
 		r.Patch("/images/{image_id}", api.jwtAuth(api.handleUpdateImage))
 		r.Delete("/images/{image_id}", api.jwtAuth(api.handleDeleteImage))
 
-		r.Get("/{username}/image.jpg", api.handleRandomImage)
+		r.Get("/user/{username}/image.jpg", api.handleRandomImage)
 	})
 }
