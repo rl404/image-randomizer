@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 
@@ -91,6 +92,11 @@ func getConfig() (*config, error) {
 	// Convert env to struct.
 	if err := envconfig.Process(envPrefix, &cfg); err != nil {
 		return nil, err
+	}
+
+	// Override PORT env.
+	if port := os.Getenv("PORT"); port != "" {
+		cfg.App.Port = port
 	}
 
 	// Validate.
