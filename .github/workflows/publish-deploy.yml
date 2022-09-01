@@ -1,23 +1,28 @@
-name: publish
+name: publish & deploy
 
 on:
   push:
     tags:
       - '*'
+
 jobs:
   publish_image:
     name: Build and push image-randomizer image
     runs-on: ubuntu-latest
+    outputs:
+      img_tag: ${{ steps.tag.outputs.img_tag }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
       - name: Remove 'v' from tag
+        id: tag
         env:
           github_ref: ${{ github.ref }}
         run: |
           github_ref=${github_ref##*/}
           github_ref=${github_ref/v/}
           echo "IMG_TAG=${github_ref}" >> $GITHUB_ENV
+          echo "::set-output name=img_tag::${github_ref}"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -55,3 +60,29 @@ jobs:
             rl404/image-randomizer:fe-${{ env.IMG_TAG }}
             ghcr.io/rl404/image-randomizer:fe-latest
             ghcr.io/rl404/image-randomizer:fe-${{ env.IMG_TAG }}
+  deploy:
+    name: Deploy
+    needs: publish_image
+    runs-on: ubuntu-latest
+    env:
+      gcr_image_name: ${{ secrets.GCR_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/image-randomizer/image-randomizer:be-${{ needs.publish_image.outputs.img_tag }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0
+      - name: Setup docker
+        run: |
+          gcloud --quiet auth configure-docker
+      - name: Copy image to registry
+        run: |
+          docker pull rl404/image-randomizer:be-${{ needs.publish_image.outputs.img_tag }}
+          docker tag rl404/image-randomizer:be-${{ needs.publish_image.outputs.img_tag }} $gcr_image_name
+          docker push $gcr_image_name
+      - name: Deploy
+        run: |
+          gcloud run services update ${{ secrets.RUN_SERVICE_NAME }} --platform=managed --region=${{ secrets.RUN_REGION }} --quiet --image=$gcr_image_name
+
