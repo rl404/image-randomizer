@@ -8,7 +8,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.4.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/newrelic/go-agent/v3 v3.19.0
+	github.com/newrelic/go-agent/v3 v3.19.1
 	github.com/rl404/fairy v0.20.0
 	github.com/spf13/cobra v1.5.0
 	github.com/swaggo/http-swagger v1.3.3
