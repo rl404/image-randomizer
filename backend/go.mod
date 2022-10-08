@@ -14,7 +14,7 @@ require (
 	github.com/swaggo/http-swagger v1.3.3
 	github.com/swaggo/swag v1.8.6
 	golang.org/x/text v0.3.7
-	gorm.io/driver/postgres v1.3.10
+	gorm.io/driver/postgres v1.4.1
 	gorm.io/gorm v1.24.0
 )
 
