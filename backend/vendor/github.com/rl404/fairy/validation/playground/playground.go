@@ -119,19 +119,21 @@ func (v *Validator) Validate(data interface{}) error {
 			return err
 		}
 
-		for _, e := range errs {
-			fn, ok := v.customErrs[e.Tag()]
+		if len(errs) > 0 {
+			fn, ok := v.customErrs[errs[0].Tag()]
 			if !ok {
 				return err
 			}
 
 			var param []string
-			if e.Param() != "" {
-				param = append(param, e.Param())
+			if errs[0].Param() != "" {
+				param = append(param, errs[0].Param())
 			}
 
-			return fn(e.Field(), param...)
+			return fn(errs[0].Field(), param...)
 		}
+
+		return err
 	}
 
 	return nil
