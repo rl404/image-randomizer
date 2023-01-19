@@ -127,7 +127,7 @@ github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.14
 ## explicit; go 1.12
 github.com/mattn/go-isatty
-# github.com/newrelic/go-agent/v3 v3.20.2
+# github.com/newrelic/go-agent/v3 v3.20.3
 ## explicit; go 1.17
 github.com/newrelic/go-agent/v3/internal
 github.com/newrelic/go-agent/v3/internal/cat
