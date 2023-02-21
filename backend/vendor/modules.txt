@@ -84,8 +84,8 @@ github.com/jackc/pgpassfile
 # github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a
 ## explicit; go 1.14
 github.com/jackc/pgservicefile
-# github.com/jackc/pgx/v5 v5.2.0
-## explicit; go 1.18
+# github.com/jackc/pgx/v5 v5.3.0
+## explicit; go 1.19
 github.com/jackc/pgx/v5
 github.com/jackc/pgx/v5/internal/anynil
 github.com/jackc/pgx/v5/internal/iobufpool
@@ -207,7 +207,7 @@ go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
-# golang.org/x/crypto v0.5.0
+# golang.org/x/crypto v0.6.0
 ## explicit; go 1.17
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/sha3
@@ -340,7 +340,7 @@ google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit; go 1.15
 gopkg.in/yaml.v2
-# gorm.io/driver/postgres v1.4.7
+# gorm.io/driver/postgres v1.4.8
 ## explicit; go 1.14
 gorm.io/driver/postgres
 # gorm.io/gorm v1.24.5
