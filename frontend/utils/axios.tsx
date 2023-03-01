@@ -1,10 +1,10 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { InternalAxiosRequestConfig } from 'axios';
 import { deleteStorage, getAccessToken, getRefreshToken, saveAccessToken } from './storage';
 
 export const axios2 = axios.create();
 
 axios2.interceptors.request.use(
-  async (config: AxiosRequestConfig) => {
+  async (config: InternalAxiosRequestConfig) => {
     config.headers && (config.headers.authorization = `Bearer ${getAccessToken()}`);
     return config;
   },
