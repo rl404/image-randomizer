@@ -13,7 +13,7 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/swaggo/http-swagger v1.3.4
 	github.com/swaggo/swag v1.8.12
-	golang.org/x/text v0.8.0
+	golang.org/x/text v0.9.0
 	gorm.io/driver/postgres v1.5.0
 	gorm.io/gorm v1.24.7-0.20230306060331-85eaf9eeda11
 )
