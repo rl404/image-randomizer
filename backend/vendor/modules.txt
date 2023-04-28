@@ -64,7 +64,7 @@ github.com/go-redis/redis/v8/internal/util
 # github.com/golang-jwt/jwt v3.2.2+incompatible
 ## explicit
 github.com/golang-jwt/jwt
-# github.com/golang/protobuf v1.5.2
+# github.com/golang/protobuf v1.5.3
 ## explicit; go 1.9
 github.com/golang/protobuf/jsonpb
 github.com/golang/protobuf/proto
@@ -127,8 +127,8 @@ github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.16
 ## explicit; go 1.15
 github.com/mattn/go-isatty
-# github.com/newrelic/go-agent/v3 v3.21.0
-## explicit; go 1.17
+# github.com/newrelic/go-agent/v3 v3.21.1
+## explicit; go 1.18
 github.com/newrelic/go-agent/v3/internal
 github.com/newrelic/go-agent/v3/internal/cat
 github.com/newrelic/go-agent/v3/internal/com_newrelic_trace_v1
@@ -253,7 +253,7 @@ golang.org/x/tools/internal/typeparams
 # google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f
 ## explicit; go 1.19
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.53.0
+# google.golang.org/grpc v1.54.0
 ## explicit; go 1.17
 google.golang.org/grpc
 google.golang.org/grpc/attributes
