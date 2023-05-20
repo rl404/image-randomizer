@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"encoding/json"
+	_errors "errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -50,9 +51,17 @@ func ResponseWithImage(ctx context.Context, w http.ResponseWriter, image string)
 		return
 	}
 
+	if img.StatusCode != http.StatusOK {
+		ResponseWithJSON(w, img.StatusCode, nil, errors.Wrap(ctx, _errors.New(http.StatusText(img.StatusCode))))
+		return
+	}
+
 	defer img.Body.Close()
 	w.Header().Set("Content-Type", "image/jpeg")
-	io.Copy(w, img.Body)
+
+	if _, err := io.Copy(w, img.Body); err != nil {
+		ResponseWithJSON(w, http.StatusInternalServerError, nil, errors.Wrap(ctx, errors.ErrInternalServer, err))
+	}
 }
 
 // Recoverer is custom recoverer middleware.

@@ -25,7 +25,7 @@ func New(cacher cache.Cacher, repo repository.Repository) *Cache {
 	}
 }
 
-//
+// Get to get image.
 func (c *Cache) Get(ctx context.Context, userID int64) (data []*entity.Image, code int, err error) {
 	key := utils.GetKey("images", "user_id", userID)
 	if c.cacher.Get(ctx, key, &data) == nil {
