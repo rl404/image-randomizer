@@ -248,33 +248,61 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
     <Grid item xs={12} sx={{ opacity: formState.deleted ? 0.3 : 1 }}>
       <form>
         <Stack direction="row" spacing={2}>
-          <TextField
-            placeholder="http://your.image.url.com"
-            required
-            fullWidth
-            size="small"
-            disabled={formState.loading || formState.deleted}
-            value={imageState.image}
-            onChange={handleChangeImage}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Stack direction="row" spacing={1}>
-                    <Tooltip title="show preview" placement="left" arrow>
-                      <IconButton onClick={handlePreview} size="small" disabled={formState.deleted}>
-                        <Visibility fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="delete" placement="right" arrow>
-                      <IconButton onClick={handleDelete} edge="end" size="small" disabled={formState.deleted}>
-                        <DeleteIcon color="error" fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
-                </InputAdornment>
-              ),
-            }}
-          />
+          <Tooltip
+            title={
+              <>
+                Looks like you are hosting your image on Imgur. Your image may gets rate limitted by Imgur. Try to host
+                it on other site such as{' '}
+                <Link href="https://postimages.org/" target="_blank" rel="noopener noreferrer">
+                  postimages
+                </Link>
+                ,{' '}
+                <Link href="https://imgbb.com/" target="_blank" rel="noopener noreferrer">
+                  imgbb
+                </Link>
+                ,{' '}
+                <Link href="https://github.com/" target="_blank" rel="noopener noreferrer">
+                  github
+                </Link>
+                , or even{' '}
+                <Link href="https://discord.com/" target="_blank" rel="noopener noreferrer">
+                  discord
+                </Link>
+                .
+              </>
+            }
+            placement="left"
+            arrow
+            open={imageState.image.includes('imgur')}
+          >
+            <TextField
+              placeholder="http://your.image.url.com"
+              required
+              fullWidth
+              size="small"
+              disabled={formState.loading || formState.deleted}
+              value={imageState.image}
+              onChange={handleChangeImage}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Stack direction="row" spacing={1}>
+                      <Tooltip title="show preview" placement="left" arrow>
+                        <IconButton onClick={handlePreview} size="small" disabled={formState.deleted}>
+                          <Visibility fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="delete" placement="right" arrow>
+                        <IconButton onClick={handleDelete} edge="end" size="small" disabled={formState.deleted}>
+                          <DeleteIcon color="error" fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Tooltip>
           {imageState.showButton && (
             <>
               <LoadingButton onClick={handleSubmit} type="submit" loading={formState.loading}>
