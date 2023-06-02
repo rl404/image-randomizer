@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -10,8 +27,8 @@ import (
 )
 
 func newILMMoveToStepFunc(t Transport) ILMMoveToStep {
-	return func(o ...func(*ILMMoveToStepRequest)) (*Response, error) {
-		var r = ILMMoveToStepRequest{}
+	return func(index string, o ...func(*ILMMoveToStepRequest)) (*Response, error) {
+		var r = ILMMoveToStepRequest{Index: index}
 		for _, f := range o {
 			f(&r)
 		}
@@ -21,12 +38,12 @@ func newILMMoveToStepFunc(t Transport) ILMMoveToStep {
 
 // ----- API Definition -------------------------------------------------------
 
-// ILMMoveToStep - https://www.elastic.co/guide/en/elasticsearch/reference/current/ilm-move-to-step.html
+// ILMMoveToStep - Manually moves an index into the specified step and executes that step.
 //
-type ILMMoveToStep func(o ...func(*ILMMoveToStepRequest)) (*Response, error)
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/ilm-move-to-step.html.
+type ILMMoveToStep func(index string, o ...func(*ILMMoveToStepRequest)) (*Response, error)
 
 // ILMMoveToStepRequest configures the ILM Move To Step API request.
-//
 type ILMMoveToStepRequest struct {
 	Index string
 
@@ -43,7 +60,6 @@ type ILMMoveToStepRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r ILMMoveToStepRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -58,10 +74,8 @@ func (r ILMMoveToStepRequest) Do(ctx context.Context, transport Transport) (*Res
 	path.WriteString("_ilm")
 	path.WriteString("/")
 	path.WriteString("move")
-	if r.Index != "" {
-		path.WriteString("/")
-		path.WriteString(r.Index)
-	}
+	path.WriteString("/")
+	path.WriteString(r.Index)
 
 	params = make(map[string]string)
 
@@ -81,7 +95,10 @@ func (r ILMMoveToStepRequest) Do(ctx context.Context, transport Transport) (*Res
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -89,10 +106,6 @@ func (r ILMMoveToStepRequest) Do(ctx context.Context, transport Transport) (*Res
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -105,6 +118,10 @@ func (r ILMMoveToStepRequest) Do(ctx context.Context, transport Transport) (*Res
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -126,7 +143,6 @@ func (r ILMMoveToStepRequest) Do(ctx context.Context, transport Transport) (*Res
 }
 
 // WithContext sets the request context.
-//
 func (f ILMMoveToStep) WithContext(v context.Context) func(*ILMMoveToStepRequest) {
 	return func(r *ILMMoveToStepRequest) {
 		r.ctx = v
@@ -134,23 +150,13 @@ func (f ILMMoveToStep) WithContext(v context.Context) func(*ILMMoveToStepRequest
 }
 
 // WithBody - The new lifecycle step to move to.
-//
 func (f ILMMoveToStep) WithBody(v io.Reader) func(*ILMMoveToStepRequest) {
 	return func(r *ILMMoveToStepRequest) {
 		r.Body = v
 	}
 }
 
-// WithIndex - the name of the index whose lifecycle step is to change.
-//
-func (f ILMMoveToStep) WithIndex(v string) func(*ILMMoveToStepRequest) {
-	return func(r *ILMMoveToStepRequest) {
-		r.Index = v
-	}
-}
-
 // WithPretty makes the response body pretty-printed.
-//
 func (f ILMMoveToStep) WithPretty() func(*ILMMoveToStepRequest) {
 	return func(r *ILMMoveToStepRequest) {
 		r.Pretty = true
@@ -158,7 +164,6 @@ func (f ILMMoveToStep) WithPretty() func(*ILMMoveToStepRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f ILMMoveToStep) WithHuman() func(*ILMMoveToStepRequest) {
 	return func(r *ILMMoveToStepRequest) {
 		r.Human = true
@@ -166,7 +171,6 @@ func (f ILMMoveToStep) WithHuman() func(*ILMMoveToStepRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f ILMMoveToStep) WithErrorTrace() func(*ILMMoveToStepRequest) {
 	return func(r *ILMMoveToStepRequest) {
 		r.ErrorTrace = true
@@ -174,7 +178,6 @@ func (f ILMMoveToStep) WithErrorTrace() func(*ILMMoveToStepRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f ILMMoveToStep) WithFilterPath(v ...string) func(*ILMMoveToStepRequest) {
 	return func(r *ILMMoveToStepRequest) {
 		r.FilterPath = v
@@ -182,7 +185,6 @@ func (f ILMMoveToStep) WithFilterPath(v ...string) func(*ILMMoveToStepRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f ILMMoveToStep) WithHeader(h map[string]string) func(*ILMMoveToStepRequest) {
 	return func(r *ILMMoveToStepRequest) {
 		if r.Header == nil {
@@ -191,5 +193,15 @@ func (f ILMMoveToStep) WithHeader(h map[string]string) func(*ILMMoveToStepReques
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f ILMMoveToStep) WithOpaqueID(s string) func(*ILMMoveToStepRequest) {
+	return func(r *ILMMoveToStepRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

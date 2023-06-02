@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -24,12 +41,10 @@ func newCountFunc(t Transport) Count {
 
 // Count returns number of documents matching a query.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/search-count.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/search-count.html.
 type Count func(o ...func(*CountRequest)) (*Response, error)
 
 // CountRequest configures the Count API request.
-//
 type CountRequest struct {
 	Index        []string
 	DocumentType []string
@@ -62,7 +77,6 @@ type CountRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r CountRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -158,7 +172,10 @@ func (r CountRequest) Do(ctx context.Context, transport Transport) (*Response, e
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -166,10 +183,6 @@ func (r CountRequest) Do(ctx context.Context, transport Transport) (*Response, e
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -182,6 +195,10 @@ func (r CountRequest) Do(ctx context.Context, transport Transport) (*Response, e
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -203,7 +220,6 @@ func (r CountRequest) Do(ctx context.Context, transport Transport) (*Response, e
 }
 
 // WithContext sets the request context.
-//
 func (f Count) WithContext(v context.Context) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.ctx = v
@@ -211,7 +227,6 @@ func (f Count) WithContext(v context.Context) func(*CountRequest) {
 }
 
 // WithBody - A query to restrict the results specified with the Query DSL (optional).
-//
 func (f Count) WithBody(v io.Reader) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.Body = v
@@ -219,7 +234,6 @@ func (f Count) WithBody(v io.Reader) func(*CountRequest) {
 }
 
 // WithIndex - a list of indices to restrict the results.
-//
 func (f Count) WithIndex(v ...string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.Index = v
@@ -227,7 +241,6 @@ func (f Count) WithIndex(v ...string) func(*CountRequest) {
 }
 
 // WithDocumentType - a list of types to restrict the results.
-//
 func (f Count) WithDocumentType(v ...string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.DocumentType = v
@@ -235,7 +248,6 @@ func (f Count) WithDocumentType(v ...string) func(*CountRequest) {
 }
 
 // WithAllowNoIndices - whether to ignore if a wildcard indices expression resolves into no concrete indices. (this includes `_all` string or when no indices have been specified).
-//
 func (f Count) WithAllowNoIndices(v bool) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.AllowNoIndices = &v
@@ -243,7 +255,6 @@ func (f Count) WithAllowNoIndices(v bool) func(*CountRequest) {
 }
 
 // WithAnalyzer - the analyzer to use for the query string.
-//
 func (f Count) WithAnalyzer(v string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.Analyzer = v
@@ -251,7 +262,6 @@ func (f Count) WithAnalyzer(v string) func(*CountRequest) {
 }
 
 // WithAnalyzeWildcard - specify whether wildcard and prefix queries should be analyzed (default: false).
-//
 func (f Count) WithAnalyzeWildcard(v bool) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.AnalyzeWildcard = &v
@@ -259,7 +269,6 @@ func (f Count) WithAnalyzeWildcard(v bool) func(*CountRequest) {
 }
 
 // WithDefaultOperator - the default operator for query string query (and or or).
-//
 func (f Count) WithDefaultOperator(v string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.DefaultOperator = v
@@ -267,7 +276,6 @@ func (f Count) WithDefaultOperator(v string) func(*CountRequest) {
 }
 
 // WithDf - the field to use as default where no field prefix is given in the query string.
-//
 func (f Count) WithDf(v string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.Df = v
@@ -275,7 +283,6 @@ func (f Count) WithDf(v string) func(*CountRequest) {
 }
 
 // WithExpandWildcards - whether to expand wildcard expression to concrete indices that are open, closed or both..
-//
 func (f Count) WithExpandWildcards(v string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.ExpandWildcards = v
@@ -283,7 +290,6 @@ func (f Count) WithExpandWildcards(v string) func(*CountRequest) {
 }
 
 // WithIgnoreThrottled - whether specified concrete, expanded or aliased indices should be ignored when throttled.
-//
 func (f Count) WithIgnoreThrottled(v bool) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.IgnoreThrottled = &v
@@ -291,7 +297,6 @@ func (f Count) WithIgnoreThrottled(v bool) func(*CountRequest) {
 }
 
 // WithIgnoreUnavailable - whether specified concrete indices should be ignored when unavailable (missing or closed).
-//
 func (f Count) WithIgnoreUnavailable(v bool) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.IgnoreUnavailable = &v
@@ -299,7 +304,6 @@ func (f Count) WithIgnoreUnavailable(v bool) func(*CountRequest) {
 }
 
 // WithLenient - specify whether format-based query failures (such as providing text to a numeric field) should be ignored.
-//
 func (f Count) WithLenient(v bool) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.Lenient = &v
@@ -307,7 +311,6 @@ func (f Count) WithLenient(v bool) func(*CountRequest) {
 }
 
 // WithMinScore - include only documents with a specific `_score` value in the result.
-//
 func (f Count) WithMinScore(v int) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.MinScore = &v
@@ -315,7 +318,6 @@ func (f Count) WithMinScore(v int) func(*CountRequest) {
 }
 
 // WithPreference - specify the node or shard the operation should be performed on (default: random).
-//
 func (f Count) WithPreference(v string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.Preference = v
@@ -323,7 +325,6 @@ func (f Count) WithPreference(v string) func(*CountRequest) {
 }
 
 // WithQuery - query in the lucene query string syntax.
-//
 func (f Count) WithQuery(v string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.Query = v
@@ -331,7 +332,6 @@ func (f Count) WithQuery(v string) func(*CountRequest) {
 }
 
 // WithRouting - a list of specific routing values.
-//
 func (f Count) WithRouting(v ...string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.Routing = v
@@ -339,7 +339,6 @@ func (f Count) WithRouting(v ...string) func(*CountRequest) {
 }
 
 // WithTerminateAfter - the maximum count for each shard, upon reaching which the query execution will terminate early.
-//
 func (f Count) WithTerminateAfter(v int) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.TerminateAfter = &v
@@ -347,7 +346,6 @@ func (f Count) WithTerminateAfter(v int) func(*CountRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f Count) WithPretty() func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.Pretty = true
@@ -355,7 +353,6 @@ func (f Count) WithPretty() func(*CountRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f Count) WithHuman() func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.Human = true
@@ -363,7 +360,6 @@ func (f Count) WithHuman() func(*CountRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f Count) WithErrorTrace() func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.ErrorTrace = true
@@ -371,7 +367,6 @@ func (f Count) WithErrorTrace() func(*CountRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f Count) WithFilterPath(v ...string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		r.FilterPath = v
@@ -379,7 +374,6 @@ func (f Count) WithFilterPath(v ...string) func(*CountRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f Count) WithHeader(h map[string]string) func(*CountRequest) {
 	return func(r *CountRequest) {
 		if r.Header == nil {
@@ -388,5 +382,15 @@ func (f Count) WithHeader(h map[string]string) func(*CountRequest) {
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f Count) WithOpaqueID(s string) func(*CountRequest) {
+	return func(r *CountRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -21,12 +38,12 @@ func newLicensePostStartTrialFunc(t Transport) LicensePostStartTrial {
 
 // ----- API Definition -------------------------------------------------------
 
-// LicensePostStartTrial - https://www.elastic.co/guide/en/elasticsearch/reference/master/start-trial.html
+// LicensePostStartTrial - starts a limited time trial license.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/start-trial.html.
 type LicensePostStartTrial func(o ...func(*LicensePostStartTrialRequest)) (*Response, error)
 
 // LicensePostStartTrialRequest configures the License Post Start Trial API request.
-//
 type LicensePostStartTrialRequest struct {
 	Acknowledge  *bool
 	DocumentType string
@@ -42,7 +59,6 @@ type LicensePostStartTrialRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r LicensePostStartTrialRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -81,7 +97,10 @@ func (r LicensePostStartTrialRequest) Do(ctx context.Context, transport Transpor
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -122,7 +141,6 @@ func (r LicensePostStartTrialRequest) Do(ctx context.Context, transport Transpor
 }
 
 // WithContext sets the request context.
-//
 func (f LicensePostStartTrial) WithContext(v context.Context) func(*LicensePostStartTrialRequest) {
 	return func(r *LicensePostStartTrialRequest) {
 		r.ctx = v
@@ -130,7 +148,6 @@ func (f LicensePostStartTrial) WithContext(v context.Context) func(*LicensePostS
 }
 
 // WithAcknowledge - whether the user has acknowledged acknowledge messages (default: false).
-//
 func (f LicensePostStartTrial) WithAcknowledge(v bool) func(*LicensePostStartTrialRequest) {
 	return func(r *LicensePostStartTrialRequest) {
 		r.Acknowledge = &v
@@ -138,7 +155,6 @@ func (f LicensePostStartTrial) WithAcknowledge(v bool) func(*LicensePostStartTri
 }
 
 // WithDocumentType - the type of trial license to generate (default: "trial").
-//
 func (f LicensePostStartTrial) WithDocumentType(v string) func(*LicensePostStartTrialRequest) {
 	return func(r *LicensePostStartTrialRequest) {
 		r.DocumentType = v
@@ -146,7 +162,6 @@ func (f LicensePostStartTrial) WithDocumentType(v string) func(*LicensePostStart
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f LicensePostStartTrial) WithPretty() func(*LicensePostStartTrialRequest) {
 	return func(r *LicensePostStartTrialRequest) {
 		r.Pretty = true
@@ -154,7 +169,6 @@ func (f LicensePostStartTrial) WithPretty() func(*LicensePostStartTrialRequest) 
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f LicensePostStartTrial) WithHuman() func(*LicensePostStartTrialRequest) {
 	return func(r *LicensePostStartTrialRequest) {
 		r.Human = true
@@ -162,7 +176,6 @@ func (f LicensePostStartTrial) WithHuman() func(*LicensePostStartTrialRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f LicensePostStartTrial) WithErrorTrace() func(*LicensePostStartTrialRequest) {
 	return func(r *LicensePostStartTrialRequest) {
 		r.ErrorTrace = true
@@ -170,7 +183,6 @@ func (f LicensePostStartTrial) WithErrorTrace() func(*LicensePostStartTrialReque
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f LicensePostStartTrial) WithFilterPath(v ...string) func(*LicensePostStartTrialRequest) {
 	return func(r *LicensePostStartTrialRequest) {
 		r.FilterPath = v
@@ -178,7 +190,6 @@ func (f LicensePostStartTrial) WithFilterPath(v ...string) func(*LicensePostStar
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f LicensePostStartTrial) WithHeader(h map[string]string) func(*LicensePostStartTrialRequest) {
 	return func(r *LicensePostStartTrialRequest) {
 		if r.Header == nil {
@@ -187,5 +198,15 @@ func (f LicensePostStartTrial) WithHeader(h map[string]string) func(*LicensePost
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f LicensePostStartTrial) WithOpaqueID(s string) func(*LicensePostStartTrialRequest) {
+	return func(r *LicensePostStartTrialRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

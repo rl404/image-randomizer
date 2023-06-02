@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -23,12 +40,10 @@ func newIndicesClearCacheFunc(t Transport) IndicesClearCache {
 
 // IndicesClearCache clears all or specific caches for one or more indices.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/indices-clearcache.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/indices-clearcache.html.
 type IndicesClearCache func(o ...func(*IndicesClearCacheRequest)) (*Response, error)
 
 // IndicesClearCacheRequest configures the Indices Clear Cache API request.
-//
 type IndicesClearCacheRequest struct {
 	Index []string
 
@@ -51,7 +66,6 @@ type IndicesClearCacheRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r IndicesClearCacheRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -121,7 +135,10 @@ func (r IndicesClearCacheRequest) Do(ctx context.Context, transport Transport) (
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -162,7 +179,6 @@ func (r IndicesClearCacheRequest) Do(ctx context.Context, transport Transport) (
 }
 
 // WithContext sets the request context.
-//
 func (f IndicesClearCache) WithContext(v context.Context) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.ctx = v
@@ -170,7 +186,6 @@ func (f IndicesClearCache) WithContext(v context.Context) func(*IndicesClearCach
 }
 
 // WithIndex - a list of index name to limit the operation.
-//
 func (f IndicesClearCache) WithIndex(v ...string) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.Index = v
@@ -178,7 +193,6 @@ func (f IndicesClearCache) WithIndex(v ...string) func(*IndicesClearCacheRequest
 }
 
 // WithAllowNoIndices - whether to ignore if a wildcard indices expression resolves into no concrete indices. (this includes `_all` string or when no indices have been specified).
-//
 func (f IndicesClearCache) WithAllowNoIndices(v bool) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.AllowNoIndices = &v
@@ -186,7 +200,6 @@ func (f IndicesClearCache) WithAllowNoIndices(v bool) func(*IndicesClearCacheReq
 }
 
 // WithExpandWildcards - whether to expand wildcard expression to concrete indices that are open, closed or both..
-//
 func (f IndicesClearCache) WithExpandWildcards(v string) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.ExpandWildcards = v
@@ -194,7 +207,6 @@ func (f IndicesClearCache) WithExpandWildcards(v string) func(*IndicesClearCache
 }
 
 // WithFielddata - clear field data.
-//
 func (f IndicesClearCache) WithFielddata(v bool) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.Fielddata = &v
@@ -202,7 +214,6 @@ func (f IndicesClearCache) WithFielddata(v bool) func(*IndicesClearCacheRequest)
 }
 
 // WithFields - a list of fields to clear when using the `fielddata` parameter (default: all).
-//
 func (f IndicesClearCache) WithFields(v ...string) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.Fields = v
@@ -210,7 +221,6 @@ func (f IndicesClearCache) WithFields(v ...string) func(*IndicesClearCacheReques
 }
 
 // WithIgnoreUnavailable - whether specified concrete indices should be ignored when unavailable (missing or closed).
-//
 func (f IndicesClearCache) WithIgnoreUnavailable(v bool) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.IgnoreUnavailable = &v
@@ -218,7 +228,6 @@ func (f IndicesClearCache) WithIgnoreUnavailable(v bool) func(*IndicesClearCache
 }
 
 // WithQuery - clear query caches.
-//
 func (f IndicesClearCache) WithQuery(v bool) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.Query = &v
@@ -226,7 +235,6 @@ func (f IndicesClearCache) WithQuery(v bool) func(*IndicesClearCacheRequest) {
 }
 
 // WithRequest - clear request cache.
-//
 func (f IndicesClearCache) WithRequest(v bool) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.Request = &v
@@ -234,7 +242,6 @@ func (f IndicesClearCache) WithRequest(v bool) func(*IndicesClearCacheRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f IndicesClearCache) WithPretty() func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.Pretty = true
@@ -242,7 +249,6 @@ func (f IndicesClearCache) WithPretty() func(*IndicesClearCacheRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f IndicesClearCache) WithHuman() func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.Human = true
@@ -250,7 +256,6 @@ func (f IndicesClearCache) WithHuman() func(*IndicesClearCacheRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f IndicesClearCache) WithErrorTrace() func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.ErrorTrace = true
@@ -258,7 +263,6 @@ func (f IndicesClearCache) WithErrorTrace() func(*IndicesClearCacheRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f IndicesClearCache) WithFilterPath(v ...string) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		r.FilterPath = v
@@ -266,7 +270,6 @@ func (f IndicesClearCache) WithFilterPath(v ...string) func(*IndicesClearCacheRe
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f IndicesClearCache) WithHeader(h map[string]string) func(*IndicesClearCacheRequest) {
 	return func(r *IndicesClearCacheRequest) {
 		if r.Header == nil {
@@ -275,5 +278,15 @@ func (f IndicesClearCache) WithHeader(h map[string]string) func(*IndicesClearCac
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f IndicesClearCache) WithOpaqueID(s string) func(*IndicesClearCacheRequest) {
+	return func(r *IndicesClearCacheRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

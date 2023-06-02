@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -20,12 +37,12 @@ func newCCRGetAutoFollowPatternFunc(t Transport) CCRGetAutoFollowPattern {
 
 // ----- API Definition -------------------------------------------------------
 
-// CCRGetAutoFollowPattern - https://www.elastic.co/guide/en/elasticsearch/reference/current/ccr-get-auto-follow-pattern.html
+// CCRGetAutoFollowPattern - Gets configured auto-follow patterns. Returns the specified auto-follow pattern collection.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/ccr-get-auto-follow-pattern.html.
 type CCRGetAutoFollowPattern func(o ...func(*CCRGetAutoFollowPatternRequest)) (*Response, error)
 
 // CCRGetAutoFollowPatternRequest configures the CCR Get Auto Follow Pattern API request.
-//
 type CCRGetAutoFollowPatternRequest struct {
 	Name string
 
@@ -40,7 +57,6 @@ type CCRGetAutoFollowPatternRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r CCRGetAutoFollowPatternRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -78,7 +94,10 @@ func (r CCRGetAutoFollowPatternRequest) Do(ctx context.Context, transport Transp
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -119,7 +138,6 @@ func (r CCRGetAutoFollowPatternRequest) Do(ctx context.Context, transport Transp
 }
 
 // WithContext sets the request context.
-//
 func (f CCRGetAutoFollowPattern) WithContext(v context.Context) func(*CCRGetAutoFollowPatternRequest) {
 	return func(r *CCRGetAutoFollowPatternRequest) {
 		r.ctx = v
@@ -127,7 +145,6 @@ func (f CCRGetAutoFollowPattern) WithContext(v context.Context) func(*CCRGetAuto
 }
 
 // WithName - the name of the auto follow pattern..
-//
 func (f CCRGetAutoFollowPattern) WithName(v string) func(*CCRGetAutoFollowPatternRequest) {
 	return func(r *CCRGetAutoFollowPatternRequest) {
 		r.Name = v
@@ -135,7 +152,6 @@ func (f CCRGetAutoFollowPattern) WithName(v string) func(*CCRGetAutoFollowPatter
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f CCRGetAutoFollowPattern) WithPretty() func(*CCRGetAutoFollowPatternRequest) {
 	return func(r *CCRGetAutoFollowPatternRequest) {
 		r.Pretty = true
@@ -143,7 +159,6 @@ func (f CCRGetAutoFollowPattern) WithPretty() func(*CCRGetAutoFollowPatternReque
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f CCRGetAutoFollowPattern) WithHuman() func(*CCRGetAutoFollowPatternRequest) {
 	return func(r *CCRGetAutoFollowPatternRequest) {
 		r.Human = true
@@ -151,7 +166,6 @@ func (f CCRGetAutoFollowPattern) WithHuman() func(*CCRGetAutoFollowPatternReques
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f CCRGetAutoFollowPattern) WithErrorTrace() func(*CCRGetAutoFollowPatternRequest) {
 	return func(r *CCRGetAutoFollowPatternRequest) {
 		r.ErrorTrace = true
@@ -159,7 +173,6 @@ func (f CCRGetAutoFollowPattern) WithErrorTrace() func(*CCRGetAutoFollowPatternR
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f CCRGetAutoFollowPattern) WithFilterPath(v ...string) func(*CCRGetAutoFollowPatternRequest) {
 	return func(r *CCRGetAutoFollowPatternRequest) {
 		r.FilterPath = v
@@ -167,7 +180,6 @@ func (f CCRGetAutoFollowPattern) WithFilterPath(v ...string) func(*CCRGetAutoFol
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f CCRGetAutoFollowPattern) WithHeader(h map[string]string) func(*CCRGetAutoFollowPatternRequest) {
 	return func(r *CCRGetAutoFollowPatternRequest) {
 		if r.Header == nil {
@@ -176,5 +188,15 @@ func (f CCRGetAutoFollowPattern) WithHeader(h map[string]string) func(*CCRGetAut
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f CCRGetAutoFollowPattern) WithOpaqueID(s string) func(*CCRGetAutoFollowPatternRequest) {
+	return func(r *CCRGetAutoFollowPatternRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

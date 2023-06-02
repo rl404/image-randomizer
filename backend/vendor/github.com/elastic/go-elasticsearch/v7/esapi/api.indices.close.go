@@ -1,9 +1,27 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
@@ -24,12 +42,10 @@ func newIndicesCloseFunc(t Transport) IndicesClose {
 
 // IndicesClose closes an index.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/indices-open-close.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/indices-open-close.html.
 type IndicesClose func(index []string, o ...func(*IndicesCloseRequest)) (*Response, error)
 
 // IndicesCloseRequest configures the Indices Close API request.
-//
 type IndicesCloseRequest struct {
 	Index []string
 
@@ -51,7 +67,6 @@ type IndicesCloseRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r IndicesCloseRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -60,6 +75,10 @@ func (r IndicesCloseRequest) Do(ctx context.Context, transport Transport) (*Resp
 	)
 
 	method = "POST"
+
+	if len(r.Index) == 0 {
+		return nil, errors.New("index is required and cannot be nil or empty")
+	}
 
 	path.Grow(1 + len(strings.Join(r.Index, ",")) + 1 + len("_close"))
 	path.WriteString("/")
@@ -109,7 +128,10 @@ func (r IndicesCloseRequest) Do(ctx context.Context, transport Transport) (*Resp
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -150,7 +172,6 @@ func (r IndicesCloseRequest) Do(ctx context.Context, transport Transport) (*Resp
 }
 
 // WithContext sets the request context.
-//
 func (f IndicesClose) WithContext(v context.Context) func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.ctx = v
@@ -158,7 +179,6 @@ func (f IndicesClose) WithContext(v context.Context) func(*IndicesCloseRequest) 
 }
 
 // WithAllowNoIndices - whether to ignore if a wildcard indices expression resolves into no concrete indices. (this includes `_all` string or when no indices have been specified).
-//
 func (f IndicesClose) WithAllowNoIndices(v bool) func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.AllowNoIndices = &v
@@ -166,7 +186,6 @@ func (f IndicesClose) WithAllowNoIndices(v bool) func(*IndicesCloseRequest) {
 }
 
 // WithExpandWildcards - whether to expand wildcard expression to concrete indices that are open, closed or both..
-//
 func (f IndicesClose) WithExpandWildcards(v string) func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.ExpandWildcards = v
@@ -174,7 +193,6 @@ func (f IndicesClose) WithExpandWildcards(v string) func(*IndicesCloseRequest) {
 }
 
 // WithIgnoreUnavailable - whether specified concrete indices should be ignored when unavailable (missing or closed).
-//
 func (f IndicesClose) WithIgnoreUnavailable(v bool) func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.IgnoreUnavailable = &v
@@ -182,7 +200,6 @@ func (f IndicesClose) WithIgnoreUnavailable(v bool) func(*IndicesCloseRequest) {
 }
 
 // WithMasterTimeout - specify timeout for connection to master.
-//
 func (f IndicesClose) WithMasterTimeout(v time.Duration) func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.MasterTimeout = v
@@ -190,15 +207,13 @@ func (f IndicesClose) WithMasterTimeout(v time.Duration) func(*IndicesCloseReque
 }
 
 // WithTimeout - explicit operation timeout.
-//
 func (f IndicesClose) WithTimeout(v time.Duration) func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.Timeout = v
 	}
 }
 
-// WithWaitForActiveShards - sets the number of active shards to wait for before the operation returns..
-//
+// WithWaitForActiveShards - sets the number of active shards to wait for before the operation returns. set to `index-setting` to wait according to the index setting `index.write.wait_for_active_shards`, or `all` to wait for all shards, or an integer. defaults to `0`..
 func (f IndicesClose) WithWaitForActiveShards(v string) func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.WaitForActiveShards = v
@@ -206,7 +221,6 @@ func (f IndicesClose) WithWaitForActiveShards(v string) func(*IndicesCloseReques
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f IndicesClose) WithPretty() func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.Pretty = true
@@ -214,7 +228,6 @@ func (f IndicesClose) WithPretty() func(*IndicesCloseRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f IndicesClose) WithHuman() func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.Human = true
@@ -222,7 +235,6 @@ func (f IndicesClose) WithHuman() func(*IndicesCloseRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f IndicesClose) WithErrorTrace() func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.ErrorTrace = true
@@ -230,7 +242,6 @@ func (f IndicesClose) WithErrorTrace() func(*IndicesCloseRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f IndicesClose) WithFilterPath(v ...string) func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		r.FilterPath = v
@@ -238,7 +249,6 @@ func (f IndicesClose) WithFilterPath(v ...string) func(*IndicesCloseRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f IndicesClose) WithHeader(h map[string]string) func(*IndicesCloseRequest) {
 	return func(r *IndicesCloseRequest) {
 		if r.Header == nil {
@@ -247,5 +257,15 @@ func (f IndicesClose) WithHeader(h map[string]string) func(*IndicesCloseRequest)
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f IndicesClose) WithOpaqueID(s string) func(*IndicesCloseRequest) {
+	return func(r *IndicesCloseRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

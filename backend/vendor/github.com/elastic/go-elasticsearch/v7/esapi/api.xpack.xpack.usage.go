@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -21,12 +38,12 @@ func newXPackUsageFunc(t Transport) XPackUsage {
 
 // ----- API Definition -------------------------------------------------------
 
-// XPackUsage - Retrieve information about xpack features usage
+// XPackUsage - Retrieves usage information about the installed X-Pack features.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/usage-api.html.
 type XPackUsage func(o ...func(*XPackUsageRequest)) (*Response, error)
 
 // XPackUsageRequest configures the X Pack Usage API request.
-//
 type XPackUsageRequest struct {
 	MasterTimeout time.Duration
 
@@ -41,7 +58,6 @@ type XPackUsageRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r XPackUsageRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -76,7 +92,10 @@ func (r XPackUsageRequest) Do(ctx context.Context, transport Transport) (*Respon
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -117,7 +136,6 @@ func (r XPackUsageRequest) Do(ctx context.Context, transport Transport) (*Respon
 }
 
 // WithContext sets the request context.
-//
 func (f XPackUsage) WithContext(v context.Context) func(*XPackUsageRequest) {
 	return func(r *XPackUsageRequest) {
 		r.ctx = v
@@ -125,7 +143,6 @@ func (f XPackUsage) WithContext(v context.Context) func(*XPackUsageRequest) {
 }
 
 // WithMasterTimeout - specify timeout for watch write operation.
-//
 func (f XPackUsage) WithMasterTimeout(v time.Duration) func(*XPackUsageRequest) {
 	return func(r *XPackUsageRequest) {
 		r.MasterTimeout = v
@@ -133,7 +150,6 @@ func (f XPackUsage) WithMasterTimeout(v time.Duration) func(*XPackUsageRequest) 
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f XPackUsage) WithPretty() func(*XPackUsageRequest) {
 	return func(r *XPackUsageRequest) {
 		r.Pretty = true
@@ -141,7 +157,6 @@ func (f XPackUsage) WithPretty() func(*XPackUsageRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f XPackUsage) WithHuman() func(*XPackUsageRequest) {
 	return func(r *XPackUsageRequest) {
 		r.Human = true
@@ -149,7 +164,6 @@ func (f XPackUsage) WithHuman() func(*XPackUsageRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f XPackUsage) WithErrorTrace() func(*XPackUsageRequest) {
 	return func(r *XPackUsageRequest) {
 		r.ErrorTrace = true
@@ -157,7 +171,6 @@ func (f XPackUsage) WithErrorTrace() func(*XPackUsageRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f XPackUsage) WithFilterPath(v ...string) func(*XPackUsageRequest) {
 	return func(r *XPackUsageRequest) {
 		r.FilterPath = v
@@ -165,7 +178,6 @@ func (f XPackUsage) WithFilterPath(v ...string) func(*XPackUsageRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f XPackUsage) WithHeader(h map[string]string) func(*XPackUsageRequest) {
 	return func(r *XPackUsageRequest) {
 		if r.Header == nil {
@@ -174,5 +186,15 @@ func (f XPackUsage) WithHeader(h map[string]string) func(*XPackUsageRequest) {
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f XPackUsage) WithOpaqueID(s string) func(*XPackUsageRequest) {
+	return func(r *XPackUsageRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

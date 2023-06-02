@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -20,12 +37,12 @@ func newSecurityGetUserPrivilegesFunc(t Transport) SecurityGetUserPrivileges {
 
 // ----- API Definition -------------------------------------------------------
 
-// SecurityGetUserPrivileges - https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-privileges.html
+// SecurityGetUserPrivileges - Retrieves security privileges for the logged in user.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-user-privileges.html.
 type SecurityGetUserPrivileges func(o ...func(*SecurityGetUserPrivilegesRequest)) (*Response, error)
 
 // SecurityGetUserPrivilegesRequest configures the Security Get User Privileges API request.
-//
 type SecurityGetUserPrivilegesRequest struct {
 	Pretty     bool
 	Human      bool
@@ -38,7 +55,6 @@ type SecurityGetUserPrivilegesRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r SecurityGetUserPrivilegesRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -69,7 +85,10 @@ func (r SecurityGetUserPrivilegesRequest) Do(ctx context.Context, transport Tran
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -110,7 +129,6 @@ func (r SecurityGetUserPrivilegesRequest) Do(ctx context.Context, transport Tran
 }
 
 // WithContext sets the request context.
-//
 func (f SecurityGetUserPrivileges) WithContext(v context.Context) func(*SecurityGetUserPrivilegesRequest) {
 	return func(r *SecurityGetUserPrivilegesRequest) {
 		r.ctx = v
@@ -118,7 +136,6 @@ func (f SecurityGetUserPrivileges) WithContext(v context.Context) func(*Security
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f SecurityGetUserPrivileges) WithPretty() func(*SecurityGetUserPrivilegesRequest) {
 	return func(r *SecurityGetUserPrivilegesRequest) {
 		r.Pretty = true
@@ -126,7 +143,6 @@ func (f SecurityGetUserPrivileges) WithPretty() func(*SecurityGetUserPrivilegesR
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f SecurityGetUserPrivileges) WithHuman() func(*SecurityGetUserPrivilegesRequest) {
 	return func(r *SecurityGetUserPrivilegesRequest) {
 		r.Human = true
@@ -134,7 +150,6 @@ func (f SecurityGetUserPrivileges) WithHuman() func(*SecurityGetUserPrivilegesRe
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f SecurityGetUserPrivileges) WithErrorTrace() func(*SecurityGetUserPrivilegesRequest) {
 	return func(r *SecurityGetUserPrivilegesRequest) {
 		r.ErrorTrace = true
@@ -142,7 +157,6 @@ func (f SecurityGetUserPrivileges) WithErrorTrace() func(*SecurityGetUserPrivile
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f SecurityGetUserPrivileges) WithFilterPath(v ...string) func(*SecurityGetUserPrivilegesRequest) {
 	return func(r *SecurityGetUserPrivilegesRequest) {
 		r.FilterPath = v
@@ -150,7 +164,6 @@ func (f SecurityGetUserPrivileges) WithFilterPath(v ...string) func(*SecurityGet
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f SecurityGetUserPrivileges) WithHeader(h map[string]string) func(*SecurityGetUserPrivilegesRequest) {
 	return func(r *SecurityGetUserPrivilegesRequest) {
 		if r.Header == nil {
@@ -159,5 +172,15 @@ func (f SecurityGetUserPrivileges) WithHeader(h map[string]string) func(*Securit
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f SecurityGetUserPrivileges) WithOpaqueID(s string) func(*SecurityGetUserPrivilegesRequest) {
+	return func(r *SecurityGetUserPrivilegesRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

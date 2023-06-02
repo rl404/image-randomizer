@@ -1,9 +1,27 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"strings"
 )
@@ -20,12 +38,12 @@ func newCCRFollowStatsFunc(t Transport) CCRFollowStats {
 
 // ----- API Definition -------------------------------------------------------
 
-// CCRFollowStats - https://www.elastic.co/guide/en/elasticsearch/reference/current/ccr-get-follow-stats.html
+// CCRFollowStats - Retrieves follower stats. return shard-level stats about the following tasks associated with each shard for the specified indices.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/ccr-get-follow-stats.html.
 type CCRFollowStats func(index []string, o ...func(*CCRFollowStatsRequest)) (*Response, error)
 
 // CCRFollowStatsRequest configures the CCR Follow Stats API request.
-//
 type CCRFollowStatsRequest struct {
 	Index []string
 
@@ -40,7 +58,6 @@ type CCRFollowStatsRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r CCRFollowStatsRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -49,6 +66,10 @@ func (r CCRFollowStatsRequest) Do(ctx context.Context, transport Transport) (*Re
 	)
 
 	method = "GET"
+
+	if len(r.Index) == 0 {
+		return nil, errors.New("index is required and cannot be nil or empty")
+	}
 
 	path.Grow(1 + len(strings.Join(r.Index, ",")) + 1 + len("_ccr") + 1 + len("stats"))
 	path.WriteString("/")
@@ -76,7 +97,10 @@ func (r CCRFollowStatsRequest) Do(ctx context.Context, transport Transport) (*Re
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -117,7 +141,6 @@ func (r CCRFollowStatsRequest) Do(ctx context.Context, transport Transport) (*Re
 }
 
 // WithContext sets the request context.
-//
 func (f CCRFollowStats) WithContext(v context.Context) func(*CCRFollowStatsRequest) {
 	return func(r *CCRFollowStatsRequest) {
 		r.ctx = v
@@ -125,7 +148,6 @@ func (f CCRFollowStats) WithContext(v context.Context) func(*CCRFollowStatsReque
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f CCRFollowStats) WithPretty() func(*CCRFollowStatsRequest) {
 	return func(r *CCRFollowStatsRequest) {
 		r.Pretty = true
@@ -133,7 +155,6 @@ func (f CCRFollowStats) WithPretty() func(*CCRFollowStatsRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f CCRFollowStats) WithHuman() func(*CCRFollowStatsRequest) {
 	return func(r *CCRFollowStatsRequest) {
 		r.Human = true
@@ -141,7 +162,6 @@ func (f CCRFollowStats) WithHuman() func(*CCRFollowStatsRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f CCRFollowStats) WithErrorTrace() func(*CCRFollowStatsRequest) {
 	return func(r *CCRFollowStatsRequest) {
 		r.ErrorTrace = true
@@ -149,7 +169,6 @@ func (f CCRFollowStats) WithErrorTrace() func(*CCRFollowStatsRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f CCRFollowStats) WithFilterPath(v ...string) func(*CCRFollowStatsRequest) {
 	return func(r *CCRFollowStatsRequest) {
 		r.FilterPath = v
@@ -157,7 +176,6 @@ func (f CCRFollowStats) WithFilterPath(v ...string) func(*CCRFollowStatsRequest)
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f CCRFollowStats) WithHeader(h map[string]string) func(*CCRFollowStatsRequest) {
 	return func(r *CCRFollowStatsRequest) {
 		if r.Header == nil {
@@ -166,5 +184,15 @@ func (f CCRFollowStats) WithHeader(h map[string]string) func(*CCRFollowStatsRequ
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f CCRFollowStats) WithOpaqueID(s string) func(*CCRFollowStatsRequest) {
+	return func(r *CCRFollowStatsRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

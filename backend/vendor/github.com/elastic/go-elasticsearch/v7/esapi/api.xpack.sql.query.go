@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -21,12 +38,12 @@ func newSQLQueryFunc(t Transport) SQLQuery {
 
 // ----- API Definition -------------------------------------------------------
 
-// SQLQuery - Execute SQL
+// SQLQuery - Executes a SQL request
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-search-api.html.
 type SQLQuery func(body io.Reader, o ...func(*SQLQueryRequest)) (*Response, error)
 
 // SQLQueryRequest configures the SQL Query API request.
-//
 type SQLQueryRequest struct {
 	Body io.Reader
 
@@ -43,7 +60,6 @@ type SQLQueryRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r SQLQueryRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -78,7 +94,10 @@ func (r SQLQueryRequest) Do(ctx context.Context, transport Transport) (*Response
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -86,10 +105,6 @@ func (r SQLQueryRequest) Do(ctx context.Context, transport Transport) (*Response
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -102,6 +117,10 @@ func (r SQLQueryRequest) Do(ctx context.Context, transport Transport) (*Response
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -123,7 +142,6 @@ func (r SQLQueryRequest) Do(ctx context.Context, transport Transport) (*Response
 }
 
 // WithContext sets the request context.
-//
 func (f SQLQuery) WithContext(v context.Context) func(*SQLQueryRequest) {
 	return func(r *SQLQueryRequest) {
 		r.ctx = v
@@ -131,7 +149,6 @@ func (f SQLQuery) WithContext(v context.Context) func(*SQLQueryRequest) {
 }
 
 // WithFormat - a short version of the accept header, e.g. json, yaml.
-//
 func (f SQLQuery) WithFormat(v string) func(*SQLQueryRequest) {
 	return func(r *SQLQueryRequest) {
 		r.Format = v
@@ -139,7 +156,6 @@ func (f SQLQuery) WithFormat(v string) func(*SQLQueryRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f SQLQuery) WithPretty() func(*SQLQueryRequest) {
 	return func(r *SQLQueryRequest) {
 		r.Pretty = true
@@ -147,7 +163,6 @@ func (f SQLQuery) WithPretty() func(*SQLQueryRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f SQLQuery) WithHuman() func(*SQLQueryRequest) {
 	return func(r *SQLQueryRequest) {
 		r.Human = true
@@ -155,7 +170,6 @@ func (f SQLQuery) WithHuman() func(*SQLQueryRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f SQLQuery) WithErrorTrace() func(*SQLQueryRequest) {
 	return func(r *SQLQueryRequest) {
 		r.ErrorTrace = true
@@ -163,7 +177,6 @@ func (f SQLQuery) WithErrorTrace() func(*SQLQueryRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f SQLQuery) WithFilterPath(v ...string) func(*SQLQueryRequest) {
 	return func(r *SQLQueryRequest) {
 		r.FilterPath = v
@@ -171,7 +184,6 @@ func (f SQLQuery) WithFilterPath(v ...string) func(*SQLQueryRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f SQLQuery) WithHeader(h map[string]string) func(*SQLQueryRequest) {
 	return func(r *SQLQueryRequest) {
 		if r.Header == nil {
@@ -180,5 +192,15 @@ func (f SQLQuery) WithHeader(h map[string]string) func(*SQLQueryRequest) {
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f SQLQuery) WithOpaqueID(s string) func(*SQLQueryRequest) {
+	return func(r *SQLQueryRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

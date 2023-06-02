@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -20,12 +37,12 @@ func newWatcherGetWatchFunc(t Transport) WatcherGetWatch {
 
 // ----- API Definition -------------------------------------------------------
 
-// WatcherGetWatch - http://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api-get-watch.html
+// WatcherGetWatch - Retrieves a watch by its ID.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api-get-watch.html.
 type WatcherGetWatch func(id string, o ...func(*WatcherGetWatchRequest)) (*Response, error)
 
 // WatcherGetWatchRequest configures the Watcher Get Watch API request.
-//
 type WatcherGetWatchRequest struct {
 	WatchID string
 
@@ -40,7 +57,6 @@ type WatcherGetWatchRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r WatcherGetWatchRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -76,7 +92,10 @@ func (r WatcherGetWatchRequest) Do(ctx context.Context, transport Transport) (*R
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -117,7 +136,6 @@ func (r WatcherGetWatchRequest) Do(ctx context.Context, transport Transport) (*R
 }
 
 // WithContext sets the request context.
-//
 func (f WatcherGetWatch) WithContext(v context.Context) func(*WatcherGetWatchRequest) {
 	return func(r *WatcherGetWatchRequest) {
 		r.ctx = v
@@ -125,7 +143,6 @@ func (f WatcherGetWatch) WithContext(v context.Context) func(*WatcherGetWatchReq
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f WatcherGetWatch) WithPretty() func(*WatcherGetWatchRequest) {
 	return func(r *WatcherGetWatchRequest) {
 		r.Pretty = true
@@ -133,7 +150,6 @@ func (f WatcherGetWatch) WithPretty() func(*WatcherGetWatchRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f WatcherGetWatch) WithHuman() func(*WatcherGetWatchRequest) {
 	return func(r *WatcherGetWatchRequest) {
 		r.Human = true
@@ -141,7 +157,6 @@ func (f WatcherGetWatch) WithHuman() func(*WatcherGetWatchRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f WatcherGetWatch) WithErrorTrace() func(*WatcherGetWatchRequest) {
 	return func(r *WatcherGetWatchRequest) {
 		r.ErrorTrace = true
@@ -149,7 +164,6 @@ func (f WatcherGetWatch) WithErrorTrace() func(*WatcherGetWatchRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f WatcherGetWatch) WithFilterPath(v ...string) func(*WatcherGetWatchRequest) {
 	return func(r *WatcherGetWatchRequest) {
 		r.FilterPath = v
@@ -157,7 +171,6 @@ func (f WatcherGetWatch) WithFilterPath(v ...string) func(*WatcherGetWatchReques
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f WatcherGetWatch) WithHeader(h map[string]string) func(*WatcherGetWatchRequest) {
 	return func(r *WatcherGetWatchRequest) {
 		if r.Header == nil {
@@ -166,5 +179,15 @@ func (f WatcherGetWatch) WithHeader(h map[string]string) func(*WatcherGetWatchRe
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f WatcherGetWatch) WithOpaqueID(s string) func(*WatcherGetWatchRequest) {
+	return func(r *WatcherGetWatchRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

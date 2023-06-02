@@ -1,10 +1,28 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -20,15 +38,16 @@ func newSecurityGetAPIKeyFunc(t Transport) SecurityGetAPIKey {
 
 // ----- API Definition -------------------------------------------------------
 
-// SecurityGetAPIKey - https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-api-key.html
+// SecurityGetAPIKey - Retrieves information for one or more API keys.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-api-key.html.
 type SecurityGetAPIKey func(o ...func(*SecurityGetAPIKeyRequest)) (*Response, error)
 
 // SecurityGetAPIKeyRequest configures the Security GetAPI Key API request.
-//
 type SecurityGetAPIKeyRequest struct {
 	ID        string
 	Name      string
+	Owner     *bool
 	RealmName string
 	Username  string
 
@@ -43,7 +62,6 @@ type SecurityGetAPIKeyRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r SecurityGetAPIKeyRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -64,6 +82,10 @@ func (r SecurityGetAPIKeyRequest) Do(ctx context.Context, transport Transport) (
 
 	if r.Name != "" {
 		params["name"] = r.Name
+	}
+
+	if r.Owner != nil {
+		params["owner"] = strconv.FormatBool(*r.Owner)
 	}
 
 	if r.RealmName != "" {
@@ -90,7 +112,10 @@ func (r SecurityGetAPIKeyRequest) Do(ctx context.Context, transport Transport) (
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -131,7 +156,6 @@ func (r SecurityGetAPIKeyRequest) Do(ctx context.Context, transport Transport) (
 }
 
 // WithContext sets the request context.
-//
 func (f SecurityGetAPIKey) WithContext(v context.Context) func(*SecurityGetAPIKeyRequest) {
 	return func(r *SecurityGetAPIKeyRequest) {
 		r.ctx = v
@@ -139,7 +163,6 @@ func (f SecurityGetAPIKey) WithContext(v context.Context) func(*SecurityGetAPIKe
 }
 
 // WithID - api key ID of the api key to be retrieved.
-//
 func (f SecurityGetAPIKey) WithID(v string) func(*SecurityGetAPIKeyRequest) {
 	return func(r *SecurityGetAPIKeyRequest) {
 		r.ID = v
@@ -147,15 +170,20 @@ func (f SecurityGetAPIKey) WithID(v string) func(*SecurityGetAPIKeyRequest) {
 }
 
 // WithName - api key name of the api key to be retrieved.
-//
 func (f SecurityGetAPIKey) WithName(v string) func(*SecurityGetAPIKeyRequest) {
 	return func(r *SecurityGetAPIKeyRequest) {
 		r.Name = v
 	}
 }
 
+// WithOwner - flag to query api keys owned by the currently authenticated user.
+func (f SecurityGetAPIKey) WithOwner(v bool) func(*SecurityGetAPIKeyRequest) {
+	return func(r *SecurityGetAPIKeyRequest) {
+		r.Owner = &v
+	}
+}
+
 // WithRealmName - realm name of the user who created this api key to be retrieved.
-//
 func (f SecurityGetAPIKey) WithRealmName(v string) func(*SecurityGetAPIKeyRequest) {
 	return func(r *SecurityGetAPIKeyRequest) {
 		r.RealmName = v
@@ -163,7 +191,6 @@ func (f SecurityGetAPIKey) WithRealmName(v string) func(*SecurityGetAPIKeyReques
 }
 
 // WithUsername - user name of the user who created this api key to be retrieved.
-//
 func (f SecurityGetAPIKey) WithUsername(v string) func(*SecurityGetAPIKeyRequest) {
 	return func(r *SecurityGetAPIKeyRequest) {
 		r.Username = v
@@ -171,7 +198,6 @@ func (f SecurityGetAPIKey) WithUsername(v string) func(*SecurityGetAPIKeyRequest
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f SecurityGetAPIKey) WithPretty() func(*SecurityGetAPIKeyRequest) {
 	return func(r *SecurityGetAPIKeyRequest) {
 		r.Pretty = true
@@ -179,7 +205,6 @@ func (f SecurityGetAPIKey) WithPretty() func(*SecurityGetAPIKeyRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f SecurityGetAPIKey) WithHuman() func(*SecurityGetAPIKeyRequest) {
 	return func(r *SecurityGetAPIKeyRequest) {
 		r.Human = true
@@ -187,7 +212,6 @@ func (f SecurityGetAPIKey) WithHuman() func(*SecurityGetAPIKeyRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f SecurityGetAPIKey) WithErrorTrace() func(*SecurityGetAPIKeyRequest) {
 	return func(r *SecurityGetAPIKeyRequest) {
 		r.ErrorTrace = true
@@ -195,7 +219,6 @@ func (f SecurityGetAPIKey) WithErrorTrace() func(*SecurityGetAPIKeyRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f SecurityGetAPIKey) WithFilterPath(v ...string) func(*SecurityGetAPIKeyRequest) {
 	return func(r *SecurityGetAPIKeyRequest) {
 		r.FilterPath = v
@@ -203,7 +226,6 @@ func (f SecurityGetAPIKey) WithFilterPath(v ...string) func(*SecurityGetAPIKeyRe
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f SecurityGetAPIKey) WithHeader(h map[string]string) func(*SecurityGetAPIKeyRequest) {
 	return func(r *SecurityGetAPIKeyRequest) {
 		if r.Header == nil {
@@ -212,5 +234,15 @@ func (f SecurityGetAPIKey) WithHeader(h map[string]string) func(*SecurityGetAPIK
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f SecurityGetAPIKey) WithOpaqueID(s string) func(*SecurityGetAPIKeyRequest) {
+	return func(r *SecurityGetAPIKeyRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

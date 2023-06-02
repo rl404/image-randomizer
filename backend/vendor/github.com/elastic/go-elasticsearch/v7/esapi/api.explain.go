@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -24,12 +41,10 @@ func newExplainFunc(t Transport) Explain {
 
 // Explain returns information about why a specific matches (or doesn't match) a query.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/search-explain.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/search-explain.html.
 type Explain func(index string, id string, o ...func(*ExplainRequest)) (*Response, error)
 
 // ExplainRequest configures the Explain API request.
-//
 type ExplainRequest struct {
 	Index        string
 	DocumentType string
@@ -61,7 +76,6 @@ type ExplainRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r ExplainRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -69,7 +83,7 @@ func (r ExplainRequest) Do(ctx context.Context, transport Transport) (*Response,
 		params map[string]string
 	)
 
-	method = "GET"
+	method = "POST"
 
 	if r.DocumentType == "" {
 		r.DocumentType = "_doc"
@@ -153,7 +167,10 @@ func (r ExplainRequest) Do(ctx context.Context, transport Transport) (*Response,
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -161,10 +178,6 @@ func (r ExplainRequest) Do(ctx context.Context, transport Transport) (*Response,
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -177,6 +190,10 @@ func (r ExplainRequest) Do(ctx context.Context, transport Transport) (*Response,
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -198,7 +215,6 @@ func (r ExplainRequest) Do(ctx context.Context, transport Transport) (*Response,
 }
 
 // WithContext sets the request context.
-//
 func (f Explain) WithContext(v context.Context) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.ctx = v
@@ -206,7 +222,6 @@ func (f Explain) WithContext(v context.Context) func(*ExplainRequest) {
 }
 
 // WithBody - The query definition using the Query DSL.
-//
 func (f Explain) WithBody(v io.Reader) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.Body = v
@@ -214,7 +229,6 @@ func (f Explain) WithBody(v io.Reader) func(*ExplainRequest) {
 }
 
 // WithDocumentType - the type of the document.
-//
 func (f Explain) WithDocumentType(v string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.DocumentType = v
@@ -222,7 +236,6 @@ func (f Explain) WithDocumentType(v string) func(*ExplainRequest) {
 }
 
 // WithAnalyzer - the analyzer for the query string query.
-//
 func (f Explain) WithAnalyzer(v string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.Analyzer = v
@@ -230,7 +243,6 @@ func (f Explain) WithAnalyzer(v string) func(*ExplainRequest) {
 }
 
 // WithAnalyzeWildcard - specify whether wildcards and prefix queries in the query string query should be analyzed (default: false).
-//
 func (f Explain) WithAnalyzeWildcard(v bool) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.AnalyzeWildcard = &v
@@ -238,7 +250,6 @@ func (f Explain) WithAnalyzeWildcard(v bool) func(*ExplainRequest) {
 }
 
 // WithDefaultOperator - the default operator for query string query (and or or).
-//
 func (f Explain) WithDefaultOperator(v string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.DefaultOperator = v
@@ -246,7 +257,6 @@ func (f Explain) WithDefaultOperator(v string) func(*ExplainRequest) {
 }
 
 // WithDf - the default field for query string query (default: _all).
-//
 func (f Explain) WithDf(v string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.Df = v
@@ -254,7 +264,6 @@ func (f Explain) WithDf(v string) func(*ExplainRequest) {
 }
 
 // WithLenient - specify whether format-based query failures (such as providing text to a numeric field) should be ignored.
-//
 func (f Explain) WithLenient(v bool) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.Lenient = &v
@@ -262,7 +271,6 @@ func (f Explain) WithLenient(v bool) func(*ExplainRequest) {
 }
 
 // WithPreference - specify the node or shard the operation should be performed on (default: random).
-//
 func (f Explain) WithPreference(v string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.Preference = v
@@ -270,7 +278,6 @@ func (f Explain) WithPreference(v string) func(*ExplainRequest) {
 }
 
 // WithQuery - query in the lucene query string syntax.
-//
 func (f Explain) WithQuery(v string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.Query = v
@@ -278,7 +285,6 @@ func (f Explain) WithQuery(v string) func(*ExplainRequest) {
 }
 
 // WithRouting - specific routing value.
-//
 func (f Explain) WithRouting(v string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.Routing = v
@@ -286,7 +292,6 @@ func (f Explain) WithRouting(v string) func(*ExplainRequest) {
 }
 
 // WithSource - true or false to return the _source field or not, or a list of fields to return.
-//
 func (f Explain) WithSource(v ...string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.Source = v
@@ -294,7 +299,6 @@ func (f Explain) WithSource(v ...string) func(*ExplainRequest) {
 }
 
 // WithSourceExcludes - a list of fields to exclude from the returned _source field.
-//
 func (f Explain) WithSourceExcludes(v ...string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.SourceExcludes = v
@@ -302,7 +306,6 @@ func (f Explain) WithSourceExcludes(v ...string) func(*ExplainRequest) {
 }
 
 // WithSourceIncludes - a list of fields to extract and return from the _source field.
-//
 func (f Explain) WithSourceIncludes(v ...string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.SourceIncludes = v
@@ -310,7 +313,6 @@ func (f Explain) WithSourceIncludes(v ...string) func(*ExplainRequest) {
 }
 
 // WithStoredFields - a list of stored fields to return in the response.
-//
 func (f Explain) WithStoredFields(v ...string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.StoredFields = v
@@ -318,7 +320,6 @@ func (f Explain) WithStoredFields(v ...string) func(*ExplainRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f Explain) WithPretty() func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.Pretty = true
@@ -326,7 +327,6 @@ func (f Explain) WithPretty() func(*ExplainRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f Explain) WithHuman() func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.Human = true
@@ -334,7 +334,6 @@ func (f Explain) WithHuman() func(*ExplainRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f Explain) WithErrorTrace() func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.ErrorTrace = true
@@ -342,7 +341,6 @@ func (f Explain) WithErrorTrace() func(*ExplainRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f Explain) WithFilterPath(v ...string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		r.FilterPath = v
@@ -350,7 +348,6 @@ func (f Explain) WithFilterPath(v ...string) func(*ExplainRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f Explain) WithHeader(h map[string]string) func(*ExplainRequest) {
 	return func(r *ExplainRequest) {
 		if r.Header == nil {
@@ -359,5 +356,15 @@ func (f Explain) WithHeader(h map[string]string) func(*ExplainRequest) {
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f Explain) WithOpaqueID(s string) func(*ExplainRequest) {
+	return func(r *ExplainRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

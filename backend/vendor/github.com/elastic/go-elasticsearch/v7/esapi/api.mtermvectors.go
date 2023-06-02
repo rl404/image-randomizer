@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -24,12 +41,10 @@ func newMtermvectorsFunc(t Transport) Mtermvectors {
 
 // Mtermvectors returns multiple termvectors in one request.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/docs-multi-termvectors.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-multi-termvectors.html.
 type Mtermvectors func(o ...func(*MtermvectorsRequest)) (*Response, error)
 
 // MtermvectorsRequest configures the Mtermvectors API request.
-//
 type MtermvectorsRequest struct {
 	Index        string
 	DocumentType string
@@ -60,7 +75,6 @@ type MtermvectorsRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r MtermvectorsRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -68,7 +82,7 @@ func (r MtermvectorsRequest) Do(ctx context.Context, transport Transport) (*Resp
 		params map[string]string
 	)
 
-	method = "GET"
+	method = "POST"
 
 	path.Grow(1 + len(r.Index) + 1 + len(r.DocumentType) + 1 + len("_mtermvectors"))
 	if r.Index != "" {
@@ -148,7 +162,10 @@ func (r MtermvectorsRequest) Do(ctx context.Context, transport Transport) (*Resp
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -156,10 +173,6 @@ func (r MtermvectorsRequest) Do(ctx context.Context, transport Transport) (*Resp
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -172,6 +185,10 @@ func (r MtermvectorsRequest) Do(ctx context.Context, transport Transport) (*Resp
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -193,7 +210,6 @@ func (r MtermvectorsRequest) Do(ctx context.Context, transport Transport) (*Resp
 }
 
 // WithContext sets the request context.
-//
 func (f Mtermvectors) WithContext(v context.Context) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.ctx = v
@@ -201,7 +217,6 @@ func (f Mtermvectors) WithContext(v context.Context) func(*MtermvectorsRequest) 
 }
 
 // WithBody - Define ids, documents, parameters or a list of parameters per document here. You must at least provide a list of document ids. See documentation..
-//
 func (f Mtermvectors) WithBody(v io.Reader) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Body = v
@@ -209,7 +224,6 @@ func (f Mtermvectors) WithBody(v io.Reader) func(*MtermvectorsRequest) {
 }
 
 // WithIndex - the index in which the document resides..
-//
 func (f Mtermvectors) WithIndex(v string) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Index = v
@@ -217,7 +231,6 @@ func (f Mtermvectors) WithIndex(v string) func(*MtermvectorsRequest) {
 }
 
 // WithDocumentType - the type of the document..
-//
 func (f Mtermvectors) WithDocumentType(v string) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.DocumentType = v
@@ -225,7 +238,6 @@ func (f Mtermvectors) WithDocumentType(v string) func(*MtermvectorsRequest) {
 }
 
 // WithFields - a list of fields to return. applies to all returned documents unless otherwise specified in body "params" or "docs"..
-//
 func (f Mtermvectors) WithFields(v ...string) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Fields = v
@@ -233,7 +245,6 @@ func (f Mtermvectors) WithFields(v ...string) func(*MtermvectorsRequest) {
 }
 
 // WithFieldStatistics - specifies if document count, sum of document frequencies and sum of total term frequencies should be returned. applies to all returned documents unless otherwise specified in body "params" or "docs"..
-//
 func (f Mtermvectors) WithFieldStatistics(v bool) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.FieldStatistics = &v
@@ -241,7 +252,6 @@ func (f Mtermvectors) WithFieldStatistics(v bool) func(*MtermvectorsRequest) {
 }
 
 // WithIds - a list of documents ids. you must define ids as parameter or set "ids" or "docs" in the request body.
-//
 func (f Mtermvectors) WithIds(v ...string) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Ids = v
@@ -249,7 +259,6 @@ func (f Mtermvectors) WithIds(v ...string) func(*MtermvectorsRequest) {
 }
 
 // WithOffsets - specifies if term offsets should be returned. applies to all returned documents unless otherwise specified in body "params" or "docs"..
-//
 func (f Mtermvectors) WithOffsets(v bool) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Offsets = &v
@@ -257,7 +266,6 @@ func (f Mtermvectors) WithOffsets(v bool) func(*MtermvectorsRequest) {
 }
 
 // WithPayloads - specifies if term payloads should be returned. applies to all returned documents unless otherwise specified in body "params" or "docs"..
-//
 func (f Mtermvectors) WithPayloads(v bool) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Payloads = &v
@@ -265,7 +273,6 @@ func (f Mtermvectors) WithPayloads(v bool) func(*MtermvectorsRequest) {
 }
 
 // WithPositions - specifies if term positions should be returned. applies to all returned documents unless otherwise specified in body "params" or "docs"..
-//
 func (f Mtermvectors) WithPositions(v bool) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Positions = &v
@@ -273,7 +280,6 @@ func (f Mtermvectors) WithPositions(v bool) func(*MtermvectorsRequest) {
 }
 
 // WithPreference - specify the node or shard the operation should be performed on (default: random) .applies to all returned documents unless otherwise specified in body "params" or "docs"..
-//
 func (f Mtermvectors) WithPreference(v string) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Preference = v
@@ -281,7 +287,6 @@ func (f Mtermvectors) WithPreference(v string) func(*MtermvectorsRequest) {
 }
 
 // WithRealtime - specifies if requests are real-time as opposed to near-real-time (default: true)..
-//
 func (f Mtermvectors) WithRealtime(v bool) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Realtime = &v
@@ -289,7 +294,6 @@ func (f Mtermvectors) WithRealtime(v bool) func(*MtermvectorsRequest) {
 }
 
 // WithRouting - specific routing value. applies to all returned documents unless otherwise specified in body "params" or "docs"..
-//
 func (f Mtermvectors) WithRouting(v string) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Routing = v
@@ -297,7 +301,6 @@ func (f Mtermvectors) WithRouting(v string) func(*MtermvectorsRequest) {
 }
 
 // WithTermStatistics - specifies if total term frequency and document frequency should be returned. applies to all returned documents unless otherwise specified in body "params" or "docs"..
-//
 func (f Mtermvectors) WithTermStatistics(v bool) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.TermStatistics = &v
@@ -305,7 +308,6 @@ func (f Mtermvectors) WithTermStatistics(v bool) func(*MtermvectorsRequest) {
 }
 
 // WithVersion - explicit version number for concurrency control.
-//
 func (f Mtermvectors) WithVersion(v int) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Version = &v
@@ -313,7 +315,6 @@ func (f Mtermvectors) WithVersion(v int) func(*MtermvectorsRequest) {
 }
 
 // WithVersionType - specific version type.
-//
 func (f Mtermvectors) WithVersionType(v string) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.VersionType = v
@@ -321,7 +322,6 @@ func (f Mtermvectors) WithVersionType(v string) func(*MtermvectorsRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f Mtermvectors) WithPretty() func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Pretty = true
@@ -329,7 +329,6 @@ func (f Mtermvectors) WithPretty() func(*MtermvectorsRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f Mtermvectors) WithHuman() func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.Human = true
@@ -337,7 +336,6 @@ func (f Mtermvectors) WithHuman() func(*MtermvectorsRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f Mtermvectors) WithErrorTrace() func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.ErrorTrace = true
@@ -345,7 +343,6 @@ func (f Mtermvectors) WithErrorTrace() func(*MtermvectorsRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f Mtermvectors) WithFilterPath(v ...string) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		r.FilterPath = v
@@ -353,7 +350,6 @@ func (f Mtermvectors) WithFilterPath(v ...string) func(*MtermvectorsRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f Mtermvectors) WithHeader(h map[string]string) func(*MtermvectorsRequest) {
 	return func(r *MtermvectorsRequest) {
 		if r.Header == nil {
@@ -362,5 +358,15 @@ func (f Mtermvectors) WithHeader(h map[string]string) func(*MtermvectorsRequest)
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f Mtermvectors) WithOpaqueID(s string) func(*MtermvectorsRequest) {
+	return func(r *MtermvectorsRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

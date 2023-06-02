@@ -1,9 +1,28 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -27,11 +46,9 @@ func newUpdateByQueryFunc(t Transport) UpdateByQuery {
 // for example to pick up a mapping change.
 //
 // See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-update-by-query.html.
-//
 type UpdateByQuery func(index []string, o ...func(*UpdateByQueryRequest)) (*Response, error)
 
 // UpdateByQueryRequest configures the Update By Query API request.
-//
 type UpdateByQueryRequest struct {
 	Index        []string
 	DocumentType []string
@@ -61,11 +78,8 @@ type UpdateByQueryRequest struct {
 	SearchTimeout       time.Duration
 	SearchType          string
 	Size                *int
-	Slices              *int
+	Slices              interface{}
 	Sort                []string
-	Source              []string
-	SourceExcludes      []string
-	SourceIncludes      []string
 	Stats               []string
 	TerminateAfter      *int
 	Timeout             time.Duration
@@ -85,7 +99,6 @@ type UpdateByQueryRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r UpdateByQueryRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -94,6 +107,10 @@ func (r UpdateByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 	)
 
 	method = "POST"
+
+	if len(r.Index) == 0 {
+		return nil, errors.New("index is required and cannot be nil or empty")
+	}
 
 	path.Grow(1 + len(strings.Join(r.Index, ",")) + 1 + len(strings.Join(r.DocumentType, ",")) + 1 + len("_update_by_query"))
 	path.WriteString("/")
@@ -200,23 +217,11 @@ func (r UpdateByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 	}
 
 	if r.Slices != nil {
-		params["slices"] = strconv.FormatInt(int64(*r.Slices), 10)
+		params["slices"] = fmt.Sprintf("%v", r.Slices)
 	}
 
 	if len(r.Sort) > 0 {
 		params["sort"] = strings.Join(r.Sort, ",")
-	}
-
-	if len(r.Source) > 0 {
-		params["_source"] = strings.Join(r.Source, ",")
-	}
-
-	if len(r.SourceExcludes) > 0 {
-		params["_source_excludes"] = strings.Join(r.SourceExcludes, ",")
-	}
-
-	if len(r.SourceIncludes) > 0 {
-		params["_source_includes"] = strings.Join(r.SourceIncludes, ",")
 	}
 
 	if len(r.Stats) > 0 {
@@ -263,7 +268,10 @@ func (r UpdateByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -271,10 +279,6 @@ func (r UpdateByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -287,6 +291,10 @@ func (r UpdateByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -308,7 +316,6 @@ func (r UpdateByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 }
 
 // WithContext sets the request context.
-//
 func (f UpdateByQuery) WithContext(v context.Context) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.ctx = v
@@ -316,7 +323,6 @@ func (f UpdateByQuery) WithContext(v context.Context) func(*UpdateByQueryRequest
 }
 
 // WithBody - The search definition using the Query DSL.
-//
 func (f UpdateByQuery) WithBody(v io.Reader) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Body = v
@@ -324,7 +330,6 @@ func (f UpdateByQuery) WithBody(v io.Reader) func(*UpdateByQueryRequest) {
 }
 
 // WithDocumentType - a list of document types to search; leave empty to perform the operation on all types.
-//
 func (f UpdateByQuery) WithDocumentType(v ...string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.DocumentType = v
@@ -332,7 +337,6 @@ func (f UpdateByQuery) WithDocumentType(v ...string) func(*UpdateByQueryRequest)
 }
 
 // WithAllowNoIndices - whether to ignore if a wildcard indices expression resolves into no concrete indices. (this includes `_all` string or when no indices have been specified).
-//
 func (f UpdateByQuery) WithAllowNoIndices(v bool) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.AllowNoIndices = &v
@@ -340,7 +344,6 @@ func (f UpdateByQuery) WithAllowNoIndices(v bool) func(*UpdateByQueryRequest) {
 }
 
 // WithAnalyzer - the analyzer to use for the query string.
-//
 func (f UpdateByQuery) WithAnalyzer(v string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Analyzer = v
@@ -348,7 +351,6 @@ func (f UpdateByQuery) WithAnalyzer(v string) func(*UpdateByQueryRequest) {
 }
 
 // WithAnalyzeWildcard - specify whether wildcard and prefix queries should be analyzed (default: false).
-//
 func (f UpdateByQuery) WithAnalyzeWildcard(v bool) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.AnalyzeWildcard = &v
@@ -356,7 +358,6 @@ func (f UpdateByQuery) WithAnalyzeWildcard(v bool) func(*UpdateByQueryRequest) {
 }
 
 // WithConflicts - what to do when the update by query hits version conflicts?.
-//
 func (f UpdateByQuery) WithConflicts(v string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Conflicts = v
@@ -364,7 +365,6 @@ func (f UpdateByQuery) WithConflicts(v string) func(*UpdateByQueryRequest) {
 }
 
 // WithDefaultOperator - the default operator for query string query (and or or).
-//
 func (f UpdateByQuery) WithDefaultOperator(v string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.DefaultOperator = v
@@ -372,7 +372,6 @@ func (f UpdateByQuery) WithDefaultOperator(v string) func(*UpdateByQueryRequest)
 }
 
 // WithDf - the field to use as default where no field prefix is given in the query string.
-//
 func (f UpdateByQuery) WithDf(v string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Df = v
@@ -380,7 +379,6 @@ func (f UpdateByQuery) WithDf(v string) func(*UpdateByQueryRequest) {
 }
 
 // WithExpandWildcards - whether to expand wildcard expression to concrete indices that are open, closed or both..
-//
 func (f UpdateByQuery) WithExpandWildcards(v string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.ExpandWildcards = v
@@ -388,7 +386,6 @@ func (f UpdateByQuery) WithExpandWildcards(v string) func(*UpdateByQueryRequest)
 }
 
 // WithFrom - starting offset (default: 0).
-//
 func (f UpdateByQuery) WithFrom(v int) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.From = &v
@@ -396,7 +393,6 @@ func (f UpdateByQuery) WithFrom(v int) func(*UpdateByQueryRequest) {
 }
 
 // WithIgnoreUnavailable - whether specified concrete indices should be ignored when unavailable (missing or closed).
-//
 func (f UpdateByQuery) WithIgnoreUnavailable(v bool) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.IgnoreUnavailable = &v
@@ -404,7 +400,6 @@ func (f UpdateByQuery) WithIgnoreUnavailable(v bool) func(*UpdateByQueryRequest)
 }
 
 // WithLenient - specify whether format-based query failures (such as providing text to a numeric field) should be ignored.
-//
 func (f UpdateByQuery) WithLenient(v bool) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Lenient = &v
@@ -412,7 +407,6 @@ func (f UpdateByQuery) WithLenient(v bool) func(*UpdateByQueryRequest) {
 }
 
 // WithMaxDocs - maximum number of documents to process (default: all documents).
-//
 func (f UpdateByQuery) WithMaxDocs(v int) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.MaxDocs = &v
@@ -420,7 +414,6 @@ func (f UpdateByQuery) WithMaxDocs(v int) func(*UpdateByQueryRequest) {
 }
 
 // WithPipeline - ingest pipeline to set on index requests made by this action. (default: none).
-//
 func (f UpdateByQuery) WithPipeline(v string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Pipeline = v
@@ -428,7 +421,6 @@ func (f UpdateByQuery) WithPipeline(v string) func(*UpdateByQueryRequest) {
 }
 
 // WithPreference - specify the node or shard the operation should be performed on (default: random).
-//
 func (f UpdateByQuery) WithPreference(v string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Preference = v
@@ -436,15 +428,13 @@ func (f UpdateByQuery) WithPreference(v string) func(*UpdateByQueryRequest) {
 }
 
 // WithQuery - query in the lucene query string syntax.
-//
 func (f UpdateByQuery) WithQuery(v string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Query = v
 	}
 }
 
-// WithRefresh - should the effected indexes be refreshed?.
-//
+// WithRefresh - should the affected indexes be refreshed?.
 func (f UpdateByQuery) WithRefresh(v bool) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Refresh = &v
@@ -452,7 +442,6 @@ func (f UpdateByQuery) WithRefresh(v bool) func(*UpdateByQueryRequest) {
 }
 
 // WithRequestCache - specify if request cache should be used for this request or not, defaults to index level setting.
-//
 func (f UpdateByQuery) WithRequestCache(v bool) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.RequestCache = &v
@@ -460,7 +449,6 @@ func (f UpdateByQuery) WithRequestCache(v bool) func(*UpdateByQueryRequest) {
 }
 
 // WithRequestsPerSecond - the throttle to set on this request in sub-requests per second. -1 means no throttle..
-//
 func (f UpdateByQuery) WithRequestsPerSecond(v int) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.RequestsPerSecond = &v
@@ -468,7 +456,6 @@ func (f UpdateByQuery) WithRequestsPerSecond(v int) func(*UpdateByQueryRequest) 
 }
 
 // WithRouting - a list of specific routing values.
-//
 func (f UpdateByQuery) WithRouting(v ...string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Routing = v
@@ -476,7 +463,6 @@ func (f UpdateByQuery) WithRouting(v ...string) func(*UpdateByQueryRequest) {
 }
 
 // WithScroll - specify how long a consistent view of the index should be maintained for scrolled search.
-//
 func (f UpdateByQuery) WithScroll(v time.Duration) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Scroll = v
@@ -484,7 +470,6 @@ func (f UpdateByQuery) WithScroll(v time.Duration) func(*UpdateByQueryRequest) {
 }
 
 // WithScrollSize - size on the scroll request powering the update by query.
-//
 func (f UpdateByQuery) WithScrollSize(v int) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.ScrollSize = &v
@@ -492,7 +477,6 @@ func (f UpdateByQuery) WithScrollSize(v int) func(*UpdateByQueryRequest) {
 }
 
 // WithSearchTimeout - explicit timeout for each search request. defaults to no timeout..
-//
 func (f UpdateByQuery) WithSearchTimeout(v time.Duration) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.SearchTimeout = v
@@ -500,7 +484,6 @@ func (f UpdateByQuery) WithSearchTimeout(v time.Duration) func(*UpdateByQueryReq
 }
 
 // WithSearchType - search operation type.
-//
 func (f UpdateByQuery) WithSearchType(v string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.SearchType = v
@@ -508,55 +491,27 @@ func (f UpdateByQuery) WithSearchType(v string) func(*UpdateByQueryRequest) {
 }
 
 // WithSize - deprecated, please use `max_docs` instead.
-//
 func (f UpdateByQuery) WithSize(v int) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Size = &v
 	}
 }
 
-// WithSlices - the number of slices this task should be divided into. defaults to 1 meaning the task isn't sliced into subtasks..
-//
-func (f UpdateByQuery) WithSlices(v int) func(*UpdateByQueryRequest) {
+// WithSlices - the number of slices this task should be divided into. defaults to 1, meaning the task isn't sliced into subtasks. can be set to `auto`..
+func (f UpdateByQuery) WithSlices(v interface{}) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
-		r.Slices = &v
+		r.Slices = v
 	}
 }
 
 // WithSort - a list of <field>:<direction> pairs.
-//
 func (f UpdateByQuery) WithSort(v ...string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Sort = v
 	}
 }
 
-// WithSource - true or false to return the _source field or not, or a list of fields to return.
-//
-func (f UpdateByQuery) WithSource(v ...string) func(*UpdateByQueryRequest) {
-	return func(r *UpdateByQueryRequest) {
-		r.Source = v
-	}
-}
-
-// WithSourceExcludes - a list of fields to exclude from the returned _source field.
-//
-func (f UpdateByQuery) WithSourceExcludes(v ...string) func(*UpdateByQueryRequest) {
-	return func(r *UpdateByQueryRequest) {
-		r.SourceExcludes = v
-	}
-}
-
-// WithSourceIncludes - a list of fields to extract and return from the _source field.
-//
-func (f UpdateByQuery) WithSourceIncludes(v ...string) func(*UpdateByQueryRequest) {
-	return func(r *UpdateByQueryRequest) {
-		r.SourceIncludes = v
-	}
-}
-
 // WithStats - specific 'tag' of the request for logging and statistical purposes.
-//
 func (f UpdateByQuery) WithStats(v ...string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Stats = v
@@ -564,7 +519,6 @@ func (f UpdateByQuery) WithStats(v ...string) func(*UpdateByQueryRequest) {
 }
 
 // WithTerminateAfter - the maximum number of documents to collect for each shard, upon reaching which the query execution will terminate early..
-//
 func (f UpdateByQuery) WithTerminateAfter(v int) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.TerminateAfter = &v
@@ -572,7 +526,6 @@ func (f UpdateByQuery) WithTerminateAfter(v int) func(*UpdateByQueryRequest) {
 }
 
 // WithTimeout - time each individual bulk request should wait for shards that are unavailable..
-//
 func (f UpdateByQuery) WithTimeout(v time.Duration) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Timeout = v
@@ -580,7 +533,6 @@ func (f UpdateByQuery) WithTimeout(v time.Duration) func(*UpdateByQueryRequest) 
 }
 
 // WithVersion - specify whether to return document version as part of a hit.
-//
 func (f UpdateByQuery) WithVersion(v bool) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Version = &v
@@ -588,7 +540,6 @@ func (f UpdateByQuery) WithVersion(v bool) func(*UpdateByQueryRequest) {
 }
 
 // WithVersionType - should the document increment the version number (internal) on hit or not (reindex).
-//
 func (f UpdateByQuery) WithVersionType(v bool) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.VersionType = &v
@@ -596,7 +547,6 @@ func (f UpdateByQuery) WithVersionType(v bool) func(*UpdateByQueryRequest) {
 }
 
 // WithWaitForActiveShards - sets the number of shard copies that must be active before proceeding with the update by query operation. defaults to 1, meaning the primary shard only. set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1).
-//
 func (f UpdateByQuery) WithWaitForActiveShards(v string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.WaitForActiveShards = v
@@ -604,7 +554,6 @@ func (f UpdateByQuery) WithWaitForActiveShards(v string) func(*UpdateByQueryRequ
 }
 
 // WithWaitForCompletion - should the request should block until the update by query operation is complete..
-//
 func (f UpdateByQuery) WithWaitForCompletion(v bool) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.WaitForCompletion = &v
@@ -612,7 +561,6 @@ func (f UpdateByQuery) WithWaitForCompletion(v bool) func(*UpdateByQueryRequest)
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f UpdateByQuery) WithPretty() func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Pretty = true
@@ -620,7 +568,6 @@ func (f UpdateByQuery) WithPretty() func(*UpdateByQueryRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f UpdateByQuery) WithHuman() func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.Human = true
@@ -628,7 +575,6 @@ func (f UpdateByQuery) WithHuman() func(*UpdateByQueryRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f UpdateByQuery) WithErrorTrace() func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.ErrorTrace = true
@@ -636,7 +582,6 @@ func (f UpdateByQuery) WithErrorTrace() func(*UpdateByQueryRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f UpdateByQuery) WithFilterPath(v ...string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		r.FilterPath = v
@@ -644,7 +589,6 @@ func (f UpdateByQuery) WithFilterPath(v ...string) func(*UpdateByQueryRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f UpdateByQuery) WithHeader(h map[string]string) func(*UpdateByQueryRequest) {
 	return func(r *UpdateByQueryRequest) {
 		if r.Header == nil {
@@ -653,5 +597,15 @@ func (f UpdateByQuery) WithHeader(h map[string]string) func(*UpdateByQueryReques
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f UpdateByQuery) WithOpaqueID(s string) func(*UpdateByQueryRequest) {
+	return func(r *UpdateByQueryRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

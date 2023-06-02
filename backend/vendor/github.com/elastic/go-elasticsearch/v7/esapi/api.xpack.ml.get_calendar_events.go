@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -22,12 +39,12 @@ func newMLGetCalendarEventsFunc(t Transport) MLGetCalendarEvents {
 
 // ----- API Definition -------------------------------------------------------
 
-// MLGetCalendarEvents -
+// MLGetCalendarEvents - Retrieves information about the scheduled events in calendars.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-get-calendar-event.html.
 type MLGetCalendarEvents func(calendar_id string, o ...func(*MLGetCalendarEventsRequest)) (*Response, error)
 
 // MLGetCalendarEventsRequest configures the ML Get Calendar Events API request.
-//
 type MLGetCalendarEventsRequest struct {
 	CalendarID string
 
@@ -48,7 +65,6 @@ type MLGetCalendarEventsRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r MLGetCalendarEventsRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -106,7 +122,10 @@ func (r MLGetCalendarEventsRequest) Do(ctx context.Context, transport Transport)
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -147,7 +166,6 @@ func (r MLGetCalendarEventsRequest) Do(ctx context.Context, transport Transport)
 }
 
 // WithContext sets the request context.
-//
 func (f MLGetCalendarEvents) WithContext(v context.Context) func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		r.ctx = v
@@ -155,7 +173,6 @@ func (f MLGetCalendarEvents) WithContext(v context.Context) func(*MLGetCalendarE
 }
 
 // WithEnd - get events before this time.
-//
 func (f MLGetCalendarEvents) WithEnd(v interface{}) func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		r.End = v
@@ -163,7 +180,6 @@ func (f MLGetCalendarEvents) WithEnd(v interface{}) func(*MLGetCalendarEventsReq
 }
 
 // WithFrom - skips a number of events.
-//
 func (f MLGetCalendarEvents) WithFrom(v int) func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		r.From = &v
@@ -171,7 +187,6 @@ func (f MLGetCalendarEvents) WithFrom(v int) func(*MLGetCalendarEventsRequest) {
 }
 
 // WithJobID - get events for the job. when this option is used calendar_id must be '_all'.
-//
 func (f MLGetCalendarEvents) WithJobID(v string) func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		r.JobID = v
@@ -179,7 +194,6 @@ func (f MLGetCalendarEvents) WithJobID(v string) func(*MLGetCalendarEventsReques
 }
 
 // WithSize - specifies a max number of events to get.
-//
 func (f MLGetCalendarEvents) WithSize(v int) func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		r.Size = &v
@@ -187,7 +201,6 @@ func (f MLGetCalendarEvents) WithSize(v int) func(*MLGetCalendarEventsRequest) {
 }
 
 // WithStart - get events after this time.
-//
 func (f MLGetCalendarEvents) WithStart(v string) func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		r.Start = v
@@ -195,7 +208,6 @@ func (f MLGetCalendarEvents) WithStart(v string) func(*MLGetCalendarEventsReques
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f MLGetCalendarEvents) WithPretty() func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		r.Pretty = true
@@ -203,7 +215,6 @@ func (f MLGetCalendarEvents) WithPretty() func(*MLGetCalendarEventsRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f MLGetCalendarEvents) WithHuman() func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		r.Human = true
@@ -211,7 +222,6 @@ func (f MLGetCalendarEvents) WithHuman() func(*MLGetCalendarEventsRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f MLGetCalendarEvents) WithErrorTrace() func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		r.ErrorTrace = true
@@ -219,7 +229,6 @@ func (f MLGetCalendarEvents) WithErrorTrace() func(*MLGetCalendarEventsRequest) 
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f MLGetCalendarEvents) WithFilterPath(v ...string) func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		r.FilterPath = v
@@ -227,7 +236,6 @@ func (f MLGetCalendarEvents) WithFilterPath(v ...string) func(*MLGetCalendarEven
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f MLGetCalendarEvents) WithHeader(h map[string]string) func(*MLGetCalendarEventsRequest) {
 	return func(r *MLGetCalendarEventsRequest) {
 		if r.Header == nil {
@@ -236,5 +244,15 @@ func (f MLGetCalendarEvents) WithHeader(h map[string]string) func(*MLGetCalendar
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f MLGetCalendarEvents) WithOpaqueID(s string) func(*MLGetCalendarEventsRequest) {
+	return func(r *MLGetCalendarEventsRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

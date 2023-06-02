@@ -1,11 +1,30 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func newMLDeleteDataFrameAnalyticsFunc(t Transport) MLDeleteDataFrameAnalytics {
@@ -20,14 +39,17 @@ func newMLDeleteDataFrameAnalyticsFunc(t Transport) MLDeleteDataFrameAnalytics {
 
 // ----- API Definition -------------------------------------------------------
 
-// MLDeleteDataFrameAnalytics - http://www.elastic.co/guide/en/elasticsearch/reference/current/delete-dfanalytics.html
+// MLDeleteDataFrameAnalytics - Deletes an existing data frame analytics job.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/delete-dfanalytics.html.
 type MLDeleteDataFrameAnalytics func(id string, o ...func(*MLDeleteDataFrameAnalyticsRequest)) (*Response, error)
 
 // MLDeleteDataFrameAnalyticsRequest configures the ML Delete Data Frame Analytics API request.
-//
 type MLDeleteDataFrameAnalyticsRequest struct {
 	ID string
+
+	Force   *bool
+	Timeout time.Duration
 
 	Pretty     bool
 	Human      bool
@@ -40,7 +62,6 @@ type MLDeleteDataFrameAnalyticsRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r MLDeleteDataFrameAnalyticsRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -62,6 +83,14 @@ func (r MLDeleteDataFrameAnalyticsRequest) Do(ctx context.Context, transport Tra
 
 	params = make(map[string]string)
 
+	if r.Force != nil {
+		params["force"] = strconv.FormatBool(*r.Force)
+	}
+
+	if r.Timeout != 0 {
+		params["timeout"] = formatDuration(r.Timeout)
+	}
+
 	if r.Pretty {
 		params["pretty"] = "true"
 	}
@@ -78,7 +107,10 @@ func (r MLDeleteDataFrameAnalyticsRequest) Do(ctx context.Context, transport Tra
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -119,15 +151,27 @@ func (r MLDeleteDataFrameAnalyticsRequest) Do(ctx context.Context, transport Tra
 }
 
 // WithContext sets the request context.
-//
 func (f MLDeleteDataFrameAnalytics) WithContext(v context.Context) func(*MLDeleteDataFrameAnalyticsRequest) {
 	return func(r *MLDeleteDataFrameAnalyticsRequest) {
 		r.ctx = v
 	}
 }
 
+// WithForce - true if the job should be forcefully deleted.
+func (f MLDeleteDataFrameAnalytics) WithForce(v bool) func(*MLDeleteDataFrameAnalyticsRequest) {
+	return func(r *MLDeleteDataFrameAnalyticsRequest) {
+		r.Force = &v
+	}
+}
+
+// WithTimeout - controls the time to wait until a job is deleted. defaults to 1 minute.
+func (f MLDeleteDataFrameAnalytics) WithTimeout(v time.Duration) func(*MLDeleteDataFrameAnalyticsRequest) {
+	return func(r *MLDeleteDataFrameAnalyticsRequest) {
+		r.Timeout = v
+	}
+}
+
 // WithPretty makes the response body pretty-printed.
-//
 func (f MLDeleteDataFrameAnalytics) WithPretty() func(*MLDeleteDataFrameAnalyticsRequest) {
 	return func(r *MLDeleteDataFrameAnalyticsRequest) {
 		r.Pretty = true
@@ -135,7 +179,6 @@ func (f MLDeleteDataFrameAnalytics) WithPretty() func(*MLDeleteDataFrameAnalytic
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f MLDeleteDataFrameAnalytics) WithHuman() func(*MLDeleteDataFrameAnalyticsRequest) {
 	return func(r *MLDeleteDataFrameAnalyticsRequest) {
 		r.Human = true
@@ -143,7 +186,6 @@ func (f MLDeleteDataFrameAnalytics) WithHuman() func(*MLDeleteDataFrameAnalytics
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f MLDeleteDataFrameAnalytics) WithErrorTrace() func(*MLDeleteDataFrameAnalyticsRequest) {
 	return func(r *MLDeleteDataFrameAnalyticsRequest) {
 		r.ErrorTrace = true
@@ -151,7 +193,6 @@ func (f MLDeleteDataFrameAnalytics) WithErrorTrace() func(*MLDeleteDataFrameAnal
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f MLDeleteDataFrameAnalytics) WithFilterPath(v ...string) func(*MLDeleteDataFrameAnalyticsRequest) {
 	return func(r *MLDeleteDataFrameAnalyticsRequest) {
 		r.FilterPath = v
@@ -159,7 +200,6 @@ func (f MLDeleteDataFrameAnalytics) WithFilterPath(v ...string) func(*MLDeleteDa
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f MLDeleteDataFrameAnalytics) WithHeader(h map[string]string) func(*MLDeleteDataFrameAnalyticsRequest) {
 	return func(r *MLDeleteDataFrameAnalyticsRequest) {
 		if r.Header == nil {
@@ -168,5 +208,15 @@ func (f MLDeleteDataFrameAnalytics) WithHeader(h map[string]string) func(*MLDele
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f MLDeleteDataFrameAnalytics) WithOpaqueID(s string) func(*MLDeleteDataFrameAnalyticsRequest) {
+	return func(r *MLDeleteDataFrameAnalyticsRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

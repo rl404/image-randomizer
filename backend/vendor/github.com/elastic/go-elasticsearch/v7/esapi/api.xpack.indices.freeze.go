@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -22,12 +39,12 @@ func newIndicesFreezeFunc(t Transport) IndicesFreeze {
 
 // ----- API Definition -------------------------------------------------------
 
-// IndicesFreeze - https://www.elastic.co/guide/en/elasticsearch/reference/current/frozen.html
+// IndicesFreeze - Freezes an index. A frozen index has almost no overhead on the cluster (except for maintaining its metadata in memory) and is read-only.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/freeze-index-api.html.
 type IndicesFreeze func(index string, o ...func(*IndicesFreezeRequest)) (*Response, error)
 
 // IndicesFreezeRequest configures the Indices Freeze API request.
-//
 type IndicesFreezeRequest struct {
 	Index string
 
@@ -49,7 +66,6 @@ type IndicesFreezeRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r IndicesFreezeRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -107,7 +123,10 @@ func (r IndicesFreezeRequest) Do(ctx context.Context, transport Transport) (*Res
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -148,7 +167,6 @@ func (r IndicesFreezeRequest) Do(ctx context.Context, transport Transport) (*Res
 }
 
 // WithContext sets the request context.
-//
 func (f IndicesFreeze) WithContext(v context.Context) func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.ctx = v
@@ -156,7 +174,6 @@ func (f IndicesFreeze) WithContext(v context.Context) func(*IndicesFreezeRequest
 }
 
 // WithAllowNoIndices - whether to ignore if a wildcard indices expression resolves into no concrete indices. (this includes `_all` string or when no indices have been specified).
-//
 func (f IndicesFreeze) WithAllowNoIndices(v bool) func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.AllowNoIndices = &v
@@ -164,7 +181,6 @@ func (f IndicesFreeze) WithAllowNoIndices(v bool) func(*IndicesFreezeRequest) {
 }
 
 // WithExpandWildcards - whether to expand wildcard expression to concrete indices that are open, closed or both..
-//
 func (f IndicesFreeze) WithExpandWildcards(v string) func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.ExpandWildcards = v
@@ -172,7 +188,6 @@ func (f IndicesFreeze) WithExpandWildcards(v string) func(*IndicesFreezeRequest)
 }
 
 // WithIgnoreUnavailable - whether specified concrete indices should be ignored when unavailable (missing or closed).
-//
 func (f IndicesFreeze) WithIgnoreUnavailable(v bool) func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.IgnoreUnavailable = &v
@@ -180,7 +195,6 @@ func (f IndicesFreeze) WithIgnoreUnavailable(v bool) func(*IndicesFreezeRequest)
 }
 
 // WithMasterTimeout - specify timeout for connection to master.
-//
 func (f IndicesFreeze) WithMasterTimeout(v time.Duration) func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.MasterTimeout = v
@@ -188,7 +202,6 @@ func (f IndicesFreeze) WithMasterTimeout(v time.Duration) func(*IndicesFreezeReq
 }
 
 // WithTimeout - explicit operation timeout.
-//
 func (f IndicesFreeze) WithTimeout(v time.Duration) func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.Timeout = v
@@ -196,7 +209,6 @@ func (f IndicesFreeze) WithTimeout(v time.Duration) func(*IndicesFreezeRequest) 
 }
 
 // WithWaitForActiveShards - sets the number of active shards to wait for before the operation returns..
-//
 func (f IndicesFreeze) WithWaitForActiveShards(v string) func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.WaitForActiveShards = v
@@ -204,7 +216,6 @@ func (f IndicesFreeze) WithWaitForActiveShards(v string) func(*IndicesFreezeRequ
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f IndicesFreeze) WithPretty() func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.Pretty = true
@@ -212,7 +223,6 @@ func (f IndicesFreeze) WithPretty() func(*IndicesFreezeRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f IndicesFreeze) WithHuman() func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.Human = true
@@ -220,7 +230,6 @@ func (f IndicesFreeze) WithHuman() func(*IndicesFreezeRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f IndicesFreeze) WithErrorTrace() func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.ErrorTrace = true
@@ -228,7 +237,6 @@ func (f IndicesFreeze) WithErrorTrace() func(*IndicesFreezeRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f IndicesFreeze) WithFilterPath(v ...string) func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		r.FilterPath = v
@@ -236,7 +244,6 @@ func (f IndicesFreeze) WithFilterPath(v ...string) func(*IndicesFreezeRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f IndicesFreeze) WithHeader(h map[string]string) func(*IndicesFreezeRequest) {
 	return func(r *IndicesFreezeRequest) {
 		if r.Header == nil {
@@ -245,5 +252,15 @@ func (f IndicesFreeze) WithHeader(h map[string]string) func(*IndicesFreezeReques
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f IndicesFreeze) WithOpaqueID(s string) func(*IndicesFreezeRequest) {
+	return func(r *IndicesFreezeRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }
