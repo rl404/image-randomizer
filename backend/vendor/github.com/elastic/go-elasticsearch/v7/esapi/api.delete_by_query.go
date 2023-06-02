@@ -1,9 +1,28 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -26,11 +45,9 @@ func newDeleteByQueryFunc(t Transport) DeleteByQuery {
 // DeleteByQuery deletes documents matching the provided query.
 //
 // See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-delete-by-query.html.
-//
 type DeleteByQuery func(index []string, body io.Reader, o ...func(*DeleteByQueryRequest)) (*Response, error)
 
 // DeleteByQueryRequest configures the Delete By Query API request.
-//
 type DeleteByQueryRequest struct {
 	Index        []string
 	DocumentType []string
@@ -59,11 +76,8 @@ type DeleteByQueryRequest struct {
 	SearchTimeout       time.Duration
 	SearchType          string
 	Size                *int
-	Slices              *int
+	Slices              interface{}
 	Sort                []string
-	Source              []string
-	SourceExcludes      []string
-	SourceIncludes      []string
 	Stats               []string
 	TerminateAfter      *int
 	Timeout             time.Duration
@@ -82,7 +96,6 @@ type DeleteByQueryRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r DeleteByQueryRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -91,6 +104,10 @@ func (r DeleteByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 	)
 
 	method = "POST"
+
+	if len(r.Index) == 0 {
+		return nil, errors.New("index is required and cannot be nil or empty")
+	}
 
 	path.Grow(1 + len(strings.Join(r.Index, ",")) + 1 + len(strings.Join(r.DocumentType, ",")) + 1 + len("_delete_by_query"))
 	path.WriteString("/")
@@ -193,23 +210,11 @@ func (r DeleteByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 	}
 
 	if r.Slices != nil {
-		params["slices"] = strconv.FormatInt(int64(*r.Slices), 10)
+		params["slices"] = fmt.Sprintf("%v", r.Slices)
 	}
 
 	if len(r.Sort) > 0 {
 		params["sort"] = strings.Join(r.Sort, ",")
-	}
-
-	if len(r.Source) > 0 {
-		params["_source"] = strings.Join(r.Source, ",")
-	}
-
-	if len(r.SourceExcludes) > 0 {
-		params["_source_excludes"] = strings.Join(r.SourceExcludes, ",")
-	}
-
-	if len(r.SourceIncludes) > 0 {
-		params["_source_includes"] = strings.Join(r.SourceIncludes, ",")
 	}
 
 	if len(r.Stats) > 0 {
@@ -252,7 +257,10 @@ func (r DeleteByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -260,10 +268,6 @@ func (r DeleteByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -276,6 +280,10 @@ func (r DeleteByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -297,7 +305,6 @@ func (r DeleteByQueryRequest) Do(ctx context.Context, transport Transport) (*Res
 }
 
 // WithContext sets the request context.
-//
 func (f DeleteByQuery) WithContext(v context.Context) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.ctx = v
@@ -305,7 +312,6 @@ func (f DeleteByQuery) WithContext(v context.Context) func(*DeleteByQueryRequest
 }
 
 // WithDocumentType - a list of document types to search; leave empty to perform the operation on all types.
-//
 func (f DeleteByQuery) WithDocumentType(v ...string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.DocumentType = v
@@ -313,7 +319,6 @@ func (f DeleteByQuery) WithDocumentType(v ...string) func(*DeleteByQueryRequest)
 }
 
 // WithAllowNoIndices - whether to ignore if a wildcard indices expression resolves into no concrete indices. (this includes `_all` string or when no indices have been specified).
-//
 func (f DeleteByQuery) WithAllowNoIndices(v bool) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.AllowNoIndices = &v
@@ -321,7 +326,6 @@ func (f DeleteByQuery) WithAllowNoIndices(v bool) func(*DeleteByQueryRequest) {
 }
 
 // WithAnalyzer - the analyzer to use for the query string.
-//
 func (f DeleteByQuery) WithAnalyzer(v string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Analyzer = v
@@ -329,7 +333,6 @@ func (f DeleteByQuery) WithAnalyzer(v string) func(*DeleteByQueryRequest) {
 }
 
 // WithAnalyzeWildcard - specify whether wildcard and prefix queries should be analyzed (default: false).
-//
 func (f DeleteByQuery) WithAnalyzeWildcard(v bool) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.AnalyzeWildcard = &v
@@ -337,7 +340,6 @@ func (f DeleteByQuery) WithAnalyzeWildcard(v bool) func(*DeleteByQueryRequest) {
 }
 
 // WithConflicts - what to do when the delete by query hits version conflicts?.
-//
 func (f DeleteByQuery) WithConflicts(v string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Conflicts = v
@@ -345,7 +347,6 @@ func (f DeleteByQuery) WithConflicts(v string) func(*DeleteByQueryRequest) {
 }
 
 // WithDefaultOperator - the default operator for query string query (and or or).
-//
 func (f DeleteByQuery) WithDefaultOperator(v string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.DefaultOperator = v
@@ -353,7 +354,6 @@ func (f DeleteByQuery) WithDefaultOperator(v string) func(*DeleteByQueryRequest)
 }
 
 // WithDf - the field to use as default where no field prefix is given in the query string.
-//
 func (f DeleteByQuery) WithDf(v string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Df = v
@@ -361,7 +361,6 @@ func (f DeleteByQuery) WithDf(v string) func(*DeleteByQueryRequest) {
 }
 
 // WithExpandWildcards - whether to expand wildcard expression to concrete indices that are open, closed or both..
-//
 func (f DeleteByQuery) WithExpandWildcards(v string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.ExpandWildcards = v
@@ -369,7 +368,6 @@ func (f DeleteByQuery) WithExpandWildcards(v string) func(*DeleteByQueryRequest)
 }
 
 // WithFrom - starting offset (default: 0).
-//
 func (f DeleteByQuery) WithFrom(v int) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.From = &v
@@ -377,7 +375,6 @@ func (f DeleteByQuery) WithFrom(v int) func(*DeleteByQueryRequest) {
 }
 
 // WithIgnoreUnavailable - whether specified concrete indices should be ignored when unavailable (missing or closed).
-//
 func (f DeleteByQuery) WithIgnoreUnavailable(v bool) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.IgnoreUnavailable = &v
@@ -385,7 +382,6 @@ func (f DeleteByQuery) WithIgnoreUnavailable(v bool) func(*DeleteByQueryRequest)
 }
 
 // WithLenient - specify whether format-based query failures (such as providing text to a numeric field) should be ignored.
-//
 func (f DeleteByQuery) WithLenient(v bool) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Lenient = &v
@@ -393,7 +389,6 @@ func (f DeleteByQuery) WithLenient(v bool) func(*DeleteByQueryRequest) {
 }
 
 // WithMaxDocs - maximum number of documents to process (default: all documents).
-//
 func (f DeleteByQuery) WithMaxDocs(v int) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.MaxDocs = &v
@@ -401,7 +396,6 @@ func (f DeleteByQuery) WithMaxDocs(v int) func(*DeleteByQueryRequest) {
 }
 
 // WithPreference - specify the node or shard the operation should be performed on (default: random).
-//
 func (f DeleteByQuery) WithPreference(v string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Preference = v
@@ -409,7 +403,6 @@ func (f DeleteByQuery) WithPreference(v string) func(*DeleteByQueryRequest) {
 }
 
 // WithQuery - query in the lucene query string syntax.
-//
 func (f DeleteByQuery) WithQuery(v string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Query = v
@@ -417,7 +410,6 @@ func (f DeleteByQuery) WithQuery(v string) func(*DeleteByQueryRequest) {
 }
 
 // WithRefresh - should the effected indexes be refreshed?.
-//
 func (f DeleteByQuery) WithRefresh(v bool) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Refresh = &v
@@ -425,7 +417,6 @@ func (f DeleteByQuery) WithRefresh(v bool) func(*DeleteByQueryRequest) {
 }
 
 // WithRequestCache - specify if request cache should be used for this request or not, defaults to index level setting.
-//
 func (f DeleteByQuery) WithRequestCache(v bool) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.RequestCache = &v
@@ -433,7 +424,6 @@ func (f DeleteByQuery) WithRequestCache(v bool) func(*DeleteByQueryRequest) {
 }
 
 // WithRequestsPerSecond - the throttle for this request in sub-requests per second. -1 means no throttle..
-//
 func (f DeleteByQuery) WithRequestsPerSecond(v int) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.RequestsPerSecond = &v
@@ -441,7 +431,6 @@ func (f DeleteByQuery) WithRequestsPerSecond(v int) func(*DeleteByQueryRequest) 
 }
 
 // WithRouting - a list of specific routing values.
-//
 func (f DeleteByQuery) WithRouting(v ...string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Routing = v
@@ -449,7 +438,6 @@ func (f DeleteByQuery) WithRouting(v ...string) func(*DeleteByQueryRequest) {
 }
 
 // WithScroll - specify how long a consistent view of the index should be maintained for scrolled search.
-//
 func (f DeleteByQuery) WithScroll(v time.Duration) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Scroll = v
@@ -457,7 +445,6 @@ func (f DeleteByQuery) WithScroll(v time.Duration) func(*DeleteByQueryRequest) {
 }
 
 // WithScrollSize - size on the scroll request powering the delete by query.
-//
 func (f DeleteByQuery) WithScrollSize(v int) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.ScrollSize = &v
@@ -465,7 +452,6 @@ func (f DeleteByQuery) WithScrollSize(v int) func(*DeleteByQueryRequest) {
 }
 
 // WithSearchTimeout - explicit timeout for each search request. defaults to no timeout..
-//
 func (f DeleteByQuery) WithSearchTimeout(v time.Duration) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.SearchTimeout = v
@@ -473,7 +459,6 @@ func (f DeleteByQuery) WithSearchTimeout(v time.Duration) func(*DeleteByQueryReq
 }
 
 // WithSearchType - search operation type.
-//
 func (f DeleteByQuery) WithSearchType(v string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.SearchType = v
@@ -481,55 +466,27 @@ func (f DeleteByQuery) WithSearchType(v string) func(*DeleteByQueryRequest) {
 }
 
 // WithSize - deprecated, please use `max_docs` instead.
-//
 func (f DeleteByQuery) WithSize(v int) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Size = &v
 	}
 }
 
-// WithSlices - the number of slices this task should be divided into. defaults to 1 meaning the task isn't sliced into subtasks..
-//
-func (f DeleteByQuery) WithSlices(v int) func(*DeleteByQueryRequest) {
+// WithSlices - the number of slices this task should be divided into. defaults to 1, meaning the task isn't sliced into subtasks. can be set to `auto`..
+func (f DeleteByQuery) WithSlices(v interface{}) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
-		r.Slices = &v
+		r.Slices = v
 	}
 }
 
 // WithSort - a list of <field>:<direction> pairs.
-//
 func (f DeleteByQuery) WithSort(v ...string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Sort = v
 	}
 }
 
-// WithSource - true or false to return the _source field or not, or a list of fields to return.
-//
-func (f DeleteByQuery) WithSource(v ...string) func(*DeleteByQueryRequest) {
-	return func(r *DeleteByQueryRequest) {
-		r.Source = v
-	}
-}
-
-// WithSourceExcludes - a list of fields to exclude from the returned _source field.
-//
-func (f DeleteByQuery) WithSourceExcludes(v ...string) func(*DeleteByQueryRequest) {
-	return func(r *DeleteByQueryRequest) {
-		r.SourceExcludes = v
-	}
-}
-
-// WithSourceIncludes - a list of fields to extract and return from the _source field.
-//
-func (f DeleteByQuery) WithSourceIncludes(v ...string) func(*DeleteByQueryRequest) {
-	return func(r *DeleteByQueryRequest) {
-		r.SourceIncludes = v
-	}
-}
-
 // WithStats - specific 'tag' of the request for logging and statistical purposes.
-//
 func (f DeleteByQuery) WithStats(v ...string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Stats = v
@@ -537,7 +494,6 @@ func (f DeleteByQuery) WithStats(v ...string) func(*DeleteByQueryRequest) {
 }
 
 // WithTerminateAfter - the maximum number of documents to collect for each shard, upon reaching which the query execution will terminate early..
-//
 func (f DeleteByQuery) WithTerminateAfter(v int) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.TerminateAfter = &v
@@ -545,7 +501,6 @@ func (f DeleteByQuery) WithTerminateAfter(v int) func(*DeleteByQueryRequest) {
 }
 
 // WithTimeout - time each individual bulk request should wait for shards that are unavailable..
-//
 func (f DeleteByQuery) WithTimeout(v time.Duration) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Timeout = v
@@ -553,7 +508,6 @@ func (f DeleteByQuery) WithTimeout(v time.Duration) func(*DeleteByQueryRequest) 
 }
 
 // WithVersion - specify whether to return document version as part of a hit.
-//
 func (f DeleteByQuery) WithVersion(v bool) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Version = &v
@@ -561,7 +515,6 @@ func (f DeleteByQuery) WithVersion(v bool) func(*DeleteByQueryRequest) {
 }
 
 // WithWaitForActiveShards - sets the number of shard copies that must be active before proceeding with the delete by query operation. defaults to 1, meaning the primary shard only. set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1).
-//
 func (f DeleteByQuery) WithWaitForActiveShards(v string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.WaitForActiveShards = v
@@ -569,7 +522,6 @@ func (f DeleteByQuery) WithWaitForActiveShards(v string) func(*DeleteByQueryRequ
 }
 
 // WithWaitForCompletion - should the request should block until the delete by query is complete..
-//
 func (f DeleteByQuery) WithWaitForCompletion(v bool) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.WaitForCompletion = &v
@@ -577,7 +529,6 @@ func (f DeleteByQuery) WithWaitForCompletion(v bool) func(*DeleteByQueryRequest)
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f DeleteByQuery) WithPretty() func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Pretty = true
@@ -585,7 +536,6 @@ func (f DeleteByQuery) WithPretty() func(*DeleteByQueryRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f DeleteByQuery) WithHuman() func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.Human = true
@@ -593,7 +543,6 @@ func (f DeleteByQuery) WithHuman() func(*DeleteByQueryRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f DeleteByQuery) WithErrorTrace() func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.ErrorTrace = true
@@ -601,7 +550,6 @@ func (f DeleteByQuery) WithErrorTrace() func(*DeleteByQueryRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f DeleteByQuery) WithFilterPath(v ...string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		r.FilterPath = v
@@ -609,7 +557,6 @@ func (f DeleteByQuery) WithFilterPath(v ...string) func(*DeleteByQueryRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f DeleteByQuery) WithHeader(h map[string]string) func(*DeleteByQueryRequest) {
 	return func(r *DeleteByQueryRequest) {
 		if r.Header == nil {
@@ -618,5 +565,15 @@ func (f DeleteByQuery) WithHeader(h map[string]string) func(*DeleteByQueryReques
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f DeleteByQuery) WithOpaqueID(s string) func(*DeleteByQueryRequest) {
+	return func(r *DeleteByQueryRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

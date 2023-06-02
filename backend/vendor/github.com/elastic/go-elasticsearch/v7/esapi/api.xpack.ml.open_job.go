@@ -1,12 +1,29 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
 import (
 	"context"
+	"io"
 	"net/http"
 	"strings"
-	"time"
 )
 
 func newMLOpenJobFunc(t Transport) MLOpenJob {
@@ -21,16 +38,16 @@ func newMLOpenJobFunc(t Transport) MLOpenJob {
 
 // ----- API Definition -------------------------------------------------------
 
-// MLOpenJob - http://www.elastic.co/guide/en/elasticsearch/reference/current/ml-open-job.html
+// MLOpenJob - Opens one or more anomaly detection jobs.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-open-job.html.
 type MLOpenJob func(job_id string, o ...func(*MLOpenJobRequest)) (*Response, error)
 
 // MLOpenJobRequest configures the ML Open Job API request.
-//
 type MLOpenJobRequest struct {
-	IgnoreDowntime *bool
-	JobID          string
-	Timeout        time.Duration
+	Body io.Reader
+
+	JobID string
 
 	Pretty     bool
 	Human      bool
@@ -43,7 +60,6 @@ type MLOpenJobRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r MLOpenJobRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -81,7 +97,10 @@ func (r MLOpenJobRequest) Do(ctx context.Context, transport Transport) (*Respons
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -103,6 +122,10 @@ func (r MLOpenJobRequest) Do(ctx context.Context, transport Transport) (*Respons
 		}
 	}
 
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
+	}
+
 	if ctx != nil {
 		req = req.WithContext(ctx)
 	}
@@ -122,31 +145,20 @@ func (r MLOpenJobRequest) Do(ctx context.Context, transport Transport) (*Respons
 }
 
 // WithContext sets the request context.
-//
 func (f MLOpenJob) WithContext(v context.Context) func(*MLOpenJobRequest) {
 	return func(r *MLOpenJobRequest) {
 		r.ctx = v
 	}
 }
 
-// WithIgnoreDowntime - controls if gaps in data are treated as anomalous or as a maintenance window after a job re-start.
-//
-func (f MLOpenJob) WithIgnoreDowntime(v bool) func(*MLOpenJobRequest) {
+// WithBody - Query parameters can be specified in the body.
+func (f MLOpenJob) WithBody(v io.Reader) func(*MLOpenJobRequest) {
 	return func(r *MLOpenJobRequest) {
-		r.IgnoreDowntime = &v
-	}
-}
-
-// WithTimeout - controls the time to wait until a job has opened. default to 30 minutes.
-//
-func (f MLOpenJob) WithTimeout(v time.Duration) func(*MLOpenJobRequest) {
-	return func(r *MLOpenJobRequest) {
-		r.Timeout = v
+		r.Body = v
 	}
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f MLOpenJob) WithPretty() func(*MLOpenJobRequest) {
 	return func(r *MLOpenJobRequest) {
 		r.Pretty = true
@@ -154,7 +166,6 @@ func (f MLOpenJob) WithPretty() func(*MLOpenJobRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f MLOpenJob) WithHuman() func(*MLOpenJobRequest) {
 	return func(r *MLOpenJobRequest) {
 		r.Human = true
@@ -162,7 +173,6 @@ func (f MLOpenJob) WithHuman() func(*MLOpenJobRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f MLOpenJob) WithErrorTrace() func(*MLOpenJobRequest) {
 	return func(r *MLOpenJobRequest) {
 		r.ErrorTrace = true
@@ -170,7 +180,6 @@ func (f MLOpenJob) WithErrorTrace() func(*MLOpenJobRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f MLOpenJob) WithFilterPath(v ...string) func(*MLOpenJobRequest) {
 	return func(r *MLOpenJobRequest) {
 		r.FilterPath = v
@@ -178,7 +187,6 @@ func (f MLOpenJob) WithFilterPath(v ...string) func(*MLOpenJobRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f MLOpenJob) WithHeader(h map[string]string) func(*MLOpenJobRequest) {
 	return func(r *MLOpenJobRequest) {
 		if r.Header == nil {
@@ -187,5 +195,15 @@ func (f MLOpenJob) WithHeader(h map[string]string) func(*MLOpenJobRequest) {
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f MLOpenJob) WithOpaqueID(s string) func(*MLOpenJobRequest) {
+	return func(r *MLOpenJobRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

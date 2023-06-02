@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -20,14 +37,14 @@ func newSecurityGetRoleFunc(t Transport) SecurityGetRole {
 
 // ----- API Definition -------------------------------------------------------
 
-// SecurityGetRole - https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-role.html
+// SecurityGetRole - Retrieves roles in the native realm.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-role.html.
 type SecurityGetRole func(o ...func(*SecurityGetRoleRequest)) (*Response, error)
 
 // SecurityGetRoleRequest configures the Security Get Role API request.
-//
 type SecurityGetRoleRequest struct {
-	Name string
+	Name []string
 
 	Pretty     bool
 	Human      bool
@@ -40,7 +57,6 @@ type SecurityGetRoleRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r SecurityGetRoleRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -50,14 +66,14 @@ func (r SecurityGetRoleRequest) Do(ctx context.Context, transport Transport) (*R
 
 	method = "GET"
 
-	path.Grow(1 + len("_security") + 1 + len("role") + 1 + len(r.Name))
+	path.Grow(1 + len("_security") + 1 + len("role") + 1 + len(strings.Join(r.Name, ",")))
 	path.WriteString("/")
 	path.WriteString("_security")
 	path.WriteString("/")
 	path.WriteString("role")
-	if r.Name != "" {
+	if len(r.Name) > 0 {
 		path.WriteString("/")
-		path.WriteString(r.Name)
+		path.WriteString(strings.Join(r.Name, ","))
 	}
 
 	params = make(map[string]string)
@@ -78,7 +94,10 @@ func (r SecurityGetRoleRequest) Do(ctx context.Context, transport Transport) (*R
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -119,23 +138,20 @@ func (r SecurityGetRoleRequest) Do(ctx context.Context, transport Transport) (*R
 }
 
 // WithContext sets the request context.
-//
 func (f SecurityGetRole) WithContext(v context.Context) func(*SecurityGetRoleRequest) {
 	return func(r *SecurityGetRoleRequest) {
 		r.ctx = v
 	}
 }
 
-// WithName - role name.
-//
-func (f SecurityGetRole) WithName(v string) func(*SecurityGetRoleRequest) {
+// WithName - a list of role names.
+func (f SecurityGetRole) WithName(v ...string) func(*SecurityGetRoleRequest) {
 	return func(r *SecurityGetRoleRequest) {
 		r.Name = v
 	}
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f SecurityGetRole) WithPretty() func(*SecurityGetRoleRequest) {
 	return func(r *SecurityGetRoleRequest) {
 		r.Pretty = true
@@ -143,7 +159,6 @@ func (f SecurityGetRole) WithPretty() func(*SecurityGetRoleRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f SecurityGetRole) WithHuman() func(*SecurityGetRoleRequest) {
 	return func(r *SecurityGetRoleRequest) {
 		r.Human = true
@@ -151,7 +166,6 @@ func (f SecurityGetRole) WithHuman() func(*SecurityGetRoleRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f SecurityGetRole) WithErrorTrace() func(*SecurityGetRoleRequest) {
 	return func(r *SecurityGetRoleRequest) {
 		r.ErrorTrace = true
@@ -159,7 +173,6 @@ func (f SecurityGetRole) WithErrorTrace() func(*SecurityGetRoleRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f SecurityGetRole) WithFilterPath(v ...string) func(*SecurityGetRoleRequest) {
 	return func(r *SecurityGetRoleRequest) {
 		r.FilterPath = v
@@ -167,7 +180,6 @@ func (f SecurityGetRole) WithFilterPath(v ...string) func(*SecurityGetRoleReques
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f SecurityGetRole) WithHeader(h map[string]string) func(*SecurityGetRoleRequest) {
 	return func(r *SecurityGetRoleRequest) {
 		if r.Header == nil {
@@ -176,5 +188,15 @@ func (f SecurityGetRole) WithHeader(h map[string]string) func(*SecurityGetRoleRe
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f SecurityGetRole) WithOpaqueID(s string) func(*SecurityGetRoleRequest) {
+	return func(r *SecurityGetRoleRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

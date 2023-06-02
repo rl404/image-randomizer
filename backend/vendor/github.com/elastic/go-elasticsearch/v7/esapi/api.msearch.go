@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -24,12 +41,10 @@ func newMsearchFunc(t Transport) Msearch {
 
 // Msearch allows to execute several search operations in one request.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/search-multi-search.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/search-multi-search.html.
 type Msearch func(body io.Reader, o ...func(*MsearchRequest)) (*Response, error)
 
 // MsearchRequest configures the Msearch API request.
-//
 type MsearchRequest struct {
 	Index        []string
 	DocumentType []string
@@ -55,7 +70,6 @@ type MsearchRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r MsearchRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -63,7 +77,7 @@ func (r MsearchRequest) Do(ctx context.Context, transport Transport) (*Response,
 		params map[string]string
 	)
 
-	method = "GET"
+	method = "POST"
 
 	path.Grow(1 + len(strings.Join(r.Index, ",")) + 1 + len(strings.Join(r.DocumentType, ",")) + 1 + len("_msearch"))
 	if len(r.Index) > 0 {
@@ -123,7 +137,10 @@ func (r MsearchRequest) Do(ctx context.Context, transport Transport) (*Response,
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -131,10 +148,6 @@ func (r MsearchRequest) Do(ctx context.Context, transport Transport) (*Response,
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -147,6 +160,10 @@ func (r MsearchRequest) Do(ctx context.Context, transport Transport) (*Response,
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -168,7 +185,6 @@ func (r MsearchRequest) Do(ctx context.Context, transport Transport) (*Response,
 }
 
 // WithContext sets the request context.
-//
 func (f Msearch) WithContext(v context.Context) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.ctx = v
@@ -176,7 +192,6 @@ func (f Msearch) WithContext(v context.Context) func(*MsearchRequest) {
 }
 
 // WithIndex - a list of index names to use as default.
-//
 func (f Msearch) WithIndex(v ...string) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.Index = v
@@ -184,7 +199,6 @@ func (f Msearch) WithIndex(v ...string) func(*MsearchRequest) {
 }
 
 // WithDocumentType - a list of document types to use as default.
-//
 func (f Msearch) WithDocumentType(v ...string) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.DocumentType = v
@@ -192,7 +206,6 @@ func (f Msearch) WithDocumentType(v ...string) func(*MsearchRequest) {
 }
 
 // WithCcsMinimizeRoundtrips - indicates whether network round-trips should be minimized as part of cross-cluster search requests execution.
-//
 func (f Msearch) WithCcsMinimizeRoundtrips(v bool) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.CcsMinimizeRoundtrips = &v
@@ -200,7 +213,6 @@ func (f Msearch) WithCcsMinimizeRoundtrips(v bool) func(*MsearchRequest) {
 }
 
 // WithMaxConcurrentSearches - controls the maximum number of concurrent searches the multi search api will execute.
-//
 func (f Msearch) WithMaxConcurrentSearches(v int) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.MaxConcurrentSearches = &v
@@ -208,15 +220,13 @@ func (f Msearch) WithMaxConcurrentSearches(v int) func(*MsearchRequest) {
 }
 
 // WithMaxConcurrentShardRequests - the number of concurrent shard requests each sub search executes concurrently per node. this value should be used to limit the impact of the search on the cluster in order to limit the number of concurrent shard requests.
-//
 func (f Msearch) WithMaxConcurrentShardRequests(v int) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.MaxConcurrentShardRequests = &v
 	}
 }
 
-// WithPreFilterShardSize - a threshold that enforces a pre-filter roundtrip to prefilter search shards based on query rewriting if the number of shards the search request expands to exceeds the threshold. this filter roundtrip can limit the number of shards significantly if for instance a shard can not match any documents based on it's rewrite method ie. if date filters are mandatory to match but the shard bounds and the query are disjoint..
-//
+// WithPreFilterShardSize - a threshold that enforces a pre-filter roundtrip to prefilter search shards based on query rewriting if the number of shards the search request expands to exceeds the threshold. this filter roundtrip can limit the number of shards significantly if for instance a shard can not match any documents based on its rewrite method ie. if date filters are mandatory to match but the shard bounds and the query are disjoint..
 func (f Msearch) WithPreFilterShardSize(v int) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.PreFilterShardSize = &v
@@ -224,7 +234,6 @@ func (f Msearch) WithPreFilterShardSize(v int) func(*MsearchRequest) {
 }
 
 // WithRestTotalHitsAsInt - indicates whether hits.total should be rendered as an integer or an object in the rest search response.
-//
 func (f Msearch) WithRestTotalHitsAsInt(v bool) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.RestTotalHitsAsInt = &v
@@ -232,7 +241,6 @@ func (f Msearch) WithRestTotalHitsAsInt(v bool) func(*MsearchRequest) {
 }
 
 // WithSearchType - search operation type.
-//
 func (f Msearch) WithSearchType(v string) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.SearchType = v
@@ -240,7 +248,6 @@ func (f Msearch) WithSearchType(v string) func(*MsearchRequest) {
 }
 
 // WithTypedKeys - specify whether aggregation and suggester names should be prefixed by their respective types in the response.
-//
 func (f Msearch) WithTypedKeys(v bool) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.TypedKeys = &v
@@ -248,7 +255,6 @@ func (f Msearch) WithTypedKeys(v bool) func(*MsearchRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f Msearch) WithPretty() func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.Pretty = true
@@ -256,7 +262,6 @@ func (f Msearch) WithPretty() func(*MsearchRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f Msearch) WithHuman() func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.Human = true
@@ -264,7 +269,6 @@ func (f Msearch) WithHuman() func(*MsearchRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f Msearch) WithErrorTrace() func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.ErrorTrace = true
@@ -272,7 +276,6 @@ func (f Msearch) WithErrorTrace() func(*MsearchRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f Msearch) WithFilterPath(v ...string) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		r.FilterPath = v
@@ -280,7 +283,6 @@ func (f Msearch) WithFilterPath(v ...string) func(*MsearchRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f Msearch) WithHeader(h map[string]string) func(*MsearchRequest) {
 	return func(r *MsearchRequest) {
 		if r.Header == nil {
@@ -289,5 +291,15 @@ func (f Msearch) WithHeader(h map[string]string) func(*MsearchRequest) {
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f Msearch) WithOpaqueID(s string) func(*MsearchRequest) {
+	return func(r *MsearchRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

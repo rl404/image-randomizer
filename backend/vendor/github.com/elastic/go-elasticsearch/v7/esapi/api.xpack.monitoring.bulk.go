@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -21,12 +38,12 @@ func newMonitoringBulkFunc(t Transport) MonitoringBulk {
 
 // ----- API Definition -------------------------------------------------------
 
-// MonitoringBulk - https://www.elastic.co/guide/en/elasticsearch/reference/master/es-monitoring.html
+// MonitoringBulk - Used by the monitoring features to send monitoring data.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/monitor-elasticsearch-cluster.html.
 type MonitoringBulk func(body io.Reader, o ...func(*MonitoringBulkRequest)) (*Response, error)
 
 // MonitoringBulkRequest configures the Monitoring Bulk API request.
-//
 type MonitoringBulkRequest struct {
 	DocumentType string
 
@@ -47,7 +64,6 @@ type MonitoringBulkRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r MonitoringBulkRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -97,7 +113,10 @@ func (r MonitoringBulkRequest) Do(ctx context.Context, transport Transport) (*Re
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -105,10 +124,6 @@ func (r MonitoringBulkRequest) Do(ctx context.Context, transport Transport) (*Re
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -121,6 +136,10 @@ func (r MonitoringBulkRequest) Do(ctx context.Context, transport Transport) (*Re
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -142,7 +161,6 @@ func (r MonitoringBulkRequest) Do(ctx context.Context, transport Transport) (*Re
 }
 
 // WithContext sets the request context.
-//
 func (f MonitoringBulk) WithContext(v context.Context) func(*MonitoringBulkRequest) {
 	return func(r *MonitoringBulkRequest) {
 		r.ctx = v
@@ -150,7 +168,6 @@ func (f MonitoringBulk) WithContext(v context.Context) func(*MonitoringBulkReque
 }
 
 // WithDocumentType - default document type for items which don't provide one.
-//
 func (f MonitoringBulk) WithDocumentType(v string) func(*MonitoringBulkRequest) {
 	return func(r *MonitoringBulkRequest) {
 		r.DocumentType = v
@@ -158,7 +175,6 @@ func (f MonitoringBulk) WithDocumentType(v string) func(*MonitoringBulkRequest) 
 }
 
 // WithInterval - collection interval (e.g., '10s' or '10000ms') of the payload.
-//
 func (f MonitoringBulk) WithInterval(v string) func(*MonitoringBulkRequest) {
 	return func(r *MonitoringBulkRequest) {
 		r.Interval = v
@@ -166,7 +182,6 @@ func (f MonitoringBulk) WithInterval(v string) func(*MonitoringBulkRequest) {
 }
 
 // WithSystemAPIVersion - api version of the monitored system.
-//
 func (f MonitoringBulk) WithSystemAPIVersion(v string) func(*MonitoringBulkRequest) {
 	return func(r *MonitoringBulkRequest) {
 		r.SystemAPIVersion = v
@@ -174,7 +189,6 @@ func (f MonitoringBulk) WithSystemAPIVersion(v string) func(*MonitoringBulkReque
 }
 
 // WithSystemID - identifier of the monitored system.
-//
 func (f MonitoringBulk) WithSystemID(v string) func(*MonitoringBulkRequest) {
 	return func(r *MonitoringBulkRequest) {
 		r.SystemID = v
@@ -182,7 +196,6 @@ func (f MonitoringBulk) WithSystemID(v string) func(*MonitoringBulkRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f MonitoringBulk) WithPretty() func(*MonitoringBulkRequest) {
 	return func(r *MonitoringBulkRequest) {
 		r.Pretty = true
@@ -190,7 +203,6 @@ func (f MonitoringBulk) WithPretty() func(*MonitoringBulkRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f MonitoringBulk) WithHuman() func(*MonitoringBulkRequest) {
 	return func(r *MonitoringBulkRequest) {
 		r.Human = true
@@ -198,7 +210,6 @@ func (f MonitoringBulk) WithHuman() func(*MonitoringBulkRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f MonitoringBulk) WithErrorTrace() func(*MonitoringBulkRequest) {
 	return func(r *MonitoringBulkRequest) {
 		r.ErrorTrace = true
@@ -206,7 +217,6 @@ func (f MonitoringBulk) WithErrorTrace() func(*MonitoringBulkRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f MonitoringBulk) WithFilterPath(v ...string) func(*MonitoringBulkRequest) {
 	return func(r *MonitoringBulkRequest) {
 		r.FilterPath = v
@@ -214,7 +224,6 @@ func (f MonitoringBulk) WithFilterPath(v ...string) func(*MonitoringBulkRequest)
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f MonitoringBulk) WithHeader(h map[string]string) func(*MonitoringBulkRequest) {
 	return func(r *MonitoringBulkRequest) {
 		if r.Header == nil {
@@ -223,5 +232,15 @@ func (f MonitoringBulk) WithHeader(h map[string]string) func(*MonitoringBulkRequ
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f MonitoringBulk) WithOpaqueID(s string) func(*MonitoringBulkRequest) {
+	return func(r *MonitoringBulkRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

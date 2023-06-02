@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -7,7 +24,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func newCatHealthFunc(t Transport) CatHealth {
@@ -24,21 +40,18 @@ func newCatHealthFunc(t Transport) CatHealth {
 
 // CatHealth returns a concise representation of the cluster health.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/cat-health.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-health.html.
 type CatHealth func(o ...func(*CatHealthRequest)) (*Response, error)
 
 // CatHealthRequest configures the Cat Health API request.
-//
 type CatHealthRequest struct {
-	Format        string
-	H             []string
-	Help          *bool
-	Local         *bool
-	MasterTimeout time.Duration
-	S             []string
-	Ts            *bool
-	V             *bool
+	Format string
+	H      []string
+	Help   *bool
+	S      []string
+	Time   string
+	Ts     *bool
+	V      *bool
 
 	Pretty     bool
 	Human      bool
@@ -51,7 +64,6 @@ type CatHealthRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r CatHealthRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -78,16 +90,12 @@ func (r CatHealthRequest) Do(ctx context.Context, transport Transport) (*Respons
 		params["help"] = strconv.FormatBool(*r.Help)
 	}
 
-	if r.Local != nil {
-		params["local"] = strconv.FormatBool(*r.Local)
-	}
-
-	if r.MasterTimeout != 0 {
-		params["master_timeout"] = formatDuration(r.MasterTimeout)
-	}
-
 	if len(r.S) > 0 {
 		params["s"] = strings.Join(r.S, ",")
+	}
+
+	if r.Time != "" {
+		params["time"] = r.Time
 	}
 
 	if r.Ts != nil {
@@ -114,7 +122,10 @@ func (r CatHealthRequest) Do(ctx context.Context, transport Transport) (*Respons
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -155,7 +166,6 @@ func (r CatHealthRequest) Do(ctx context.Context, transport Transport) (*Respons
 }
 
 // WithContext sets the request context.
-//
 func (f CatHealth) WithContext(v context.Context) func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.ctx = v
@@ -163,7 +173,6 @@ func (f CatHealth) WithContext(v context.Context) func(*CatHealthRequest) {
 }
 
 // WithFormat - a short version of the accept header, e.g. json, yaml.
-//
 func (f CatHealth) WithFormat(v string) func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.Format = v
@@ -171,7 +180,6 @@ func (f CatHealth) WithFormat(v string) func(*CatHealthRequest) {
 }
 
 // WithH - comma-separated list of column names to display.
-//
 func (f CatHealth) WithH(v ...string) func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.H = v
@@ -179,39 +187,27 @@ func (f CatHealth) WithH(v ...string) func(*CatHealthRequest) {
 }
 
 // WithHelp - return help information.
-//
 func (f CatHealth) WithHelp(v bool) func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.Help = &v
 	}
 }
 
-// WithLocal - return local information, do not retrieve the state from master node (default: false).
-//
-func (f CatHealth) WithLocal(v bool) func(*CatHealthRequest) {
-	return func(r *CatHealthRequest) {
-		r.Local = &v
-	}
-}
-
-// WithMasterTimeout - explicit operation timeout for connection to master node.
-//
-func (f CatHealth) WithMasterTimeout(v time.Duration) func(*CatHealthRequest) {
-	return func(r *CatHealthRequest) {
-		r.MasterTimeout = v
-	}
-}
-
 // WithS - comma-separated list of column names or column aliases to sort by.
-//
 func (f CatHealth) WithS(v ...string) func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.S = v
 	}
 }
 
+// WithTime - the unit in which to display time values.
+func (f CatHealth) WithTime(v string) func(*CatHealthRequest) {
+	return func(r *CatHealthRequest) {
+		r.Time = v
+	}
+}
+
 // WithTs - set to false to disable timestamping.
-//
 func (f CatHealth) WithTs(v bool) func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.Ts = &v
@@ -219,7 +215,6 @@ func (f CatHealth) WithTs(v bool) func(*CatHealthRequest) {
 }
 
 // WithV - verbose mode. display column headers.
-//
 func (f CatHealth) WithV(v bool) func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.V = &v
@@ -227,7 +222,6 @@ func (f CatHealth) WithV(v bool) func(*CatHealthRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f CatHealth) WithPretty() func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.Pretty = true
@@ -235,7 +229,6 @@ func (f CatHealth) WithPretty() func(*CatHealthRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f CatHealth) WithHuman() func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.Human = true
@@ -243,7 +236,6 @@ func (f CatHealth) WithHuman() func(*CatHealthRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f CatHealth) WithErrorTrace() func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.ErrorTrace = true
@@ -251,7 +243,6 @@ func (f CatHealth) WithErrorTrace() func(*CatHealthRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f CatHealth) WithFilterPath(v ...string) func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		r.FilterPath = v
@@ -259,7 +250,6 @@ func (f CatHealth) WithFilterPath(v ...string) func(*CatHealthRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f CatHealth) WithHeader(h map[string]string) func(*CatHealthRequest) {
 	return func(r *CatHealthRequest) {
 		if r.Header == nil {
@@ -268,5 +258,15 @@ func (f CatHealth) WithHeader(h map[string]string) func(*CatHealthRequest) {
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f CatHealth) WithOpaqueID(s string) func(*CatHealthRequest) {
+	return func(r *CatHealthRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

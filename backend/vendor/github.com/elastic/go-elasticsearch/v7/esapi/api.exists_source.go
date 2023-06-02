@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -23,12 +40,10 @@ func newExistsSourceFunc(t Transport) ExistsSource {
 
 // ExistsSource returns information about whether a document source exists in an index.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/docs-get.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-get.html.
 type ExistsSource func(index string, id string, o ...func(*ExistsSourceRequest)) (*Response, error)
 
 // ExistsSourceRequest configures the Exists Source API request.
-//
 type ExistsSourceRequest struct {
 	Index        string
 	DocumentType string
@@ -55,7 +70,6 @@ type ExistsSourceRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r ExistsSourceRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -131,7 +145,10 @@ func (r ExistsSourceRequest) Do(ctx context.Context, transport Transport) (*Resp
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -172,7 +189,6 @@ func (r ExistsSourceRequest) Do(ctx context.Context, transport Transport) (*Resp
 }
 
 // WithContext sets the request context.
-//
 func (f ExistsSource) WithContext(v context.Context) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.ctx = v
@@ -180,7 +196,6 @@ func (f ExistsSource) WithContext(v context.Context) func(*ExistsSourceRequest) 
 }
 
 // WithDocumentType - the type of the document; deprecated and optional starting with 7.0.
-//
 func (f ExistsSource) WithDocumentType(v string) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.DocumentType = v
@@ -188,7 +203,6 @@ func (f ExistsSource) WithDocumentType(v string) func(*ExistsSourceRequest) {
 }
 
 // WithPreference - specify the node or shard the operation should be performed on (default: random).
-//
 func (f ExistsSource) WithPreference(v string) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.Preference = v
@@ -196,7 +210,6 @@ func (f ExistsSource) WithPreference(v string) func(*ExistsSourceRequest) {
 }
 
 // WithRealtime - specify whether to perform the operation in realtime or search mode.
-//
 func (f ExistsSource) WithRealtime(v bool) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.Realtime = &v
@@ -204,7 +217,6 @@ func (f ExistsSource) WithRealtime(v bool) func(*ExistsSourceRequest) {
 }
 
 // WithRefresh - refresh the shard containing the document before performing the operation.
-//
 func (f ExistsSource) WithRefresh(v bool) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.Refresh = &v
@@ -212,7 +224,6 @@ func (f ExistsSource) WithRefresh(v bool) func(*ExistsSourceRequest) {
 }
 
 // WithRouting - specific routing value.
-//
 func (f ExistsSource) WithRouting(v string) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.Routing = v
@@ -220,7 +231,6 @@ func (f ExistsSource) WithRouting(v string) func(*ExistsSourceRequest) {
 }
 
 // WithSource - true or false to return the _source field or not, or a list of fields to return.
-//
 func (f ExistsSource) WithSource(v ...string) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.Source = v
@@ -228,7 +238,6 @@ func (f ExistsSource) WithSource(v ...string) func(*ExistsSourceRequest) {
 }
 
 // WithSourceExcludes - a list of fields to exclude from the returned _source field.
-//
 func (f ExistsSource) WithSourceExcludes(v ...string) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.SourceExcludes = v
@@ -236,7 +245,6 @@ func (f ExistsSource) WithSourceExcludes(v ...string) func(*ExistsSourceRequest)
 }
 
 // WithSourceIncludes - a list of fields to extract and return from the _source field.
-//
 func (f ExistsSource) WithSourceIncludes(v ...string) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.SourceIncludes = v
@@ -244,7 +252,6 @@ func (f ExistsSource) WithSourceIncludes(v ...string) func(*ExistsSourceRequest)
 }
 
 // WithVersion - explicit version number for concurrency control.
-//
 func (f ExistsSource) WithVersion(v int) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.Version = &v
@@ -252,7 +259,6 @@ func (f ExistsSource) WithVersion(v int) func(*ExistsSourceRequest) {
 }
 
 // WithVersionType - specific version type.
-//
 func (f ExistsSource) WithVersionType(v string) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.VersionType = v
@@ -260,7 +266,6 @@ func (f ExistsSource) WithVersionType(v string) func(*ExistsSourceRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f ExistsSource) WithPretty() func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.Pretty = true
@@ -268,7 +273,6 @@ func (f ExistsSource) WithPretty() func(*ExistsSourceRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f ExistsSource) WithHuman() func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.Human = true
@@ -276,7 +280,6 @@ func (f ExistsSource) WithHuman() func(*ExistsSourceRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f ExistsSource) WithErrorTrace() func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.ErrorTrace = true
@@ -284,7 +287,6 @@ func (f ExistsSource) WithErrorTrace() func(*ExistsSourceRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f ExistsSource) WithFilterPath(v ...string) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		r.FilterPath = v
@@ -292,7 +294,6 @@ func (f ExistsSource) WithFilterPath(v ...string) func(*ExistsSourceRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f ExistsSource) WithHeader(h map[string]string) func(*ExistsSourceRequest) {
 	return func(r *ExistsSourceRequest) {
 		if r.Header == nil {
@@ -301,5 +302,15 @@ func (f ExistsSource) WithHeader(h map[string]string) func(*ExistsSourceRequest)
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f ExistsSource) WithOpaqueID(s string) func(*ExistsSourceRequest) {
+	return func(r *ExistsSourceRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

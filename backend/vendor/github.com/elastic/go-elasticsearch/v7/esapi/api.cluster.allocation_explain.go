@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -24,12 +41,10 @@ func newClusterAllocationExplainFunc(t Transport) ClusterAllocationExplain {
 
 // ClusterAllocationExplain provides explanations for shard allocations in the cluster.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/cluster-allocation-explain.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/cluster-allocation-explain.html.
 type ClusterAllocationExplain func(o ...func(*ClusterAllocationExplainRequest)) (*Response, error)
 
 // ClusterAllocationExplainRequest configures the Cluster Allocation Explain API request.
-//
 type ClusterAllocationExplainRequest struct {
 	Body io.Reader
 
@@ -47,7 +62,6 @@ type ClusterAllocationExplainRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r ClusterAllocationExplainRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -55,7 +69,7 @@ func (r ClusterAllocationExplainRequest) Do(ctx context.Context, transport Trans
 		params map[string]string
 	)
 
-	method = "GET"
+	method = "POST"
 
 	path.Grow(len("/_cluster/allocation/explain"))
 	path.WriteString("/_cluster/allocation/explain")
@@ -86,7 +100,10 @@ func (r ClusterAllocationExplainRequest) Do(ctx context.Context, transport Trans
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -94,10 +111,6 @@ func (r ClusterAllocationExplainRequest) Do(ctx context.Context, transport Trans
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -110,6 +123,10 @@ func (r ClusterAllocationExplainRequest) Do(ctx context.Context, transport Trans
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -131,15 +148,13 @@ func (r ClusterAllocationExplainRequest) Do(ctx context.Context, transport Trans
 }
 
 // WithContext sets the request context.
-//
 func (f ClusterAllocationExplain) WithContext(v context.Context) func(*ClusterAllocationExplainRequest) {
 	return func(r *ClusterAllocationExplainRequest) {
 		r.ctx = v
 	}
 }
 
-// WithBody - The index, shard, and primary flag to explain. Empty means 'explain the first unassigned shard'.
-//
+// WithBody - The index, shard, and primary flag to explain. Empty means 'explain a randomly-chosen unassigned shard'.
 func (f ClusterAllocationExplain) WithBody(v io.Reader) func(*ClusterAllocationExplainRequest) {
 	return func(r *ClusterAllocationExplainRequest) {
 		r.Body = v
@@ -147,7 +162,6 @@ func (f ClusterAllocationExplain) WithBody(v io.Reader) func(*ClusterAllocationE
 }
 
 // WithIncludeDiskInfo - return information about disk usage and shard sizes (default: false).
-//
 func (f ClusterAllocationExplain) WithIncludeDiskInfo(v bool) func(*ClusterAllocationExplainRequest) {
 	return func(r *ClusterAllocationExplainRequest) {
 		r.IncludeDiskInfo = &v
@@ -155,7 +169,6 @@ func (f ClusterAllocationExplain) WithIncludeDiskInfo(v bool) func(*ClusterAlloc
 }
 
 // WithIncludeYesDecisions - return 'yes' decisions in explanation (default: false).
-//
 func (f ClusterAllocationExplain) WithIncludeYesDecisions(v bool) func(*ClusterAllocationExplainRequest) {
 	return func(r *ClusterAllocationExplainRequest) {
 		r.IncludeYesDecisions = &v
@@ -163,7 +176,6 @@ func (f ClusterAllocationExplain) WithIncludeYesDecisions(v bool) func(*ClusterA
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f ClusterAllocationExplain) WithPretty() func(*ClusterAllocationExplainRequest) {
 	return func(r *ClusterAllocationExplainRequest) {
 		r.Pretty = true
@@ -171,7 +183,6 @@ func (f ClusterAllocationExplain) WithPretty() func(*ClusterAllocationExplainReq
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f ClusterAllocationExplain) WithHuman() func(*ClusterAllocationExplainRequest) {
 	return func(r *ClusterAllocationExplainRequest) {
 		r.Human = true
@@ -179,7 +190,6 @@ func (f ClusterAllocationExplain) WithHuman() func(*ClusterAllocationExplainRequ
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f ClusterAllocationExplain) WithErrorTrace() func(*ClusterAllocationExplainRequest) {
 	return func(r *ClusterAllocationExplainRequest) {
 		r.ErrorTrace = true
@@ -187,7 +197,6 @@ func (f ClusterAllocationExplain) WithErrorTrace() func(*ClusterAllocationExplai
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f ClusterAllocationExplain) WithFilterPath(v ...string) func(*ClusterAllocationExplainRequest) {
 	return func(r *ClusterAllocationExplainRequest) {
 		r.FilterPath = v
@@ -195,7 +204,6 @@ func (f ClusterAllocationExplain) WithFilterPath(v ...string) func(*ClusterAlloc
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f ClusterAllocationExplain) WithHeader(h map[string]string) func(*ClusterAllocationExplainRequest) {
 	return func(r *ClusterAllocationExplainRequest) {
 		if r.Header == nil {
@@ -204,5 +212,15 @@ func (f ClusterAllocationExplain) WithHeader(h map[string]string) func(*ClusterA
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f ClusterAllocationExplain) WithOpaqueID(s string) func(*ClusterAllocationExplainRequest) {
+	return func(r *ClusterAllocationExplainRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

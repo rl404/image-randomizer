@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -25,12 +42,10 @@ func newClusterPutSettingsFunc(t Transport) ClusterPutSettings {
 
 // ClusterPutSettings updates the cluster settings.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/cluster-update-settings.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/cluster-update-settings.html.
 type ClusterPutSettings func(body io.Reader, o ...func(*ClusterPutSettingsRequest)) (*Response, error)
 
 // ClusterPutSettingsRequest configures the Cluster Put Settings API request.
-//
 type ClusterPutSettingsRequest struct {
 	Body io.Reader
 
@@ -49,7 +64,6 @@ type ClusterPutSettingsRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r ClusterPutSettingsRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -92,7 +106,10 @@ func (r ClusterPutSettingsRequest) Do(ctx context.Context, transport Transport) 
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -100,10 +117,6 @@ func (r ClusterPutSettingsRequest) Do(ctx context.Context, transport Transport) 
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -116,6 +129,10 @@ func (r ClusterPutSettingsRequest) Do(ctx context.Context, transport Transport) 
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -137,7 +154,6 @@ func (r ClusterPutSettingsRequest) Do(ctx context.Context, transport Transport) 
 }
 
 // WithContext sets the request context.
-//
 func (f ClusterPutSettings) WithContext(v context.Context) func(*ClusterPutSettingsRequest) {
 	return func(r *ClusterPutSettingsRequest) {
 		r.ctx = v
@@ -145,7 +161,6 @@ func (f ClusterPutSettings) WithContext(v context.Context) func(*ClusterPutSetti
 }
 
 // WithFlatSettings - return settings in flat format (default: false).
-//
 func (f ClusterPutSettings) WithFlatSettings(v bool) func(*ClusterPutSettingsRequest) {
 	return func(r *ClusterPutSettingsRequest) {
 		r.FlatSettings = &v
@@ -153,7 +168,6 @@ func (f ClusterPutSettings) WithFlatSettings(v bool) func(*ClusterPutSettingsReq
 }
 
 // WithMasterTimeout - explicit operation timeout for connection to master node.
-//
 func (f ClusterPutSettings) WithMasterTimeout(v time.Duration) func(*ClusterPutSettingsRequest) {
 	return func(r *ClusterPutSettingsRequest) {
 		r.MasterTimeout = v
@@ -161,7 +175,6 @@ func (f ClusterPutSettings) WithMasterTimeout(v time.Duration) func(*ClusterPutS
 }
 
 // WithTimeout - explicit operation timeout.
-//
 func (f ClusterPutSettings) WithTimeout(v time.Duration) func(*ClusterPutSettingsRequest) {
 	return func(r *ClusterPutSettingsRequest) {
 		r.Timeout = v
@@ -169,7 +182,6 @@ func (f ClusterPutSettings) WithTimeout(v time.Duration) func(*ClusterPutSetting
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f ClusterPutSettings) WithPretty() func(*ClusterPutSettingsRequest) {
 	return func(r *ClusterPutSettingsRequest) {
 		r.Pretty = true
@@ -177,7 +189,6 @@ func (f ClusterPutSettings) WithPretty() func(*ClusterPutSettingsRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f ClusterPutSettings) WithHuman() func(*ClusterPutSettingsRequest) {
 	return func(r *ClusterPutSettingsRequest) {
 		r.Human = true
@@ -185,7 +196,6 @@ func (f ClusterPutSettings) WithHuman() func(*ClusterPutSettingsRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f ClusterPutSettings) WithErrorTrace() func(*ClusterPutSettingsRequest) {
 	return func(r *ClusterPutSettingsRequest) {
 		r.ErrorTrace = true
@@ -193,7 +203,6 @@ func (f ClusterPutSettings) WithErrorTrace() func(*ClusterPutSettingsRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f ClusterPutSettings) WithFilterPath(v ...string) func(*ClusterPutSettingsRequest) {
 	return func(r *ClusterPutSettingsRequest) {
 		r.FilterPath = v
@@ -201,7 +210,6 @@ func (f ClusterPutSettings) WithFilterPath(v ...string) func(*ClusterPutSettings
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f ClusterPutSettings) WithHeader(h map[string]string) func(*ClusterPutSettingsRequest) {
 	return func(r *ClusterPutSettingsRequest) {
 		if r.Header == nil {
@@ -210,5 +218,15 @@ func (f ClusterPutSettings) WithHeader(h map[string]string) func(*ClusterPutSett
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f ClusterPutSettings) WithOpaqueID(s string) func(*ClusterPutSettingsRequest) {
+	return func(r *ClusterPutSettingsRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

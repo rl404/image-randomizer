@@ -1,16 +1,34 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
 func newILMExplainLifecycleFunc(t Transport) ILMExplainLifecycle {
-	return func(o ...func(*ILMExplainLifecycleRequest)) (*Response, error) {
-		var r = ILMExplainLifecycleRequest{}
+	return func(index string, o ...func(*ILMExplainLifecycleRequest)) (*Response, error) {
+		var r = ILMExplainLifecycleRequest{Index: index}
 		for _, f := range o {
 			f(&r)
 		}
@@ -20,14 +38,17 @@ func newILMExplainLifecycleFunc(t Transport) ILMExplainLifecycle {
 
 // ----- API Definition -------------------------------------------------------
 
-// ILMExplainLifecycle - https://www.elastic.co/guide/en/elasticsearch/reference/current/ilm-explain-lifecycle.html
+// ILMExplainLifecycle - Retrieves information about the index's current lifecycle state, such as the currently executing phase, action, and step.
 //
-type ILMExplainLifecycle func(o ...func(*ILMExplainLifecycleRequest)) (*Response, error)
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/ilm-explain-lifecycle.html.
+type ILMExplainLifecycle func(index string, o ...func(*ILMExplainLifecycleRequest)) (*Response, error)
 
 // ILMExplainLifecycleRequest configures the ILM Explain Lifecycle API request.
-//
 type ILMExplainLifecycleRequest struct {
 	Index string
+
+	OnlyErrors  *bool
+	OnlyManaged *bool
 
 	Pretty     bool
 	Human      bool
@@ -40,7 +61,6 @@ type ILMExplainLifecycleRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r ILMExplainLifecycleRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -51,16 +71,22 @@ func (r ILMExplainLifecycleRequest) Do(ctx context.Context, transport Transport)
 	method = "GET"
 
 	path.Grow(1 + len(r.Index) + 1 + len("_ilm") + 1 + len("explain"))
-	if r.Index != "" {
-		path.WriteString("/")
-		path.WriteString(r.Index)
-	}
+	path.WriteString("/")
+	path.WriteString(r.Index)
 	path.WriteString("/")
 	path.WriteString("_ilm")
 	path.WriteString("/")
 	path.WriteString("explain")
 
 	params = make(map[string]string)
+
+	if r.OnlyErrors != nil {
+		params["only_errors"] = strconv.FormatBool(*r.OnlyErrors)
+	}
+
+	if r.OnlyManaged != nil {
+		params["only_managed"] = strconv.FormatBool(*r.OnlyManaged)
+	}
 
 	if r.Pretty {
 		params["pretty"] = "true"
@@ -78,7 +104,10 @@ func (r ILMExplainLifecycleRequest) Do(ctx context.Context, transport Transport)
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -119,23 +148,27 @@ func (r ILMExplainLifecycleRequest) Do(ctx context.Context, transport Transport)
 }
 
 // WithContext sets the request context.
-//
 func (f ILMExplainLifecycle) WithContext(v context.Context) func(*ILMExplainLifecycleRequest) {
 	return func(r *ILMExplainLifecycleRequest) {
 		r.ctx = v
 	}
 }
 
-// WithIndex - the name of the index to explain.
-//
-func (f ILMExplainLifecycle) WithIndex(v string) func(*ILMExplainLifecycleRequest) {
+// WithOnlyErrors - filters the indices included in the response to ones in an ilm error state, implies only_managed.
+func (f ILMExplainLifecycle) WithOnlyErrors(v bool) func(*ILMExplainLifecycleRequest) {
 	return func(r *ILMExplainLifecycleRequest) {
-		r.Index = v
+		r.OnlyErrors = &v
+	}
+}
+
+// WithOnlyManaged - filters the indices included in the response to ones managed by ilm.
+func (f ILMExplainLifecycle) WithOnlyManaged(v bool) func(*ILMExplainLifecycleRequest) {
+	return func(r *ILMExplainLifecycleRequest) {
+		r.OnlyManaged = &v
 	}
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f ILMExplainLifecycle) WithPretty() func(*ILMExplainLifecycleRequest) {
 	return func(r *ILMExplainLifecycleRequest) {
 		r.Pretty = true
@@ -143,7 +176,6 @@ func (f ILMExplainLifecycle) WithPretty() func(*ILMExplainLifecycleRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f ILMExplainLifecycle) WithHuman() func(*ILMExplainLifecycleRequest) {
 	return func(r *ILMExplainLifecycleRequest) {
 		r.Human = true
@@ -151,7 +183,6 @@ func (f ILMExplainLifecycle) WithHuman() func(*ILMExplainLifecycleRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f ILMExplainLifecycle) WithErrorTrace() func(*ILMExplainLifecycleRequest) {
 	return func(r *ILMExplainLifecycleRequest) {
 		r.ErrorTrace = true
@@ -159,7 +190,6 @@ func (f ILMExplainLifecycle) WithErrorTrace() func(*ILMExplainLifecycleRequest) 
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f ILMExplainLifecycle) WithFilterPath(v ...string) func(*ILMExplainLifecycleRequest) {
 	return func(r *ILMExplainLifecycleRequest) {
 		r.FilterPath = v
@@ -167,7 +197,6 @@ func (f ILMExplainLifecycle) WithFilterPath(v ...string) func(*ILMExplainLifecyc
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f ILMExplainLifecycle) WithHeader(h map[string]string) func(*ILMExplainLifecycleRequest) {
 	return func(r *ILMExplainLifecycleRequest) {
 		if r.Header == nil {
@@ -176,5 +205,15 @@ func (f ILMExplainLifecycle) WithHeader(h map[string]string) func(*ILMExplainLif
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f ILMExplainLifecycle) WithOpaqueID(s string) func(*ILMExplainLifecycleRequest) {
+	return func(r *ILMExplainLifecycleRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -20,12 +37,14 @@ func newRollupGetRollupIndexCapsFunc(t Transport) RollupGetRollupIndexCaps {
 
 // ----- API Definition -------------------------------------------------------
 
-// RollupGetRollupIndexCaps -
+// RollupGetRollupIndexCaps - Returns the rollup capabilities of all jobs inside of a rollup index (e.g. the index where rollup data is stored).
 //
+// This API is experimental.
+//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/rollup-get-rollup-index-caps.html.
 type RollupGetRollupIndexCaps func(index string, o ...func(*RollupGetRollupIndexCapsRequest)) (*Response, error)
 
 // RollupGetRollupIndexCapsRequest configures the Rollup Get Rollup Index Caps API request.
-//
 type RollupGetRollupIndexCapsRequest struct {
 	Index string
 
@@ -40,7 +59,6 @@ type RollupGetRollupIndexCapsRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r RollupGetRollupIndexCapsRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -76,7 +94,10 @@ func (r RollupGetRollupIndexCapsRequest) Do(ctx context.Context, transport Trans
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -117,7 +138,6 @@ func (r RollupGetRollupIndexCapsRequest) Do(ctx context.Context, transport Trans
 }
 
 // WithContext sets the request context.
-//
 func (f RollupGetRollupIndexCaps) WithContext(v context.Context) func(*RollupGetRollupIndexCapsRequest) {
 	return func(r *RollupGetRollupIndexCapsRequest) {
 		r.ctx = v
@@ -125,7 +145,6 @@ func (f RollupGetRollupIndexCaps) WithContext(v context.Context) func(*RollupGet
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f RollupGetRollupIndexCaps) WithPretty() func(*RollupGetRollupIndexCapsRequest) {
 	return func(r *RollupGetRollupIndexCapsRequest) {
 		r.Pretty = true
@@ -133,7 +152,6 @@ func (f RollupGetRollupIndexCaps) WithPretty() func(*RollupGetRollupIndexCapsReq
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f RollupGetRollupIndexCaps) WithHuman() func(*RollupGetRollupIndexCapsRequest) {
 	return func(r *RollupGetRollupIndexCapsRequest) {
 		r.Human = true
@@ -141,7 +159,6 @@ func (f RollupGetRollupIndexCaps) WithHuman() func(*RollupGetRollupIndexCapsRequ
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f RollupGetRollupIndexCaps) WithErrorTrace() func(*RollupGetRollupIndexCapsRequest) {
 	return func(r *RollupGetRollupIndexCapsRequest) {
 		r.ErrorTrace = true
@@ -149,7 +166,6 @@ func (f RollupGetRollupIndexCaps) WithErrorTrace() func(*RollupGetRollupIndexCap
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f RollupGetRollupIndexCaps) WithFilterPath(v ...string) func(*RollupGetRollupIndexCapsRequest) {
 	return func(r *RollupGetRollupIndexCapsRequest) {
 		r.FilterPath = v
@@ -157,7 +173,6 @@ func (f RollupGetRollupIndexCaps) WithFilterPath(v ...string) func(*RollupGetRol
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f RollupGetRollupIndexCaps) WithHeader(h map[string]string) func(*RollupGetRollupIndexCapsRequest) {
 	return func(r *RollupGetRollupIndexCapsRequest) {
 		if r.Header == nil {
@@ -166,5 +181,15 @@ func (f RollupGetRollupIndexCaps) WithHeader(h map[string]string) func(*RollupGe
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f RollupGetRollupIndexCaps) WithOpaqueID(s string) func(*RollupGetRollupIndexCapsRequest) {
+	return func(r *RollupGetRollupIndexCapsRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

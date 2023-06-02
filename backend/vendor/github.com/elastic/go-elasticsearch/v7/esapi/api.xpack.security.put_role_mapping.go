@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -21,12 +38,12 @@ func newSecurityPutRoleMappingFunc(t Transport) SecurityPutRoleMapping {
 
 // ----- API Definition -------------------------------------------------------
 
-// SecurityPutRoleMapping - https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-role-mapping.html
+// SecurityPutRoleMapping - Creates and updates role mappings.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-role-mapping.html.
 type SecurityPutRoleMapping func(name string, body io.Reader, o ...func(*SecurityPutRoleMappingRequest)) (*Response, error)
 
 // SecurityPutRoleMappingRequest configures the Security Put Role Mapping API request.
-//
 type SecurityPutRoleMappingRequest struct {
 	Body io.Reader
 
@@ -45,7 +62,6 @@ type SecurityPutRoleMappingRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r SecurityPutRoleMappingRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -85,7 +101,10 @@ func (r SecurityPutRoleMappingRequest) Do(ctx context.Context, transport Transpo
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -93,10 +112,6 @@ func (r SecurityPutRoleMappingRequest) Do(ctx context.Context, transport Transpo
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -109,6 +124,10 @@ func (r SecurityPutRoleMappingRequest) Do(ctx context.Context, transport Transpo
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -130,7 +149,6 @@ func (r SecurityPutRoleMappingRequest) Do(ctx context.Context, transport Transpo
 }
 
 // WithContext sets the request context.
-//
 func (f SecurityPutRoleMapping) WithContext(v context.Context) func(*SecurityPutRoleMappingRequest) {
 	return func(r *SecurityPutRoleMappingRequest) {
 		r.ctx = v
@@ -138,7 +156,6 @@ func (f SecurityPutRoleMapping) WithContext(v context.Context) func(*SecurityPut
 }
 
 // WithRefresh - if `true` (the default) then refresh the affected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` then do nothing with refreshes..
-//
 func (f SecurityPutRoleMapping) WithRefresh(v string) func(*SecurityPutRoleMappingRequest) {
 	return func(r *SecurityPutRoleMappingRequest) {
 		r.Refresh = v
@@ -146,7 +163,6 @@ func (f SecurityPutRoleMapping) WithRefresh(v string) func(*SecurityPutRoleMappi
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f SecurityPutRoleMapping) WithPretty() func(*SecurityPutRoleMappingRequest) {
 	return func(r *SecurityPutRoleMappingRequest) {
 		r.Pretty = true
@@ -154,7 +170,6 @@ func (f SecurityPutRoleMapping) WithPretty() func(*SecurityPutRoleMappingRequest
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f SecurityPutRoleMapping) WithHuman() func(*SecurityPutRoleMappingRequest) {
 	return func(r *SecurityPutRoleMappingRequest) {
 		r.Human = true
@@ -162,7 +177,6 @@ func (f SecurityPutRoleMapping) WithHuman() func(*SecurityPutRoleMappingRequest)
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f SecurityPutRoleMapping) WithErrorTrace() func(*SecurityPutRoleMappingRequest) {
 	return func(r *SecurityPutRoleMappingRequest) {
 		r.ErrorTrace = true
@@ -170,7 +184,6 @@ func (f SecurityPutRoleMapping) WithErrorTrace() func(*SecurityPutRoleMappingReq
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f SecurityPutRoleMapping) WithFilterPath(v ...string) func(*SecurityPutRoleMappingRequest) {
 	return func(r *SecurityPutRoleMappingRequest) {
 		r.FilterPath = v
@@ -178,7 +191,6 @@ func (f SecurityPutRoleMapping) WithFilterPath(v ...string) func(*SecurityPutRol
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f SecurityPutRoleMapping) WithHeader(h map[string]string) func(*SecurityPutRoleMappingRequest) {
 	return func(r *SecurityPutRoleMappingRequest) {
 		if r.Header == nil {
@@ -187,5 +199,15 @@ func (f SecurityPutRoleMapping) WithHeader(h map[string]string) func(*SecurityPu
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f SecurityPutRoleMapping) WithOpaqueID(s string) func(*SecurityPutRoleMappingRequest) {
+	return func(r *SecurityPutRoleMappingRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

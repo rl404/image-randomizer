@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -22,12 +39,12 @@ func newMLDeleteForecastFunc(t Transport) MLDeleteForecast {
 
 // ----- API Definition -------------------------------------------------------
 
-// MLDeleteForecast - http://www.elastic.co/guide/en/elasticsearch/reference/current/ml-delete-forecast.html
+// MLDeleteForecast - Deletes forecasts from a machine learning job.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-delete-forecast.html.
 type MLDeleteForecast func(job_id string, o ...func(*MLDeleteForecastRequest)) (*Response, error)
 
 // MLDeleteForecastRequest configures the ML Delete Forecast API request.
-//
 type MLDeleteForecastRequest struct {
 	ForecastID string
 	JobID      string
@@ -46,7 +63,6 @@ type MLDeleteForecastRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r MLDeleteForecastRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -96,7 +112,10 @@ func (r MLDeleteForecastRequest) Do(ctx context.Context, transport Transport) (*
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -137,7 +156,6 @@ func (r MLDeleteForecastRequest) Do(ctx context.Context, transport Transport) (*
 }
 
 // WithContext sets the request context.
-//
 func (f MLDeleteForecast) WithContext(v context.Context) func(*MLDeleteForecastRequest) {
 	return func(r *MLDeleteForecastRequest) {
 		r.ctx = v
@@ -145,7 +163,6 @@ func (f MLDeleteForecast) WithContext(v context.Context) func(*MLDeleteForecastR
 }
 
 // WithForecastID - the ID of the forecast to delete, can be comma delimited list. leaving blank implies `_all`.
-//
 func (f MLDeleteForecast) WithForecastID(v string) func(*MLDeleteForecastRequest) {
 	return func(r *MLDeleteForecastRequest) {
 		r.ForecastID = v
@@ -153,7 +170,6 @@ func (f MLDeleteForecast) WithForecastID(v string) func(*MLDeleteForecastRequest
 }
 
 // WithAllowNoForecasts - whether to ignore if `_all` matches no forecasts.
-//
 func (f MLDeleteForecast) WithAllowNoForecasts(v bool) func(*MLDeleteForecastRequest) {
 	return func(r *MLDeleteForecastRequest) {
 		r.AllowNoForecasts = &v
@@ -161,7 +177,6 @@ func (f MLDeleteForecast) WithAllowNoForecasts(v bool) func(*MLDeleteForecastReq
 }
 
 // WithTimeout - controls the time to wait until the forecast(s) are deleted. default to 30 seconds.
-//
 func (f MLDeleteForecast) WithTimeout(v time.Duration) func(*MLDeleteForecastRequest) {
 	return func(r *MLDeleteForecastRequest) {
 		r.Timeout = v
@@ -169,7 +184,6 @@ func (f MLDeleteForecast) WithTimeout(v time.Duration) func(*MLDeleteForecastReq
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f MLDeleteForecast) WithPretty() func(*MLDeleteForecastRequest) {
 	return func(r *MLDeleteForecastRequest) {
 		r.Pretty = true
@@ -177,7 +191,6 @@ func (f MLDeleteForecast) WithPretty() func(*MLDeleteForecastRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f MLDeleteForecast) WithHuman() func(*MLDeleteForecastRequest) {
 	return func(r *MLDeleteForecastRequest) {
 		r.Human = true
@@ -185,7 +198,6 @@ func (f MLDeleteForecast) WithHuman() func(*MLDeleteForecastRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f MLDeleteForecast) WithErrorTrace() func(*MLDeleteForecastRequest) {
 	return func(r *MLDeleteForecastRequest) {
 		r.ErrorTrace = true
@@ -193,7 +205,6 @@ func (f MLDeleteForecast) WithErrorTrace() func(*MLDeleteForecastRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f MLDeleteForecast) WithFilterPath(v ...string) func(*MLDeleteForecastRequest) {
 	return func(r *MLDeleteForecastRequest) {
 		r.FilterPath = v
@@ -201,7 +212,6 @@ func (f MLDeleteForecast) WithFilterPath(v ...string) func(*MLDeleteForecastRequ
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f MLDeleteForecast) WithHeader(h map[string]string) func(*MLDeleteForecastRequest) {
 	return func(r *MLDeleteForecastRequest) {
 		if r.Header == nil {
@@ -210,5 +220,15 @@ func (f MLDeleteForecast) WithHeader(h map[string]string) func(*MLDeleteForecast
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f MLDeleteForecast) WithOpaqueID(s string) func(*MLDeleteForecastRequest) {
+	return func(r *MLDeleteForecastRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

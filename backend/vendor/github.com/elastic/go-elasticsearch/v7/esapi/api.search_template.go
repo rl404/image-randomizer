@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -25,12 +42,10 @@ func newSearchTemplateFunc(t Transport) SearchTemplate {
 
 // SearchTemplate allows to use the Mustache language to pre-render a search definition.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html.
 type SearchTemplate func(body io.Reader, o ...func(*SearchTemplateRequest)) (*Response, error)
 
 // SearchTemplateRequest configures the Search Template API request.
-//
 type SearchTemplateRequest struct {
 	Index        []string
 	DocumentType []string
@@ -62,7 +77,6 @@ type SearchTemplateRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r SearchTemplateRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -70,7 +84,7 @@ func (r SearchTemplateRequest) Do(ctx context.Context, transport Transport) (*Re
 		params map[string]string
 	)
 
-	method = "GET"
+	method = "POST"
 
 	path.Grow(1 + len(strings.Join(r.Index, ",")) + 1 + len(strings.Join(r.DocumentType, ",")) + 1 + len("_search") + 1 + len("template"))
 	if len(r.Index) > 0 {
@@ -156,7 +170,10 @@ func (r SearchTemplateRequest) Do(ctx context.Context, transport Transport) (*Re
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -164,10 +181,6 @@ func (r SearchTemplateRequest) Do(ctx context.Context, transport Transport) (*Re
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -180,6 +193,10 @@ func (r SearchTemplateRequest) Do(ctx context.Context, transport Transport) (*Re
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -201,7 +218,6 @@ func (r SearchTemplateRequest) Do(ctx context.Context, transport Transport) (*Re
 }
 
 // WithContext sets the request context.
-//
 func (f SearchTemplate) WithContext(v context.Context) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.ctx = v
@@ -209,7 +225,6 @@ func (f SearchTemplate) WithContext(v context.Context) func(*SearchTemplateReque
 }
 
 // WithIndex - a list of index names to search; use _all to perform the operation on all indices.
-//
 func (f SearchTemplate) WithIndex(v ...string) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.Index = v
@@ -217,7 +232,6 @@ func (f SearchTemplate) WithIndex(v ...string) func(*SearchTemplateRequest) {
 }
 
 // WithDocumentType - a list of document types to search; leave empty to perform the operation on all types.
-//
 func (f SearchTemplate) WithDocumentType(v ...string) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.DocumentType = v
@@ -225,7 +239,6 @@ func (f SearchTemplate) WithDocumentType(v ...string) func(*SearchTemplateReques
 }
 
 // WithAllowNoIndices - whether to ignore if a wildcard indices expression resolves into no concrete indices. (this includes `_all` string or when no indices have been specified).
-//
 func (f SearchTemplate) WithAllowNoIndices(v bool) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.AllowNoIndices = &v
@@ -233,7 +246,6 @@ func (f SearchTemplate) WithAllowNoIndices(v bool) func(*SearchTemplateRequest) 
 }
 
 // WithCcsMinimizeRoundtrips - indicates whether network round-trips should be minimized as part of cross-cluster search requests execution.
-//
 func (f SearchTemplate) WithCcsMinimizeRoundtrips(v bool) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.CcsMinimizeRoundtrips = &v
@@ -241,7 +253,6 @@ func (f SearchTemplate) WithCcsMinimizeRoundtrips(v bool) func(*SearchTemplateRe
 }
 
 // WithExpandWildcards - whether to expand wildcard expression to concrete indices that are open, closed or both..
-//
 func (f SearchTemplate) WithExpandWildcards(v string) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.ExpandWildcards = v
@@ -249,7 +260,6 @@ func (f SearchTemplate) WithExpandWildcards(v string) func(*SearchTemplateReques
 }
 
 // WithExplain - specify whether to return detailed information about score computation as part of a hit.
-//
 func (f SearchTemplate) WithExplain(v bool) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.Explain = &v
@@ -257,7 +267,6 @@ func (f SearchTemplate) WithExplain(v bool) func(*SearchTemplateRequest) {
 }
 
 // WithIgnoreThrottled - whether specified concrete, expanded or aliased indices should be ignored when throttled.
-//
 func (f SearchTemplate) WithIgnoreThrottled(v bool) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.IgnoreThrottled = &v
@@ -265,7 +274,6 @@ func (f SearchTemplate) WithIgnoreThrottled(v bool) func(*SearchTemplateRequest)
 }
 
 // WithIgnoreUnavailable - whether specified concrete indices should be ignored when unavailable (missing or closed).
-//
 func (f SearchTemplate) WithIgnoreUnavailable(v bool) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.IgnoreUnavailable = &v
@@ -273,7 +281,6 @@ func (f SearchTemplate) WithIgnoreUnavailable(v bool) func(*SearchTemplateReques
 }
 
 // WithPreference - specify the node or shard the operation should be performed on (default: random).
-//
 func (f SearchTemplate) WithPreference(v string) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.Preference = v
@@ -281,7 +288,6 @@ func (f SearchTemplate) WithPreference(v string) func(*SearchTemplateRequest) {
 }
 
 // WithProfile - specify whether to profile the query execution.
-//
 func (f SearchTemplate) WithProfile(v bool) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.Profile = &v
@@ -289,7 +295,6 @@ func (f SearchTemplate) WithProfile(v bool) func(*SearchTemplateRequest) {
 }
 
 // WithRestTotalHitsAsInt - indicates whether hits.total should be rendered as an integer or an object in the rest search response.
-//
 func (f SearchTemplate) WithRestTotalHitsAsInt(v bool) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.RestTotalHitsAsInt = &v
@@ -297,7 +302,6 @@ func (f SearchTemplate) WithRestTotalHitsAsInt(v bool) func(*SearchTemplateReque
 }
 
 // WithRouting - a list of specific routing values.
-//
 func (f SearchTemplate) WithRouting(v ...string) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.Routing = v
@@ -305,7 +309,6 @@ func (f SearchTemplate) WithRouting(v ...string) func(*SearchTemplateRequest) {
 }
 
 // WithScroll - specify how long a consistent view of the index should be maintained for scrolled search.
-//
 func (f SearchTemplate) WithScroll(v time.Duration) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.Scroll = v
@@ -313,7 +316,6 @@ func (f SearchTemplate) WithScroll(v time.Duration) func(*SearchTemplateRequest)
 }
 
 // WithSearchType - search operation type.
-//
 func (f SearchTemplate) WithSearchType(v string) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.SearchType = v
@@ -321,7 +323,6 @@ func (f SearchTemplate) WithSearchType(v string) func(*SearchTemplateRequest) {
 }
 
 // WithTypedKeys - specify whether aggregation and suggester names should be prefixed by their respective types in the response.
-//
 func (f SearchTemplate) WithTypedKeys(v bool) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.TypedKeys = &v
@@ -329,7 +330,6 @@ func (f SearchTemplate) WithTypedKeys(v bool) func(*SearchTemplateRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f SearchTemplate) WithPretty() func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.Pretty = true
@@ -337,7 +337,6 @@ func (f SearchTemplate) WithPretty() func(*SearchTemplateRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f SearchTemplate) WithHuman() func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.Human = true
@@ -345,7 +344,6 @@ func (f SearchTemplate) WithHuman() func(*SearchTemplateRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f SearchTemplate) WithErrorTrace() func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.ErrorTrace = true
@@ -353,7 +351,6 @@ func (f SearchTemplate) WithErrorTrace() func(*SearchTemplateRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f SearchTemplate) WithFilterPath(v ...string) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		r.FilterPath = v
@@ -361,7 +358,6 @@ func (f SearchTemplate) WithFilterPath(v ...string) func(*SearchTemplateRequest)
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f SearchTemplate) WithHeader(h map[string]string) func(*SearchTemplateRequest) {
 	return func(r *SearchTemplateRequest) {
 		if r.Header == nil {
@@ -370,5 +366,15 @@ func (f SearchTemplate) WithHeader(h map[string]string) func(*SearchTemplateRequ
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f SearchTemplate) WithOpaqueID(s string) func(*SearchTemplateRequest) {
+	return func(r *SearchTemplateRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -24,12 +41,10 @@ func newMsearchTemplateFunc(t Transport) MsearchTemplate {
 
 // MsearchTemplate allows to execute several search template operations in one request.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html.
 type MsearchTemplate func(body io.Reader, o ...func(*MsearchTemplateRequest)) (*Response, error)
 
 // MsearchTemplateRequest configures the Msearch Template API request.
-//
 type MsearchTemplateRequest struct {
 	Index        []string
 	DocumentType []string
@@ -53,7 +68,6 @@ type MsearchTemplateRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r MsearchTemplateRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -61,7 +75,7 @@ func (r MsearchTemplateRequest) Do(ctx context.Context, transport Transport) (*R
 		params map[string]string
 	)
 
-	method = "GET"
+	method = "POST"
 
 	path.Grow(1 + len(strings.Join(r.Index, ",")) + 1 + len(strings.Join(r.DocumentType, ",")) + 1 + len("_msearch") + 1 + len("template"))
 	if len(r.Index) > 0 {
@@ -115,7 +129,10 @@ func (r MsearchTemplateRequest) Do(ctx context.Context, transport Transport) (*R
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -123,10 +140,6 @@ func (r MsearchTemplateRequest) Do(ctx context.Context, transport Transport) (*R
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -139,6 +152,10 @@ func (r MsearchTemplateRequest) Do(ctx context.Context, transport Transport) (*R
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -160,7 +177,6 @@ func (r MsearchTemplateRequest) Do(ctx context.Context, transport Transport) (*R
 }
 
 // WithContext sets the request context.
-//
 func (f MsearchTemplate) WithContext(v context.Context) func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.ctx = v
@@ -168,7 +184,6 @@ func (f MsearchTemplate) WithContext(v context.Context) func(*MsearchTemplateReq
 }
 
 // WithIndex - a list of index names to use as default.
-//
 func (f MsearchTemplate) WithIndex(v ...string) func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.Index = v
@@ -176,7 +191,6 @@ func (f MsearchTemplate) WithIndex(v ...string) func(*MsearchTemplateRequest) {
 }
 
 // WithDocumentType - a list of document types to use as default.
-//
 func (f MsearchTemplate) WithDocumentType(v ...string) func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.DocumentType = v
@@ -184,7 +198,6 @@ func (f MsearchTemplate) WithDocumentType(v ...string) func(*MsearchTemplateRequ
 }
 
 // WithCcsMinimizeRoundtrips - indicates whether network round-trips should be minimized as part of cross-cluster search requests execution.
-//
 func (f MsearchTemplate) WithCcsMinimizeRoundtrips(v bool) func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.CcsMinimizeRoundtrips = &v
@@ -192,7 +205,6 @@ func (f MsearchTemplate) WithCcsMinimizeRoundtrips(v bool) func(*MsearchTemplate
 }
 
 // WithMaxConcurrentSearches - controls the maximum number of concurrent searches the multi search api will execute.
-//
 func (f MsearchTemplate) WithMaxConcurrentSearches(v int) func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.MaxConcurrentSearches = &v
@@ -200,7 +212,6 @@ func (f MsearchTemplate) WithMaxConcurrentSearches(v int) func(*MsearchTemplateR
 }
 
 // WithRestTotalHitsAsInt - indicates whether hits.total should be rendered as an integer or an object in the rest search response.
-//
 func (f MsearchTemplate) WithRestTotalHitsAsInt(v bool) func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.RestTotalHitsAsInt = &v
@@ -208,7 +219,6 @@ func (f MsearchTemplate) WithRestTotalHitsAsInt(v bool) func(*MsearchTemplateReq
 }
 
 // WithSearchType - search operation type.
-//
 func (f MsearchTemplate) WithSearchType(v string) func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.SearchType = v
@@ -216,7 +226,6 @@ func (f MsearchTemplate) WithSearchType(v string) func(*MsearchTemplateRequest) 
 }
 
 // WithTypedKeys - specify whether aggregation and suggester names should be prefixed by their respective types in the response.
-//
 func (f MsearchTemplate) WithTypedKeys(v bool) func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.TypedKeys = &v
@@ -224,7 +233,6 @@ func (f MsearchTemplate) WithTypedKeys(v bool) func(*MsearchTemplateRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f MsearchTemplate) WithPretty() func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.Pretty = true
@@ -232,7 +240,6 @@ func (f MsearchTemplate) WithPretty() func(*MsearchTemplateRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f MsearchTemplate) WithHuman() func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.Human = true
@@ -240,7 +247,6 @@ func (f MsearchTemplate) WithHuman() func(*MsearchTemplateRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f MsearchTemplate) WithErrorTrace() func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.ErrorTrace = true
@@ -248,7 +254,6 @@ func (f MsearchTemplate) WithErrorTrace() func(*MsearchTemplateRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f MsearchTemplate) WithFilterPath(v ...string) func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		r.FilterPath = v
@@ -256,7 +261,6 @@ func (f MsearchTemplate) WithFilterPath(v ...string) func(*MsearchTemplateReques
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f MsearchTemplate) WithHeader(h map[string]string) func(*MsearchTemplateRequest) {
 	return func(r *MsearchTemplateRequest) {
 		if r.Header == nil {
@@ -265,5 +269,15 @@ func (f MsearchTemplate) WithHeader(h map[string]string) func(*MsearchTemplateRe
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f MsearchTemplate) WithOpaqueID(s string) func(*MsearchTemplateRequest) {
+	return func(r *MsearchTemplateRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

@@ -1,10 +1,28 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -24,15 +42,14 @@ func newIngestGetPipelineFunc(t Transport) IngestGetPipeline {
 // IngestGetPipeline returns a pipeline.
 //
 // See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/get-pipeline-api.html.
-//
 type IngestGetPipeline func(o ...func(*IngestGetPipelineRequest)) (*Response, error)
 
 // IngestGetPipelineRequest configures the Ingest Get Pipeline API request.
-//
 type IngestGetPipelineRequest struct {
 	PipelineID string
 
 	MasterTimeout time.Duration
+	Summary       *bool
 
 	Pretty     bool
 	Human      bool
@@ -45,7 +62,6 @@ type IngestGetPipelineRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r IngestGetPipelineRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -71,6 +87,10 @@ func (r IngestGetPipelineRequest) Do(ctx context.Context, transport Transport) (
 		params["master_timeout"] = formatDuration(r.MasterTimeout)
 	}
 
+	if r.Summary != nil {
+		params["summary"] = strconv.FormatBool(*r.Summary)
+	}
+
 	if r.Pretty {
 		params["pretty"] = "true"
 	}
@@ -87,7 +107,10 @@ func (r IngestGetPipelineRequest) Do(ctx context.Context, transport Transport) (
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -128,7 +151,6 @@ func (r IngestGetPipelineRequest) Do(ctx context.Context, transport Transport) (
 }
 
 // WithContext sets the request context.
-//
 func (f IngestGetPipeline) WithContext(v context.Context) func(*IngestGetPipelineRequest) {
 	return func(r *IngestGetPipelineRequest) {
 		r.ctx = v
@@ -136,7 +158,6 @@ func (f IngestGetPipeline) WithContext(v context.Context) func(*IngestGetPipelin
 }
 
 // WithPipelineID - comma separated list of pipeline ids. wildcards supported.
-//
 func (f IngestGetPipeline) WithPipelineID(v string) func(*IngestGetPipelineRequest) {
 	return func(r *IngestGetPipelineRequest) {
 		r.PipelineID = v
@@ -144,15 +165,20 @@ func (f IngestGetPipeline) WithPipelineID(v string) func(*IngestGetPipelineReque
 }
 
 // WithMasterTimeout - explicit operation timeout for connection to master node.
-//
 func (f IngestGetPipeline) WithMasterTimeout(v time.Duration) func(*IngestGetPipelineRequest) {
 	return func(r *IngestGetPipelineRequest) {
 		r.MasterTimeout = v
 	}
 }
 
+// WithSummary - return pipelines without their definitions (default: false).
+func (f IngestGetPipeline) WithSummary(v bool) func(*IngestGetPipelineRequest) {
+	return func(r *IngestGetPipelineRequest) {
+		r.Summary = &v
+	}
+}
+
 // WithPretty makes the response body pretty-printed.
-//
 func (f IngestGetPipeline) WithPretty() func(*IngestGetPipelineRequest) {
 	return func(r *IngestGetPipelineRequest) {
 		r.Pretty = true
@@ -160,7 +186,6 @@ func (f IngestGetPipeline) WithPretty() func(*IngestGetPipelineRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f IngestGetPipeline) WithHuman() func(*IngestGetPipelineRequest) {
 	return func(r *IngestGetPipelineRequest) {
 		r.Human = true
@@ -168,7 +193,6 @@ func (f IngestGetPipeline) WithHuman() func(*IngestGetPipelineRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f IngestGetPipeline) WithErrorTrace() func(*IngestGetPipelineRequest) {
 	return func(r *IngestGetPipelineRequest) {
 		r.ErrorTrace = true
@@ -176,7 +200,6 @@ func (f IngestGetPipeline) WithErrorTrace() func(*IngestGetPipelineRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f IngestGetPipeline) WithFilterPath(v ...string) func(*IngestGetPipelineRequest) {
 	return func(r *IngestGetPipelineRequest) {
 		r.FilterPath = v
@@ -184,7 +207,6 @@ func (f IngestGetPipeline) WithFilterPath(v ...string) func(*IngestGetPipelineRe
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f IngestGetPipeline) WithHeader(h map[string]string) func(*IngestGetPipelineRequest) {
 	return func(r *IngestGetPipelineRequest) {
 		if r.Header == nil {
@@ -193,5 +215,15 @@ func (f IngestGetPipeline) WithHeader(h map[string]string) func(*IngestGetPipeli
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f IngestGetPipeline) WithOpaqueID(s string) func(*IngestGetPipelineRequest) {
+	return func(r *IngestGetPipelineRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -25,12 +42,10 @@ func newIndexFunc(t Transport) Index {
 
 // Index creates or updates a document in an index.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/docs-index_.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-index_.html.
 type Index func(index string, body io.Reader, o ...func(*IndexRequest)) (*Response, error)
 
 // IndexRequest configures the Index API request.
-//
 type IndexRequest struct {
 	Index        string
 	DocumentType string
@@ -43,6 +58,7 @@ type IndexRequest struct {
 	OpType              string
 	Pipeline            string
 	Refresh             string
+	RequireAlias        *bool
 	Routing             string
 	Timeout             time.Duration
 	Version             *int
@@ -60,7 +76,6 @@ type IndexRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r IndexRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -81,8 +96,10 @@ func (r IndexRequest) Do(ctx context.Context, transport Transport) (*Response, e
 	path.Grow(1 + len(r.Index) + 1 + len(r.DocumentType) + 1 + len(r.DocumentID))
 	path.WriteString("/")
 	path.WriteString(r.Index)
-	path.WriteString("/")
-	path.WriteString(r.DocumentType)
+	if r.DocumentType != "" {
+		path.WriteString("/")
+		path.WriteString(r.DocumentType)
+	}
 	if r.DocumentID != "" {
 		path.WriteString("/")
 		path.WriteString(r.DocumentID)
@@ -108,6 +125,10 @@ func (r IndexRequest) Do(ctx context.Context, transport Transport) (*Response, e
 
 	if r.Refresh != "" {
 		params["refresh"] = r.Refresh
+	}
+
+	if r.RequireAlias != nil {
+		params["require_alias"] = strconv.FormatBool(*r.RequireAlias)
 	}
 
 	if r.Routing != "" {
@@ -146,7 +167,10 @@ func (r IndexRequest) Do(ctx context.Context, transport Transport) (*Response, e
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), r.Body)
+	req, err := newRequest(method, path.String(), r.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -154,10 +178,6 @@ func (r IndexRequest) Do(ctx context.Context, transport Transport) (*Response, e
 			q.Set(k, v)
 		}
 		req.URL.RawQuery = q.Encode()
-	}
-
-	if r.Body != nil {
-		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if len(r.Header) > 0 {
@@ -170,6 +190,10 @@ func (r IndexRequest) Do(ctx context.Context, transport Transport) (*Response, e
 				}
 			}
 		}
+	}
+
+	if r.Body != nil && req.Header.Get(headerContentType) == "" {
+		req.Header[headerContentType] = headerContentTypeJSON
 	}
 
 	if ctx != nil {
@@ -191,7 +215,6 @@ func (r IndexRequest) Do(ctx context.Context, transport Transport) (*Response, e
 }
 
 // WithContext sets the request context.
-//
 func (f Index) WithContext(v context.Context) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.ctx = v
@@ -199,7 +222,6 @@ func (f Index) WithContext(v context.Context) func(*IndexRequest) {
 }
 
 // WithDocumentID - document ID.
-//
 func (f Index) WithDocumentID(v string) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.DocumentID = v
@@ -207,7 +229,6 @@ func (f Index) WithDocumentID(v string) func(*IndexRequest) {
 }
 
 // WithDocumentType - the type of the document.
-//
 func (f Index) WithDocumentType(v string) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.DocumentType = v
@@ -215,7 +236,6 @@ func (f Index) WithDocumentType(v string) func(*IndexRequest) {
 }
 
 // WithIfPrimaryTerm - only perform the index operation if the last operation that has changed the document has the specified primary term.
-//
 func (f Index) WithIfPrimaryTerm(v int) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.IfPrimaryTerm = &v
@@ -223,15 +243,13 @@ func (f Index) WithIfPrimaryTerm(v int) func(*IndexRequest) {
 }
 
 // WithIfSeqNo - only perform the index operation if the last operation that has changed the document has the specified sequence number.
-//
 func (f Index) WithIfSeqNo(v int) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.IfSeqNo = &v
 	}
 }
 
-// WithOpType - explicit operation type.
-//
+// WithOpType - explicit operation type. defaults to `index` for requests with an explicit document ID, and to `create`for requests without an explicit document ID.
 func (f Index) WithOpType(v string) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.OpType = v
@@ -239,7 +257,6 @@ func (f Index) WithOpType(v string) func(*IndexRequest) {
 }
 
 // WithPipeline - the pipeline ID to preprocess incoming documents with.
-//
 func (f Index) WithPipeline(v string) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.Pipeline = v
@@ -247,15 +264,20 @@ func (f Index) WithPipeline(v string) func(*IndexRequest) {
 }
 
 // WithRefresh - if `true` then refresh the affected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes..
-//
 func (f Index) WithRefresh(v string) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.Refresh = v
 	}
 }
 
+// WithRequireAlias - when true, requires destination to be an alias. default is false.
+func (f Index) WithRequireAlias(v bool) func(*IndexRequest) {
+	return func(r *IndexRequest) {
+		r.RequireAlias = &v
+	}
+}
+
 // WithRouting - specific routing value.
-//
 func (f Index) WithRouting(v string) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.Routing = v
@@ -263,7 +285,6 @@ func (f Index) WithRouting(v string) func(*IndexRequest) {
 }
 
 // WithTimeout - explicit operation timeout.
-//
 func (f Index) WithTimeout(v time.Duration) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.Timeout = v
@@ -271,7 +292,6 @@ func (f Index) WithTimeout(v time.Duration) func(*IndexRequest) {
 }
 
 // WithVersion - explicit version number for concurrency control.
-//
 func (f Index) WithVersion(v int) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.Version = &v
@@ -279,7 +299,6 @@ func (f Index) WithVersion(v int) func(*IndexRequest) {
 }
 
 // WithVersionType - specific version type.
-//
 func (f Index) WithVersionType(v string) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.VersionType = v
@@ -287,7 +306,6 @@ func (f Index) WithVersionType(v string) func(*IndexRequest) {
 }
 
 // WithWaitForActiveShards - sets the number of shard copies that must be active before proceeding with the index operation. defaults to 1, meaning the primary shard only. set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1).
-//
 func (f Index) WithWaitForActiveShards(v string) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.WaitForActiveShards = v
@@ -295,7 +313,6 @@ func (f Index) WithWaitForActiveShards(v string) func(*IndexRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f Index) WithPretty() func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.Pretty = true
@@ -303,7 +320,6 @@ func (f Index) WithPretty() func(*IndexRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f Index) WithHuman() func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.Human = true
@@ -311,7 +327,6 @@ func (f Index) WithHuman() func(*IndexRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f Index) WithErrorTrace() func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.ErrorTrace = true
@@ -319,7 +334,6 @@ func (f Index) WithErrorTrace() func(*IndexRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f Index) WithFilterPath(v ...string) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		r.FilterPath = v
@@ -327,7 +341,6 @@ func (f Index) WithFilterPath(v ...string) func(*IndexRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f Index) WithHeader(h map[string]string) func(*IndexRequest) {
 	return func(r *IndexRequest) {
 		if r.Header == nil {
@@ -336,5 +349,15 @@ func (f Index) WithHeader(h map[string]string) func(*IndexRequest) {
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f Index) WithOpaqueID(s string) func(*IndexRequest) {
+	return func(r *IndexRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

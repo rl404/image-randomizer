@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -20,12 +37,12 @@ func newWatcherDeactivateWatchFunc(t Transport) WatcherDeactivateWatch {
 
 // ----- API Definition -------------------------------------------------------
 
-// WatcherDeactivateWatch - https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api-deactivate-watch.html
+// WatcherDeactivateWatch - Deactivates a currently active watch.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api-deactivate-watch.html.
 type WatcherDeactivateWatch func(watch_id string, o ...func(*WatcherDeactivateWatchRequest)) (*Response, error)
 
 // WatcherDeactivateWatchRequest configures the Watcher Deactivate Watch API request.
-//
 type WatcherDeactivateWatchRequest struct {
 	WatchID string
 
@@ -40,7 +57,6 @@ type WatcherDeactivateWatchRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r WatcherDeactivateWatchRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -78,7 +94,10 @@ func (r WatcherDeactivateWatchRequest) Do(ctx context.Context, transport Transpo
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -119,7 +138,6 @@ func (r WatcherDeactivateWatchRequest) Do(ctx context.Context, transport Transpo
 }
 
 // WithContext sets the request context.
-//
 func (f WatcherDeactivateWatch) WithContext(v context.Context) func(*WatcherDeactivateWatchRequest) {
 	return func(r *WatcherDeactivateWatchRequest) {
 		r.ctx = v
@@ -127,7 +145,6 @@ func (f WatcherDeactivateWatch) WithContext(v context.Context) func(*WatcherDeac
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f WatcherDeactivateWatch) WithPretty() func(*WatcherDeactivateWatchRequest) {
 	return func(r *WatcherDeactivateWatchRequest) {
 		r.Pretty = true
@@ -135,7 +152,6 @@ func (f WatcherDeactivateWatch) WithPretty() func(*WatcherDeactivateWatchRequest
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f WatcherDeactivateWatch) WithHuman() func(*WatcherDeactivateWatchRequest) {
 	return func(r *WatcherDeactivateWatchRequest) {
 		r.Human = true
@@ -143,7 +159,6 @@ func (f WatcherDeactivateWatch) WithHuman() func(*WatcherDeactivateWatchRequest)
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f WatcherDeactivateWatch) WithErrorTrace() func(*WatcherDeactivateWatchRequest) {
 	return func(r *WatcherDeactivateWatchRequest) {
 		r.ErrorTrace = true
@@ -151,7 +166,6 @@ func (f WatcherDeactivateWatch) WithErrorTrace() func(*WatcherDeactivateWatchReq
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f WatcherDeactivateWatch) WithFilterPath(v ...string) func(*WatcherDeactivateWatchRequest) {
 	return func(r *WatcherDeactivateWatchRequest) {
 		r.FilterPath = v
@@ -159,7 +173,6 @@ func (f WatcherDeactivateWatch) WithFilterPath(v ...string) func(*WatcherDeactiv
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f WatcherDeactivateWatch) WithHeader(h map[string]string) func(*WatcherDeactivateWatchRequest) {
 	return func(r *WatcherDeactivateWatchRequest) {
 		if r.Header == nil {
@@ -168,5 +181,15 @@ func (f WatcherDeactivateWatch) WithHeader(h map[string]string) func(*WatcherDea
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f WatcherDeactivateWatch) WithOpaqueID(s string) func(*WatcherDeactivateWatchRequest) {
+	return func(r *WatcherDeactivateWatchRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

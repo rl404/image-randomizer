@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -22,12 +39,12 @@ func newMLSetUpgradeModeFunc(t Transport) MLSetUpgradeMode {
 
 // ----- API Definition -------------------------------------------------------
 
-// MLSetUpgradeMode - http://www.elastic.co/guide/en/elasticsearch/reference/current/ml-set-upgrade-mode.html
+// MLSetUpgradeMode - Sets a cluster wide upgrade_mode setting that prepares machine learning indices for an upgrade.
 //
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-set-upgrade-mode.html.
 type MLSetUpgradeMode func(o ...func(*MLSetUpgradeModeRequest)) (*Response, error)
 
 // MLSetUpgradeModeRequest configures the ML Set Upgrade Mode API request.
-//
 type MLSetUpgradeModeRequest struct {
 	Enabled *bool
 	Timeout time.Duration
@@ -43,7 +60,6 @@ type MLSetUpgradeModeRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r MLSetUpgradeModeRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -82,7 +98,10 @@ func (r MLSetUpgradeModeRequest) Do(ctx context.Context, transport Transport) (*
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -123,7 +142,6 @@ func (r MLSetUpgradeModeRequest) Do(ctx context.Context, transport Transport) (*
 }
 
 // WithContext sets the request context.
-//
 func (f MLSetUpgradeMode) WithContext(v context.Context) func(*MLSetUpgradeModeRequest) {
 	return func(r *MLSetUpgradeModeRequest) {
 		r.ctx = v
@@ -131,7 +149,6 @@ func (f MLSetUpgradeMode) WithContext(v context.Context) func(*MLSetUpgradeModeR
 }
 
 // WithEnabled - whether to enable upgrade_mode ml setting or not. defaults to false..
-//
 func (f MLSetUpgradeMode) WithEnabled(v bool) func(*MLSetUpgradeModeRequest) {
 	return func(r *MLSetUpgradeModeRequest) {
 		r.Enabled = &v
@@ -139,7 +156,6 @@ func (f MLSetUpgradeMode) WithEnabled(v bool) func(*MLSetUpgradeModeRequest) {
 }
 
 // WithTimeout - controls the time to wait before action times out. defaults to 30 seconds.
-//
 func (f MLSetUpgradeMode) WithTimeout(v time.Duration) func(*MLSetUpgradeModeRequest) {
 	return func(r *MLSetUpgradeModeRequest) {
 		r.Timeout = v
@@ -147,7 +163,6 @@ func (f MLSetUpgradeMode) WithTimeout(v time.Duration) func(*MLSetUpgradeModeReq
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f MLSetUpgradeMode) WithPretty() func(*MLSetUpgradeModeRequest) {
 	return func(r *MLSetUpgradeModeRequest) {
 		r.Pretty = true
@@ -155,7 +170,6 @@ func (f MLSetUpgradeMode) WithPretty() func(*MLSetUpgradeModeRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f MLSetUpgradeMode) WithHuman() func(*MLSetUpgradeModeRequest) {
 	return func(r *MLSetUpgradeModeRequest) {
 		r.Human = true
@@ -163,7 +177,6 @@ func (f MLSetUpgradeMode) WithHuman() func(*MLSetUpgradeModeRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f MLSetUpgradeMode) WithErrorTrace() func(*MLSetUpgradeModeRequest) {
 	return func(r *MLSetUpgradeModeRequest) {
 		r.ErrorTrace = true
@@ -171,7 +184,6 @@ func (f MLSetUpgradeMode) WithErrorTrace() func(*MLSetUpgradeModeRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f MLSetUpgradeMode) WithFilterPath(v ...string) func(*MLSetUpgradeModeRequest) {
 	return func(r *MLSetUpgradeModeRequest) {
 		r.FilterPath = v
@@ -179,7 +191,6 @@ func (f MLSetUpgradeMode) WithFilterPath(v ...string) func(*MLSetUpgradeModeRequ
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f MLSetUpgradeMode) WithHeader(h map[string]string) func(*MLSetUpgradeModeRequest) {
 	return func(r *MLSetUpgradeModeRequest) {
 		if r.Header == nil {
@@ -188,5 +199,15 @@ func (f MLSetUpgradeMode) WithHeader(h map[string]string) func(*MLSetUpgradeMode
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f MLSetUpgradeMode) WithOpaqueID(s string) func(*MLSetUpgradeModeRequest) {
+	return func(r *MLSetUpgradeModeRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

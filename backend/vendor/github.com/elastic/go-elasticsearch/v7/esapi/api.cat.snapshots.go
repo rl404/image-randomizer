@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -24,12 +41,10 @@ func newCatSnapshotsFunc(t Transport) CatSnapshots {
 
 // CatSnapshots returns all snapshots in a specific repository.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/cat-snapshots.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-snapshots.html.
 type CatSnapshots func(o ...func(*CatSnapshotsRequest)) (*Response, error)
 
 // CatSnapshotsRequest configures the Cat Snapshots API request.
-//
 type CatSnapshotsRequest struct {
 	Repository []string
 
@@ -39,6 +54,7 @@ type CatSnapshotsRequest struct {
 	IgnoreUnavailable *bool
 	MasterTimeout     time.Duration
 	S                 []string
+	Time              string
 	V                 *bool
 
 	Pretty     bool
@@ -52,7 +68,6 @@ type CatSnapshotsRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r CatSnapshotsRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -98,6 +113,10 @@ func (r CatSnapshotsRequest) Do(ctx context.Context, transport Transport) (*Resp
 		params["s"] = strings.Join(r.S, ",")
 	}
 
+	if r.Time != "" {
+		params["time"] = r.Time
+	}
+
 	if r.V != nil {
 		params["v"] = strconv.FormatBool(*r.V)
 	}
@@ -118,7 +137,10 @@ func (r CatSnapshotsRequest) Do(ctx context.Context, transport Transport) (*Resp
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -159,7 +181,6 @@ func (r CatSnapshotsRequest) Do(ctx context.Context, transport Transport) (*Resp
 }
 
 // WithContext sets the request context.
-//
 func (f CatSnapshots) WithContext(v context.Context) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.ctx = v
@@ -167,7 +188,6 @@ func (f CatSnapshots) WithContext(v context.Context) func(*CatSnapshotsRequest) 
 }
 
 // WithRepository - name of repository from which to fetch the snapshot information.
-//
 func (f CatSnapshots) WithRepository(v ...string) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.Repository = v
@@ -175,7 +195,6 @@ func (f CatSnapshots) WithRepository(v ...string) func(*CatSnapshotsRequest) {
 }
 
 // WithFormat - a short version of the accept header, e.g. json, yaml.
-//
 func (f CatSnapshots) WithFormat(v string) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.Format = v
@@ -183,7 +202,6 @@ func (f CatSnapshots) WithFormat(v string) func(*CatSnapshotsRequest) {
 }
 
 // WithH - comma-separated list of column names to display.
-//
 func (f CatSnapshots) WithH(v ...string) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.H = v
@@ -191,7 +209,6 @@ func (f CatSnapshots) WithH(v ...string) func(*CatSnapshotsRequest) {
 }
 
 // WithHelp - return help information.
-//
 func (f CatSnapshots) WithHelp(v bool) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.Help = &v
@@ -199,7 +216,6 @@ func (f CatSnapshots) WithHelp(v bool) func(*CatSnapshotsRequest) {
 }
 
 // WithIgnoreUnavailable - set to true to ignore unavailable snapshots.
-//
 func (f CatSnapshots) WithIgnoreUnavailable(v bool) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.IgnoreUnavailable = &v
@@ -207,7 +223,6 @@ func (f CatSnapshots) WithIgnoreUnavailable(v bool) func(*CatSnapshotsRequest) {
 }
 
 // WithMasterTimeout - explicit operation timeout for connection to master node.
-//
 func (f CatSnapshots) WithMasterTimeout(v time.Duration) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.MasterTimeout = v
@@ -215,15 +230,20 @@ func (f CatSnapshots) WithMasterTimeout(v time.Duration) func(*CatSnapshotsReque
 }
 
 // WithS - comma-separated list of column names or column aliases to sort by.
-//
 func (f CatSnapshots) WithS(v ...string) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.S = v
 	}
 }
 
+// WithTime - the unit in which to display time values.
+func (f CatSnapshots) WithTime(v string) func(*CatSnapshotsRequest) {
+	return func(r *CatSnapshotsRequest) {
+		r.Time = v
+	}
+}
+
 // WithV - verbose mode. display column headers.
-//
 func (f CatSnapshots) WithV(v bool) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.V = &v
@@ -231,7 +251,6 @@ func (f CatSnapshots) WithV(v bool) func(*CatSnapshotsRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f CatSnapshots) WithPretty() func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.Pretty = true
@@ -239,7 +258,6 @@ func (f CatSnapshots) WithPretty() func(*CatSnapshotsRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f CatSnapshots) WithHuman() func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.Human = true
@@ -247,7 +265,6 @@ func (f CatSnapshots) WithHuman() func(*CatSnapshotsRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f CatSnapshots) WithErrorTrace() func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.ErrorTrace = true
@@ -255,7 +272,6 @@ func (f CatSnapshots) WithErrorTrace() func(*CatSnapshotsRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f CatSnapshots) WithFilterPath(v ...string) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		r.FilterPath = v
@@ -263,7 +279,6 @@ func (f CatSnapshots) WithFilterPath(v ...string) func(*CatSnapshotsRequest) {
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f CatSnapshots) WithHeader(h map[string]string) func(*CatSnapshotsRequest) {
 	return func(r *CatSnapshotsRequest) {
 		if r.Header == nil {
@@ -272,5 +287,15 @@ func (f CatSnapshots) WithHeader(h map[string]string) func(*CatSnapshotsRequest)
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f CatSnapshots) WithOpaqueID(s string) func(*CatSnapshotsRequest) {
+	return func(r *CatSnapshotsRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }

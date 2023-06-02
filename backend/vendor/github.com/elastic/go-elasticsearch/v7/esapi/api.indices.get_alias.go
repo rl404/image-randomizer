@@ -1,4 +1,21 @@
-// Code generated from specification version 7.3.0: DO NOT EDIT
+// Licensed to Elasticsearch B.V. under one or more contributor
+// license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright
+// ownership. Elasticsearch B.V. licenses this file to you under
+// the Apache License, Version 2.0 (the "License"); you may
+// not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// Code generated from specification version 7.17.10: DO NOT EDIT
 
 package esapi
 
@@ -23,12 +40,10 @@ func newIndicesGetAliasFunc(t Transport) IndicesGetAlias {
 
 // IndicesGetAlias returns an alias.
 //
-// See full documentation at http://www.elastic.co/guide/en/elasticsearch/reference/master/indices-aliases.html.
-//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/master/indices-aliases.html.
 type IndicesGetAlias func(o ...func(*IndicesGetAliasRequest)) (*Response, error)
 
 // IndicesGetAliasRequest configures the Indices Get Alias API request.
-//
 type IndicesGetAliasRequest struct {
 	Index []string
 
@@ -50,7 +65,6 @@ type IndicesGetAliasRequest struct {
 }
 
 // Do executes the request and returns response or error.
-//
 func (r IndicesGetAliasRequest) Do(ctx context.Context, transport Transport) (*Response, error) {
 	var (
 		method string
@@ -106,7 +120,10 @@ func (r IndicesGetAliasRequest) Do(ctx context.Context, transport Transport) (*R
 		params["filter_path"] = strings.Join(r.FilterPath, ",")
 	}
 
-	req, _ := newRequest(method, path.String(), nil)
+	req, err := newRequest(method, path.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if len(params) > 0 {
 		q := req.URL.Query()
@@ -147,7 +164,6 @@ func (r IndicesGetAliasRequest) Do(ctx context.Context, transport Transport) (*R
 }
 
 // WithContext sets the request context.
-//
 func (f IndicesGetAlias) WithContext(v context.Context) func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.ctx = v
@@ -155,7 +171,6 @@ func (f IndicesGetAlias) WithContext(v context.Context) func(*IndicesGetAliasReq
 }
 
 // WithIndex - a list of index names to filter aliases.
-//
 func (f IndicesGetAlias) WithIndex(v ...string) func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.Index = v
@@ -163,7 +178,6 @@ func (f IndicesGetAlias) WithIndex(v ...string) func(*IndicesGetAliasRequest) {
 }
 
 // WithName - a list of alias names to return.
-//
 func (f IndicesGetAlias) WithName(v ...string) func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.Name = v
@@ -171,7 +185,6 @@ func (f IndicesGetAlias) WithName(v ...string) func(*IndicesGetAliasRequest) {
 }
 
 // WithAllowNoIndices - whether to ignore if a wildcard indices expression resolves into no concrete indices. (this includes `_all` string or when no indices have been specified).
-//
 func (f IndicesGetAlias) WithAllowNoIndices(v bool) func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.AllowNoIndices = &v
@@ -179,7 +192,6 @@ func (f IndicesGetAlias) WithAllowNoIndices(v bool) func(*IndicesGetAliasRequest
 }
 
 // WithExpandWildcards - whether to expand wildcard expression to concrete indices that are open, closed or both..
-//
 func (f IndicesGetAlias) WithExpandWildcards(v string) func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.ExpandWildcards = v
@@ -187,7 +199,6 @@ func (f IndicesGetAlias) WithExpandWildcards(v string) func(*IndicesGetAliasRequ
 }
 
 // WithIgnoreUnavailable - whether specified concrete indices should be ignored when unavailable (missing or closed).
-//
 func (f IndicesGetAlias) WithIgnoreUnavailable(v bool) func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.IgnoreUnavailable = &v
@@ -195,7 +206,6 @@ func (f IndicesGetAlias) WithIgnoreUnavailable(v bool) func(*IndicesGetAliasRequ
 }
 
 // WithLocal - return local information, do not retrieve the state from master node (default: false).
-//
 func (f IndicesGetAlias) WithLocal(v bool) func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.Local = &v
@@ -203,7 +213,6 @@ func (f IndicesGetAlias) WithLocal(v bool) func(*IndicesGetAliasRequest) {
 }
 
 // WithPretty makes the response body pretty-printed.
-//
 func (f IndicesGetAlias) WithPretty() func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.Pretty = true
@@ -211,7 +220,6 @@ func (f IndicesGetAlias) WithPretty() func(*IndicesGetAliasRequest) {
 }
 
 // WithHuman makes statistical values human-readable.
-//
 func (f IndicesGetAlias) WithHuman() func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.Human = true
@@ -219,7 +227,6 @@ func (f IndicesGetAlias) WithHuman() func(*IndicesGetAliasRequest) {
 }
 
 // WithErrorTrace includes the stack trace for errors in the response body.
-//
 func (f IndicesGetAlias) WithErrorTrace() func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.ErrorTrace = true
@@ -227,7 +234,6 @@ func (f IndicesGetAlias) WithErrorTrace() func(*IndicesGetAliasRequest) {
 }
 
 // WithFilterPath filters the properties of the response body.
-//
 func (f IndicesGetAlias) WithFilterPath(v ...string) func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		r.FilterPath = v
@@ -235,7 +241,6 @@ func (f IndicesGetAlias) WithFilterPath(v ...string) func(*IndicesGetAliasReques
 }
 
 // WithHeader adds the headers to the HTTP request.
-//
 func (f IndicesGetAlias) WithHeader(h map[string]string) func(*IndicesGetAliasRequest) {
 	return func(r *IndicesGetAliasRequest) {
 		if r.Header == nil {
@@ -244,5 +249,15 @@ func (f IndicesGetAlias) WithHeader(h map[string]string) func(*IndicesGetAliasRe
 		for k, v := range h {
 			r.Header.Add(k, v)
 		}
+	}
+}
+
+// WithOpaqueID adds the X-Opaque-Id header to the HTTP request.
+func (f IndicesGetAlias) WithOpaqueID(s string) func(*IndicesGetAliasRequest) {
+	return func(r *IndicesGetAliasRequest) {
+		if r.Header == nil {
+			r.Header = make(http.Header)
+		}
+		r.Header.Set("X-Opaque-Id", s)
 	}
 }
