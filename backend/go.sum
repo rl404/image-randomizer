@@ -93,8 +93,8 @@ github.com/mattn/go-colorable v0.1.13/go.mod h1:7S9/ev0klgBDR4GtXTXX8a3vIGJpMovk
 github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27kJ6hsGG94=
 github.com/mattn/go-isatty v0.0.16 h1:bq3VjFmv/sOjHtdEhmkEV4x1AJtvUvOJ2PFAZ5+peKQ=
 github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
-github.com/newrelic/go-agent/v3 v3.22.0 h1:+4+pPHl/hI1MWmqNbdQ1yS7B2KODN8S7pJb7ZQ/e400=
-github.com/newrelic/go-agent/v3 v3.22.0/go.mod h1:AGagR69YHzamnvfxq9aDHnImvZwxr7C+4w7UN0Bm3UM=
+github.com/newrelic/go-agent/v3 v3.22.1 h1:c1nPHw/LMNx+J6U5dtVb9xGywftj36cG3sxrHwOwygA=
+github.com/newrelic/go-agent/v3 v3.22.1/go.mod h1:uuvX0xe0ZuO2wAXuM30vdIjyc76z3TfG81BVkf3pclc=
 github.com/newrelic/go-agent/v3/integrations/nrgrpc v1.3.2 h1:SBtZAkWapxfAxYVZHagHxsrbRt+ULkgxi0mbn6TMRM8=
 github.com/newrelic/go-agent/v3/integrations/nrgrpc v1.3.2/go.mod h1:h5GGcju9OuzmRdKa5glKh/SrMs1HhZyvXrf0mEPv70k=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
