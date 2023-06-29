@@ -97,6 +97,8 @@ github.com/mattn/go-isatty v0.0.16 h1:bq3VjFmv/sOjHtdEhmkEV4x1AJtvUvOJ2PFAZ5+peK
 github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/newrelic/go-agent/v3 v3.23.0 h1:50lRZCxtfnBx31nOK/GXDxnhLSBC8ZanhP0g2odcaMk=
 github.com/newrelic/go-agent/v3 v3.23.0/go.mod h1:dG7Q7yLUrqOo7SYVJADVDN9+P8c/87xp9axldPxmdHM=
+github.com/newrelic/go-agent/v3 v3.23.1 h1:n4CK4EEod2A47T74wQFztavh9g3wHxxmlndj53ksbVg=
+github.com/newrelic/go-agent/v3 v3.23.1/go.mod h1:dG7Q7yLUrqOo7SYVJADVDN9+P8c/87xp9axldPxmdHM=
 github.com/newrelic/go-agent/v3/integrations/nrgrpc v1.3.2 h1:SBtZAkWapxfAxYVZHagHxsrbRt+ULkgxi0mbn6TMRM8=
 github.com/newrelic/go-agent/v3/integrations/nrgrpc v1.3.2/go.mod h1:h5GGcju9OuzmRdKa5glKh/SrMs1HhZyvXrf0mEPv70k=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
