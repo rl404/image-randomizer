@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/rl404/image-randomizer/internal/errors"
 	"github.com/rl404/image-randomizer/internal/service"
 	"github.com/rl404/image-randomizer/internal/utils"
