@@ -4,7 +4,7 @@ LABEL stage="image_randomizer_be_builder"
 WORKDIR /image-randomizer
 COPY . .
 WORKDIR /image-randomizer/cmd/image-randomizer
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -mod vendor -o image-randomizer
+RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o image-randomizer
 
 # New stage from scratch
 FROM alpine:3.18

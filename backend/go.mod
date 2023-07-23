@@ -1,6 +1,6 @@
 module github.com/rl404/image-randomizer
 
-go 1.18
+go 1.20
 
 require (
 	github.com/go-chi/chi/v5 v5.0.10
@@ -9,7 +9,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/newrelic/go-agent/v3 v3.23.1
-	github.com/rl404/fairy v0.22.3
+	github.com/rl404/fairy v0.23.0
 	github.com/spf13/cobra v1.7.0
 	github.com/swaggo/http-swagger/v2 v2.0.1
 	github.com/swaggo/swag v1.16.1
@@ -65,7 +65,7 @@ require (
 	golang.org/x/net v0.12.0 // indirect
 	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/tools v0.7.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230629202037-9506855d4529 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230706204954-ccb25ca9f130 // indirect
 	google.golang.org/grpc v1.56.2 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

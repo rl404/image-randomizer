@@ -3,7 +3,7 @@ name: publish & deploy
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 jobs:
   publish_image:
@@ -85,4 +85,3 @@ jobs:
       - name: Deploy
         run: |
           gcloud run services update ${{ secrets.RUN_SERVICE_NAME }} --platform=managed --region=${{ secrets.RUN_REGION }} --quiet --image=$gcr_image_name
-
