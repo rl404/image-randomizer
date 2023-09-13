@@ -39,7 +39,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push image backend
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: ./backend
           file: ./backend/build/package/Dockerfile
@@ -50,7 +50,7 @@ jobs:
             ghcr.io/rl404/image-randomizer:be-latest
             ghcr.io/rl404/image-randomizer:be-${{ env.IMG_TAG }}
       - name: Build and push image frontend
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: ./frontend
           file: ./frontend/Dockerfile
