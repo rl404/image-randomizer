@@ -5,6 +5,9 @@ github.com/KyleBanks/depth
 ## explicit; go 1.16
 github.com/allegro/bigcache/v3
 github.com/allegro/bigcache/v3/queue
+# github.com/andybalholm/brotli v1.0.5
+## explicit; go 1.12
+github.com/andybalholm/brotli
 # github.com/bradfitz/gomemcache v0.0.0-20230611145640-acc696258285
 ## explicit; go 1.12
 github.com/bradfitz/gomemcache/memcache
@@ -730,6 +733,11 @@ github.com/josharian/intern
 # github.com/kelseyhightower/envconfig v1.4.0
 ## explicit
 github.com/kelseyhightower/envconfig
+# github.com/klauspost/compress v1.16.3
+## explicit; go 1.18
+github.com/klauspost/compress/flate
+github.com/klauspost/compress/gzip
+github.com/klauspost/compress/zlib
 # github.com/leodido/go-urn v1.2.4
 ## explicit; go 1.16
 github.com/leodido/go-urn
@@ -744,7 +752,7 @@ github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.16
 ## explicit; go 1.15
 github.com/mattn/go-isatty
-# github.com/newrelic/go-agent/v3 v3.24.1
+# github.com/newrelic/go-agent/v3 v3.25.1
 ## explicit; go 1.19
 github.com/newrelic/go-agent/v3/internal
 github.com/newrelic/go-agent/v3/internal/cat
@@ -821,6 +829,15 @@ github.com/swaggo/http-swagger/v2
 # github.com/swaggo/swag v1.16.2
 ## explicit; go 1.18
 github.com/swaggo/swag
+# github.com/valyala/bytebufferpool v1.0.0
+## explicit
+github.com/valyala/bytebufferpool
+# github.com/valyala/fasthttp v1.49.0
+## explicit; go 1.20
+github.com/valyala/fasthttp
+github.com/valyala/fasthttp/fasthttpadaptor
+github.com/valyala/fasthttp/fasthttputil
+github.com/valyala/fasthttp/stackless
 # go.uber.org/atomic v1.10.0
 ## explicit; go 1.18
 go.uber.org/atomic
