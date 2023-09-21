@@ -1,0 +1,53 @@
+name: import terraform
+
+on: workflow_dispatch
+
+jobs:
+  import_terraform:
+    name: Import Terraform
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./deployment/terraform
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+      - name: Setup Terraform Variables
+        run: |-
+          cat > pipeline.auto.tfvars <<EOF
+          gcp_project_id          = "${{ secrets.GCP_PROJECT_ID }}"
+          gcp_region              = "${{ secrets.GCP_REGION }}"
+          gcr_image_name          = "${{ secrets.GCR_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/image-randomizer:be-${{ needs.publish_image.outputs.img_tag }}"
+          cloud_run_name          = "${{ secrets.CLOUD_RUN_NAME }}"
+          cloud_run_location      = "${{ secrets.CLOUD_RUN_LOCATION }}"
+          ir_cache_dialect        = "${{ secrets.IR_CACHE_DIALECT }}"
+          ir_cache_address        = "${{ secrets.IR_CACHE_ADDRESS }}"
+          ir_cache_password       = "${{ secrets.IR_CACHE_PASSWORD }}"
+          ir_cache_time           = "${{ secrets.IR_CACHE_TIME }}"
+          ir_db_address           = "${{ secrets.IR_DB_ADDRESS }}"
+          ir_db_name              = "${{ secrets.IR_DB_NAME }}"
+          ir_db_user              = "${{ secrets.IR_DB_USER }}"
+          ir_db_password          = "${{ secrets.IR_DB_PASSWORD }}"
+          ir_jwt_access_secret    = "${{ secrets.IR_JWT_ACCESS_SECRET }}"
+          ir_jwt_access_expired   = "${{ secrets.IR_JWT_ACCESS_EXPIRED }}"
+          ir_jwt_refresh_secret   = "${{ secrets.IR_JWT_REFRESH_SECRET }}"
+          ir_jwt_refresh_expired  = "${{ secrets.IR_JWT_REFRESH_EXPIRED }}"
+          ir_log_json             = "${{ secrets.IR_LOG_JSON }}"
+          ir_log_level            = "${{ secrets.IR_LOG_LEVEL }}"
+          ir_newrelic_license_key = "${{ secrets.IR_NEWRELIC_LICENSE_KEY }}"
+          EOF
+      - name: Init Terraform
+        run: terraform init -backend-config "bucket=${{ secrets.GCS_BUCKET }}"
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Import Terraform
+        run: |
+          terraform import -input=false google_cloud_run_v2_service.server ${{ secrets.GCP_PROJECT_ID }}/${{ secrets.CLOUD_RUN_LOCATION }}/${{ secrets.CLOUD_RUN_NAME }}
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
