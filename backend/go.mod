@@ -9,7 +9,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/newrelic/go-agent/v3 v3.26.0
-	github.com/rl404/fairy v0.23.0
+	github.com/rl404/fairy v0.24.0
 	github.com/spf13/cobra v1.7.0
 	github.com/swaggo/http-swagger/v2 v2.0.2
 	github.com/swaggo/swag v1.16.2
