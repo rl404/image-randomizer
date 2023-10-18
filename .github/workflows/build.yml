@@ -1,14 +1,14 @@
-name: push
+name: build
 
-on: push
+on: pull_request
 
 jobs:
-  push:
+  build:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up Go environment

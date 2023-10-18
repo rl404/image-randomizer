@@ -18,32 +18,32 @@ Inspired by [sig.grumpybumpers](http://sig.grumpybumpers.com/).
 ### Step
 
 1. Git clone this repo.
-    ```
-    git clone https://github.com/rl404/image-randomizer
-    ```
+   ```
+   git clone https://github.com/rl404/image-randomizer
+   ```
 2. Rename `backend/.env.sample` to `.env` and modify according to your configuration.
 3. Rename `frontend/.env.sample` to `.env` and modify according to your configuration.
 4. Start the backend service. (Assumed the database is ready to use).
-    ```
-    cd backend
-    make
-    ```
+   ```
+   cd backend
+   make
+   ```
 5. Open new console/terminal and start the frontend service.
-    ```
-    cd frontend
-    npm run dev
-    ```
-6. [http://localhost:31001](http://localhost:31001) and [http://localhost:31002](http://localhost:31002) are ready to use*.
+   ```
+   cd frontend
+   npm run dev
+   ```
+6. [http://localhost:31001](http://localhost:31001) and [http://localhost:31002](http://localhost:31002) are ready to use\*.
 
-**Port depends on `port` in their `.env` file.*
+\*_Port depends on `port` in their `.env` file._
 
 ### With Docker + Docker compose
 
 1. Do step 1-3 above.
 2. Build and start docker containers.
-    ```
-    docker-compose up
-    ````
+   ```
+   docker-compose up
+   ```
 
 ## License
 
