@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/rl404/fairy/errors/stack"
 	"github.com/rl404/image-randomizer/internal/domain/image/entity"
-	"github.com/rl404/image-randomizer/internal/errors"
 	"github.com/rl404/image-randomizer/internal/utils"
 )
 
@@ -20,7 +20,7 @@ type Image struct {
 func (s *service) GetImages(ctx context.Context, userID int64) ([]Image, int, error) {
 	images, code, err := s.image.Get(ctx, userID)
 	if err != nil {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	res := make([]Image, len(images))
@@ -44,7 +44,7 @@ type CreateImageRequest struct {
 // CreateImage to create new image.
 func (s *service) CreateImage(ctx context.Context, data CreateImageRequest) (*Image, int, error) {
 	if err := utils.Validate(&data); err != nil {
-		return nil, http.StatusBadRequest, errors.Wrap(ctx, err)
+		return nil, http.StatusBadRequest, stack.Wrap(ctx, err)
 	}
 
 	img, code, err := s.image.Create(ctx, entity.Image{
@@ -52,7 +52,7 @@ func (s *service) CreateImage(ctx context.Context, data CreateImageRequest) (*Im
 		Image:  data.Image,
 	})
 	if err != nil {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	return &Image{
@@ -72,7 +72,7 @@ type UpdateImageRequest struct {
 // UpdateImage to create new image.
 func (s *service) UpdateImage(ctx context.Context, data UpdateImageRequest) (int, error) {
 	if err := utils.Validate(&data); err != nil {
-		return http.StatusBadRequest, errors.Wrap(ctx, err)
+		return http.StatusBadRequest, stack.Wrap(ctx, err)
 	}
 
 	if code, err := s.image.Update(ctx, entity.Image{
@@ -80,7 +80,7 @@ func (s *service) UpdateImage(ctx context.Context, data UpdateImageRequest) (int
 		UserID: data.UserID,
 		Image:  data.Image,
 	}); err != nil {
-		return code, errors.Wrap(ctx, err)
+		return code, stack.Wrap(ctx, err)
 	}
 
 	return http.StatusOK, nil
@@ -95,14 +95,14 @@ type DeleteImageRequest struct {
 // DeleteImage to create new image.
 func (s *service) DeleteImage(ctx context.Context, data DeleteImageRequest) (int, error) {
 	if err := utils.Validate(&data); err != nil {
-		return http.StatusBadRequest, errors.Wrap(ctx, err)
+		return http.StatusBadRequest, stack.Wrap(ctx, err)
 	}
 
 	if code, err := s.image.Delete(ctx, entity.Image{
 		ID:     data.ImageID,
 		UserID: data.UserID,
 	}); err != nil {
-		return code, errors.Wrap(ctx, err)
+		return code, stack.Wrap(ctx, err)
 	}
 
 	return http.StatusOK, nil

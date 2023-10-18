@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/rl404/fairy/cache"
+	"github.com/rl404/fairy/errors/stack"
 	"github.com/rl404/image-randomizer/internal/domain/image/entity"
 	"github.com/rl404/image-randomizer/internal/domain/image/repository"
 	"github.com/rl404/image-randomizer/internal/errors"
@@ -34,11 +35,11 @@ func (c *Cache) Get(ctx context.Context, userID int64) (data []*entity.Image, co
 
 	data, code, err = c.repo.Get(ctx, userID)
 	if err != nil {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	if err := c.cacher.Set(ctx, key, data); err != nil {
-		return nil, http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalCache, err)
+		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
 	}
 
 	return data, code, nil
@@ -48,7 +49,7 @@ func (c *Cache) Get(ctx context.Context, userID int64) (data []*entity.Image, co
 func (c *Cache) Create(ctx context.Context, data entity.Image) (*entity.Image, int, error) {
 	key := utils.GetKey("images", "user_id", data.UserID)
 	if err := c.cacher.Delete(ctx, key); err != nil {
-		return nil, http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalCache, err)
+		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
 	}
 
 	return c.repo.Create(ctx, data)
@@ -58,7 +59,7 @@ func (c *Cache) Create(ctx context.Context, data entity.Image) (*entity.Image, i
 func (c *Cache) Update(ctx context.Context, data entity.Image) (int, error) {
 	key := utils.GetKey("images", "user_id", data.UserID)
 	if err := c.cacher.Delete(ctx, key); err != nil {
-		return http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalCache, err)
+		return http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
 	}
 
 	return c.repo.Update(ctx, data)
@@ -68,7 +69,7 @@ func (c *Cache) Update(ctx context.Context, data entity.Image) (int, error) {
 func (c *Cache) Delete(ctx context.Context, data entity.Image) (int, error) {
 	key := utils.GetKey("images", "user_id", data.UserID)
 	if err := c.cacher.Delete(ctx, key); err != nil {
-		return http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalCache, err)
+		return http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
 	}
 
 	return c.repo.Delete(ctx, data)

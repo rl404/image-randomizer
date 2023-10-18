@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/rl404/fairy/cache"
+	"github.com/rl404/fairy/errors/stack"
 	"github.com/rl404/image-randomizer/internal/domain/user/entity"
 	"github.com/rl404/image-randomizer/internal/domain/user/repository"
 	"github.com/rl404/image-randomizer/internal/errors"
@@ -34,11 +35,11 @@ func (c *Cache) GetByUsername(ctx context.Context, username string) (data *entit
 
 	data, code, err = c.repo.GetByUsername(ctx, username)
 	if err != nil {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	if err := c.cacher.Set(ctx, key, data); err != nil {
-		return nil, http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalCache, err)
+		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
 	}
 
 	return data, code, nil

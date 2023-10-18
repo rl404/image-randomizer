@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/rl404/fairy/errors/stack"
 	"github.com/rl404/image-randomizer/internal/errors"
 	"github.com/rl404/image-randomizer/internal/service"
 	"github.com/rl404/image-randomizer/internal/utils"
@@ -21,12 +22,12 @@ import (
 func (api *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	var request service.RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, errors.Wrap(r.Context(), errors.ErrInvalidRequestFormat, err))
+		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, stack.Wrap(r.Context(), err, errors.ErrInvalidRequestFormat))
 		return
 	}
 
 	token, code, err := api.service.Register(r.Context(), request)
-	utils.ResponseWithJSON(w, code, token, errors.Wrap(r.Context(), err))
+	utils.ResponseWithJSON(w, code, token, stack.Wrap(r.Context(), err))
 }
 
 // @summary Login.
@@ -40,12 +41,12 @@ func (api *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 func (api *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	var request service.LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, errors.Wrap(r.Context(), errors.ErrInvalidRequestFormat, err))
+		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, stack.Wrap(r.Context(), err, errors.ErrInvalidRequestFormat))
 		return
 	}
 
 	token, code, err := api.service.Login(r.Context(), request)
-	utils.ResponseWithJSON(w, code, token, errors.Wrap(r.Context(), err))
+	utils.ResponseWithJSON(w, code, token, stack.Wrap(r.Context(), err))
 }
 
 // @summary Get random image.
@@ -58,7 +59,7 @@ func (api *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 func (api *API) handleRandomImage(w http.ResponseWriter, r *http.Request) {
 	image, code, err := api.service.GetRandomImage(r.Context(), chi.URLParam(r, "username"))
 	if err != nil {
-		utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+		utils.ResponseWithJSON(w, code, nil, stack.Wrap(r.Context(), err))
 		return
 	}
 

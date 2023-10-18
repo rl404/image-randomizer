@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/rl404/fairy/errors/stack"
 	"github.com/rl404/image-randomizer/internal/errors"
 )
 
@@ -47,12 +48,12 @@ func ResponseWithJSON(w http.ResponseWriter, code int, data interface{}, err err
 func ResponseWithImage(ctx context.Context, w http.ResponseWriter, image string) {
 	img, err := http.Get(image)
 	if err != nil {
-		ResponseWithJSON(w, http.StatusInternalServerError, nil, errors.Wrap(ctx, errors.ErrInternalServer, err))
+		ResponseWithJSON(w, http.StatusInternalServerError, nil, stack.Wrap(ctx, err, errors.ErrInternalServer))
 		return
 	}
 
 	if img.StatusCode != http.StatusOK {
-		ResponseWithJSON(w, img.StatusCode, nil, errors.Wrap(ctx, _errors.New(http.StatusText(img.StatusCode))))
+		ResponseWithJSON(w, img.StatusCode, nil, stack.Wrap(ctx, _errors.New(http.StatusText(img.StatusCode))))
 		return
 	}
 
@@ -60,7 +61,7 @@ func ResponseWithImage(ctx context.Context, w http.ResponseWriter, image string)
 	w.Header().Set("Content-Type", "image/jpeg")
 
 	if _, err := io.Copy(w, img.Body); err != nil {
-		ResponseWithJSON(w, http.StatusInternalServerError, nil, errors.Wrap(ctx, errors.ErrInternalServer, err))
+		ResponseWithJSON(w, http.StatusInternalServerError, nil, stack.Wrap(ctx, err, errors.ErrInternalServer))
 	}
 }
 
@@ -74,11 +75,10 @@ func Recoverer(next http.Handler) http.Handler {
 					w,
 					http.StatusInternalServerError,
 					nil,
-					errors.Wrap(
-						r.Context(),
-						errors.ErrInternalServer,
+					stack.Wrap(r.Context(),
+						fmt.Errorf("%s", debug.Stack()),
 						fmt.Errorf("%v", rvr),
-						fmt.Errorf("%s", debug.Stack())))
+						errors.ErrInternalServer))
 			}
 		}()
 
