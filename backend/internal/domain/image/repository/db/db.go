@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/rl404/fairy/errors/stack"
 	"github.com/rl404/image-randomizer/internal/domain/image/entity"
 	"github.com/rl404/image-randomizer/internal/errors"
 	"gorm.io/gorm"
@@ -25,7 +26,7 @@ func New(db *gorm.DB) *DB {
 func (db *DB) Get(ctx context.Context, userID int64) ([]*entity.Image, int, error) {
 	var images []Image
 	if err := db.db.WithContext(ctx).Where("user_id = ?", userID).Find(&images).Error; err != nil {
-		return nil, http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalDB, err)
+		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalDB)
 	}
 	return db.toEntities(images), http.StatusOK, nil
 }
@@ -34,7 +35,7 @@ func (db *DB) Get(ctx context.Context, userID int64) ([]*entity.Image, int, erro
 func (db *DB) Create(ctx context.Context, data entity.Image) (*entity.Image, int, error) {
 	i := db.fromEntity(data)
 	if err := db.db.WithContext(ctx).Create(&i).Error; err != nil {
-		return nil, http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalDB, err)
+		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalDB)
 	}
 	return i.toEntity(), http.StatusCreated, nil
 }
@@ -47,11 +48,11 @@ func (db *DB) Update(ctx context.Context, data entity.Image) (int, error) {
 		Update("image", data.Image)
 
 	if err := query.Error; err != nil {
-		return http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalDB, err)
+		return http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalDB)
 	}
 
 	if query.RowsAffected == 0 {
-		return http.StatusNotFound, errors.Wrap(ctx, errors.ErrNotFoundImage)
+		return http.StatusNotFound, stack.Wrap(ctx, errors.ErrNotFoundImage)
 	}
 
 	return http.StatusOK, nil
@@ -62,11 +63,11 @@ func (db *DB) Delete(ctx context.Context, data entity.Image) (int, error) {
 	query := db.db.WithContext(ctx).Where("id = ? and user_id = ?", data.ID, data.UserID).Delete(&Image{})
 
 	if err := query.Error; err != nil {
-		return http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalDB, err)
+		return http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalDB)
 	}
 
 	if query.RowsAffected == 0 {
-		return http.StatusNotFound, errors.Wrap(ctx, errors.ErrNotFoundImage)
+		return http.StatusNotFound, stack.Wrap(ctx, errors.ErrNotFoundImage)
 	}
 
 	return http.StatusOK, nil

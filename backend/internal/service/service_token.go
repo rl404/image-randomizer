@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/rl404/fairy/errors/stack"
 	tokenEntity "github.com/rl404/image-randomizer/internal/domain/token/entity"
 	"github.com/rl404/image-randomizer/internal/errors"
 	"github.com/rl404/image-randomizer/internal/utils"
@@ -30,7 +31,7 @@ func (s *service) RefreshToken(ctx context.Context, data JWTClaim) (*Token, int,
 		AccessUUID: utils.GenerateUUID(),
 	})
 	if err != nil {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	return &Token{
@@ -42,7 +43,7 @@ func (s *service) RefreshToken(ctx context.Context, data JWTClaim) (*Token, int,
 func (s *service) ValidateToken(ctx context.Context, uuid string, userID int64) (int, error) {
 	value := s.token.Get(ctx, uuid)
 	if value != userID {
-		return http.StatusUnauthorized, errors.Wrap(ctx, errors.ErrInvalidToken)
+		return http.StatusUnauthorized, stack.Wrap(ctx, errors.ErrInvalidToken)
 	}
 	return http.StatusOK, nil
 }

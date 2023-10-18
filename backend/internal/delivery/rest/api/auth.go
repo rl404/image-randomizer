@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/rl404/fairy/errors/stack"
 	"github.com/rl404/image-randomizer/internal/errors"
 	"github.com/rl404/image-randomizer/internal/service"
 	"github.com/rl404/image-randomizer/internal/utils"
@@ -51,14 +52,14 @@ func (api *API) jwtAuth(next http.HandlerFunc, tokenTypes ...tokenType) http.Han
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		jwtTokenStr := api.getJWTFromRequest(r)
 		if jwtTokenStr == "" {
-			utils.ResponseWithJSON(w, http.StatusUnauthorized, nil, errors.Wrap(r.Context(), errors.ErrRequiredToken))
+			utils.ResponseWithJSON(w, http.StatusUnauthorized, nil, stack.Wrap(r.Context(), errors.ErrRequiredToken))
 			return
 		}
 
 		// Parse jwt.
 		jwtToken, code, err := api.parseJWT(r.Context(), jwtTokenStr, tokenType)
 		if err != nil {
-			utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+			utils.ResponseWithJSON(w, code, nil, stack.Wrap(r.Context(), err))
 			return
 		}
 
@@ -72,7 +73,7 @@ func (api *API) jwtAuth(next http.HandlerFunc, tokenTypes ...tokenType) http.Han
 
 		// Validate token.
 		if code, err := api.service.ValidateToken(r.Context(), uuid, jwtToken.UserID); err != nil {
-			utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+			utils.ResponseWithJSON(w, code, nil, stack.Wrap(r.Context(), err))
 			return
 		}
 
@@ -97,16 +98,16 @@ func (api *API) parseJWT(ctx context.Context, jwtTokenStr string, tokenType toke
 		}
 	})
 	if err != nil {
-		return nil, http.StatusUnauthorized, errors.Wrap(ctx, errors.ErrInvalidToken)
+		return nil, http.StatusUnauthorized, stack.Wrap(ctx, errors.ErrInvalidToken)
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalServer)
+		return nil, http.StatusInternalServerError, stack.Wrap(ctx, errors.ErrInternalServer)
 	}
 
 	if !token.Valid {
-		return nil, http.StatusUnauthorized, errors.Wrap(ctx, errors.ErrInvalidToken)
+		return nil, http.StatusUnauthorized, stack.Wrap(ctx, errors.ErrInvalidToken)
 	}
 
 	var t service.JWTClaim

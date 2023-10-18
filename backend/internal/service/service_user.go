@@ -4,7 +4,9 @@ import (
 	"context"
 	"math/rand"
 	"net/http"
+	"time"
 
+	"github.com/rl404/fairy/errors/stack"
 	tokenEntity "github.com/rl404/image-randomizer/internal/domain/token/entity"
 	"github.com/rl404/image-randomizer/internal/domain/user/entity"
 	"github.com/rl404/image-randomizer/internal/errors"
@@ -20,16 +22,16 @@ type RegisterRequest struct {
 // Register to register user.
 func (s *service) Register(ctx context.Context, data RegisterRequest) (*Token, int, error) {
 	if err := utils.Validate(&data); err != nil {
-		return nil, http.StatusBadRequest, errors.Wrap(ctx, err)
+		return nil, http.StatusBadRequest, stack.Wrap(ctx, err)
 	}
 
 	// Check duplicate username.
 	userTmp, code, err := s.user.GetByUsername(ctx, data.Username)
 	if err != nil && code != http.StatusNotFound {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 	if userTmp != nil {
-		return nil, http.StatusBadRequest, errors.Wrap(ctx, errors.ErrDuplicateUsername)
+		return nil, http.StatusBadRequest, stack.Wrap(ctx, errors.ErrDuplicateUsername)
 	}
 
 	// Prepare password salt.
@@ -42,7 +44,7 @@ func (s *service) Register(ctx context.Context, data RegisterRequest) (*Token, i
 		PasswordSalt: salt,
 	})
 	if err != nil {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	// Create access token.
@@ -51,7 +53,7 @@ func (s *service) Register(ctx context.Context, data RegisterRequest) (*Token, i
 		AccessUUID: utils.GenerateUUID(),
 	})
 	if err != nil {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	// Create refresh token.
@@ -60,7 +62,7 @@ func (s *service) Register(ctx context.Context, data RegisterRequest) (*Token, i
 		RefreshUUID: utils.GenerateUUID(),
 	})
 	if err != nil {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	return &Token{
@@ -78,20 +80,20 @@ type LoginRequest struct {
 // Login to login user.
 func (s *service) Login(ctx context.Context, data LoginRequest) (*Token, int, error) {
 	if err := utils.Validate(&data); err != nil {
-		return nil, http.StatusBadRequest, errors.Wrap(ctx, err)
+		return nil, http.StatusBadRequest, stack.Wrap(ctx, err)
 	}
 
 	// Get user.
 	user, code, err := s.user.GetByUsername(ctx, data.Username)
 	if err != nil {
 		if code == http.StatusNotFound {
-			return nil, http.StatusNotFound, errors.Wrap(ctx, errors.ErrInvalidLogin)
+			return nil, http.StatusNotFound, stack.Wrap(ctx, errors.ErrInvalidLogin)
 		}
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	if user.PasswordHash != utils.EncodePassword(data.Password, user.PasswordSalt) {
-		return nil, http.StatusBadRequest, errors.Wrap(ctx, errors.ErrInvalidLogin)
+		return nil, http.StatusBadRequest, stack.Wrap(ctx, errors.ErrInvalidLogin)
 	}
 
 	// Create access token.
@@ -100,7 +102,7 @@ func (s *service) Login(ctx context.Context, data LoginRequest) (*Token, int, er
 		AccessUUID: utils.GenerateUUID(),
 	})
 	if err != nil {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	// Create refresh token.
@@ -109,7 +111,7 @@ func (s *service) Login(ctx context.Context, data LoginRequest) (*Token, int, er
 		RefreshUUID: utils.GenerateUUID(),
 	})
 	if err != nil {
-		return nil, code, errors.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	return &Token{
@@ -122,19 +124,19 @@ func (s *service) Login(ctx context.Context, data LoginRequest) (*Token, int, er
 func (s *service) GetRandomImage(ctx context.Context, username string) (string, int, error) {
 	user, code, err := s.user.GetByUsername(ctx, username)
 	if err != nil {
-		return "", code, errors.Wrap(ctx, err)
+		return "", code, stack.Wrap(ctx, err)
 	}
 
 	images, code, err := s.image.Get(ctx, user.ID)
 	if err != nil {
-		return "", code, errors.Wrap(ctx, err)
+		return "", code, stack.Wrap(ctx, err)
 	}
 
 	if len(images) == 0 {
-		return "", http.StatusNotFound, errors.Wrap(ctx, errors.ErrNotFoundImage)
+		return "", http.StatusNotFound, stack.Wrap(ctx, errors.ErrNotFoundImage)
 	}
 
-	randIndex := rand.Intn(len(images))
+	randIndex := rand.New(rand.NewSource(time.Now().UnixNano())).Intn(len(images))
 
 	return images[randIndex].Image, http.StatusOK, nil
 }

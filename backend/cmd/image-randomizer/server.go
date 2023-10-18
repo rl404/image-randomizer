@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/newrelic/go-agent/v3/newrelic"
-	"github.com/rl404/fairy/cache"
 	_nr "github.com/rl404/fairy/log/newrelic"
 	nrCache "github.com/rl404/fairy/monitoring/newrelic/cache"
 	"github.com/rl404/image-randomizer/internal/delivery/rest/api"
@@ -24,6 +23,7 @@ import (
 	userDB "github.com/rl404/image-randomizer/internal/domain/user/repository/db"
 	"github.com/rl404/image-randomizer/internal/service"
 	"github.com/rl404/image-randomizer/internal/utils"
+	"github.com/rl404/image-randomizer/pkg/cache"
 	"github.com/rl404/image-randomizer/pkg/http"
 )
 

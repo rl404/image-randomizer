@@ -2,18 +2,17 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
-	"github.com/rl404/fairy/cache"
-	"github.com/rl404/fairy/log"
 	"github.com/rl404/fairy/monitoring/newrelic/database"
 	"github.com/rl404/image-randomizer/internal/errors"
 	"github.com/rl404/image-randomizer/internal/utils"
+	"github.com/rl404/image-randomizer/pkg/cache"
+	"github.com/rl404/image-randomizer/pkg/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -38,7 +37,7 @@ type appConfig struct {
 }
 
 type cacheConfig struct {
-	Dialect  string        `envconfig:"DIALECT" validate:"required,oneof=nocache redis inmemory memcache" mod:"default=inmemory,no_space,lcase"`
+	Dialect  string        `envconfig:"DIALECT" validate:"required,oneof=nocache redis inmemory" mod:"default=inmemory,no_space,lcase"`
 	Address  string        `envconfig:"ADDRESS"`
 	Password string        `envconfig:"PASSWORD"`
 	Time     time.Duration `envconfig:"TIME" default:"60m" validate:"required,gt=0"`
@@ -62,7 +61,6 @@ type jwtConfig struct {
 }
 
 type logConfig struct {
-	Type  log.LogType  `envconfig:"TYPE" default:"2"`
 	Level log.LogLevel `envconfig:"LEVEL" default:"-1"`
 	JSON  bool         `envconfig:"JSON" default:"false"`
 	Color bool         `envconfig:"COLOR" default:"true"`
@@ -77,10 +75,9 @@ const envPath = "../../.env"
 const envPrefix = "IR"
 
 var cacheType = map[string]cache.CacheType{
-	"nocache":  cache.NoCache,
+	"nocache":  cache.NOP,
 	"redis":    cache.Redis,
 	"inmemory": cache.InMemory,
-	"memcache": cache.Memcache,
 }
 
 func getConfig() (*config, error) {
@@ -105,11 +102,9 @@ func getConfig() (*config, error) {
 	}
 
 	// Init global log.
-	if err := utils.InitLog(cfg.Log.Type, cfg.Log.Level, cfg.Log.JSON, cfg.Log.Color); err != nil {
+	if err := utils.InitLog(cfg.Log.Level, cfg.Log.JSON, cfg.Log.Color); err != nil {
 		return nil, err
 	}
-
-	rand.Seed(time.Now().UnixNano())
 
 	return &cfg, nil
 }

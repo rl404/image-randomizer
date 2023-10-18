@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/rl404/fairy/errors/stack"
 	"github.com/rl404/image-randomizer/internal/errors"
 	"github.com/rl404/image-randomizer/internal/service"
 	"github.com/rl404/image-randomizer/internal/utils"
@@ -23,12 +24,12 @@ import (
 func (api *API) handleGetImages(w http.ResponseWriter, r *http.Request) {
 	claims, code, err := api.getJWTClaimFromContext(r.Context())
 	if err != nil {
-		utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+		utils.ResponseWithJSON(w, code, nil, stack.Wrap(r.Context(), err))
 		return
 	}
 
 	images, code, err := api.service.GetImages(r.Context(), claims.UserID)
-	utils.ResponseWithJSON(w, code, images, errors.Wrap(r.Context(), err))
+	utils.ResponseWithJSON(w, code, images, stack.Wrap(r.Context(), err))
 }
 
 // @summary Create image.
@@ -44,20 +45,20 @@ func (api *API) handleGetImages(w http.ResponseWriter, r *http.Request) {
 func (api *API) handleCreateImage(w http.ResponseWriter, r *http.Request) {
 	claims, code, err := api.getJWTClaimFromContext(r.Context())
 	if err != nil {
-		utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+		utils.ResponseWithJSON(w, code, nil, stack.Wrap(r.Context(), err))
 		return
 	}
 
 	var request service.CreateImageRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, errors.Wrap(r.Context(), errors.ErrInvalidRequestFormat, err))
+		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, stack.Wrap(r.Context(), err, errors.ErrInvalidRequestFormat))
 		return
 	}
 
 	request.UserID = claims.UserID
 
 	image, code, err := api.service.CreateImage(r.Context(), request)
-	utils.ResponseWithJSON(w, code, image, errors.Wrap(r.Context(), err))
+	utils.ResponseWithJSON(w, code, image, stack.Wrap(r.Context(), err))
 }
 
 // @summary Update image.
@@ -74,19 +75,19 @@ func (api *API) handleCreateImage(w http.ResponseWriter, r *http.Request) {
 func (api *API) handleUpdateImage(w http.ResponseWriter, r *http.Request) {
 	claims, code, err := api.getJWTClaimFromContext(r.Context())
 	if err != nil {
-		utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+		utils.ResponseWithJSON(w, code, nil, stack.Wrap(r.Context(), err))
 		return
 	}
 
 	var request service.UpdateImageRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, errors.Wrap(r.Context(), errors.ErrInvalidRequestFormat, err))
+		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, stack.Wrap(r.Context(), err, errors.ErrInvalidRequestFormat))
 		return
 	}
 
 	imageID, err := strconv.ParseInt(chi.URLParam(r, "image_id"), 10, 64)
 	if err != nil {
-		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, errors.Wrap(r.Context(), errors.ErrInvalidRequestFormat, err))
+		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, stack.Wrap(r.Context(), err, errors.ErrInvalidRequestFormat))
 		return
 	}
 
@@ -94,7 +95,7 @@ func (api *API) handleUpdateImage(w http.ResponseWriter, r *http.Request) {
 	request.ImageID = imageID
 
 	code, err = api.service.UpdateImage(r.Context(), request)
-	utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+	utils.ResponseWithJSON(w, code, nil, stack.Wrap(r.Context(), err))
 }
 
 // @summary Delete image.
@@ -110,13 +111,13 @@ func (api *API) handleUpdateImage(w http.ResponseWriter, r *http.Request) {
 func (api *API) handleDeleteImage(w http.ResponseWriter, r *http.Request) {
 	claims, code, err := api.getJWTClaimFromContext(r.Context())
 	if err != nil {
-		utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+		utils.ResponseWithJSON(w, code, nil, stack.Wrap(r.Context(), err))
 		return
 	}
 
 	imageID, err := strconv.ParseInt(chi.URLParam(r, "image_id"), 10, 64)
 	if err != nil {
-		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, errors.Wrap(r.Context(), errors.ErrInvalidRequestFormat, err))
+		utils.ResponseWithJSON(w, http.StatusBadRequest, nil, stack.Wrap(r.Context(), err, errors.ErrInvalidRequestFormat))
 		return
 	}
 
@@ -125,5 +126,5 @@ func (api *API) handleDeleteImage(w http.ResponseWriter, r *http.Request) {
 		ImageID: imageID,
 	})
 
-	utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+	utils.ResponseWithJSON(w, code, nil, stack.Wrap(r.Context(), err))
 }

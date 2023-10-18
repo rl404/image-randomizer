@@ -5,6 +5,7 @@ import (
 	_errors "errors"
 	"net/http"
 
+	"github.com/rl404/fairy/errors/stack"
 	"github.com/rl404/image-randomizer/internal/domain/user/entity"
 	"github.com/rl404/image-randomizer/internal/errors"
 	"gorm.io/gorm"
@@ -27,9 +28,9 @@ func (db *DB) GetByUsername(ctx context.Context, username string) (*entity.User,
 	var u User
 	if err := db.db.WithContext(ctx).Where("username = ?", username).Take(&u).Error; err != nil {
 		if _errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, http.StatusNotFound, errors.Wrap(ctx, errors.ErrNotFoundUser, err)
+			return nil, http.StatusNotFound, stack.Wrap(ctx, err, errors.ErrNotFoundUser)
 		}
-		return nil, http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalDB, err)
+		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalDB)
 	}
 	return u.toEntity(), http.StatusOK, nil
 }
@@ -38,7 +39,7 @@ func (db *DB) GetByUsername(ctx context.Context, username string) (*entity.User,
 func (db *DB) Create(ctx context.Context, data entity.User) (*entity.User, int, error) {
 	u := db.fromEntity(data)
 	if err := db.db.WithContext(ctx).Create(&u).Error; err != nil {
-		return nil, http.StatusInternalServerError, errors.Wrap(ctx, errors.ErrInternalDB, err)
+		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalDB)
 	}
 	return u.toEntity(), http.StatusCreated, nil
 }

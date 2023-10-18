@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/rl404/image-randomizer/internal/errors"
+	"github.com/rl404/fairy/errors/stack"
 	"github.com/rl404/image-randomizer/internal/utils"
 )
 
@@ -17,7 +17,7 @@ import (
 // @router /token/check [get]
 func (api *API) handleTokenCheck(w http.ResponseWriter, r *http.Request) {
 	claims, code, err := api.getJWTClaimFromContext(r.Context())
-	utils.ResponseWithJSON(w, code, claims, errors.Wrap(r.Context(), err))
+	utils.ResponseWithJSON(w, code, claims, stack.Wrap(r.Context(), err))
 }
 
 // @summary Refresh Token
@@ -31,7 +31,7 @@ func (api *API) handleTokenCheck(w http.ResponseWriter, r *http.Request) {
 func (api *API) handleTokenRefresh(w http.ResponseWriter, r *http.Request) {
 	claims, code, err := api.getJWTClaimFromContext(r.Context())
 	if err != nil {
-		utils.ResponseWithJSON(w, code, nil, errors.Wrap(r.Context(), err))
+		utils.ResponseWithJSON(w, code, nil, stack.Wrap(r.Context(), err))
 		return
 	}
 
@@ -40,5 +40,5 @@ func (api *API) handleTokenRefresh(w http.ResponseWriter, r *http.Request) {
 		token.RefreshToken = api.getJWTFromRequest(r)
 	}
 
-	utils.ResponseWithJSON(w, code, token, errors.Wrap(r.Context(), err))
+	utils.ResponseWithJSON(w, code, token, stack.Wrap(r.Context(), err))
 }
