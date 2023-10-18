@@ -8,9 +8,6 @@ github.com/allegro/bigcache/v3/queue
 # github.com/andybalholm/brotli v1.0.5
 ## explicit; go 1.12
 github.com/andybalholm/brotli
-# github.com/bradfitz/gomemcache v0.0.0-20230611145640-acc696258285
-## explicit; go 1.12
-github.com/andybalholm/brotli
 # github.com/cespare/xxhash/v2 v2.2.0
 ## explicit; go 1.11
 github.com/cespare/xxhash/v2
@@ -216,21 +213,6 @@ github.com/valyala/fasthttp
 github.com/valyala/fasthttp/fasthttpadaptor
 github.com/valyala/fasthttp/fasthttputil
 github.com/valyala/fasthttp/stackless
-# go.uber.org/atomic v1.10.0
-## explicit; go 1.18
-go.uber.org/atomic
-# go.uber.org/multierr v1.7.0
-## explicit; go 1.14
-go.uber.org/multierr
-# go.uber.org/zap v1.24.0
-## explicit; go 1.19
-go.uber.org/zap
-go.uber.org/zap/buffer
-go.uber.org/zap/internal
-go.uber.org/zap/internal/bufferpool
-go.uber.org/zap/internal/color
-go.uber.org/zap/internal/exit
-go.uber.org/zap/zapcore
 # golang.org/x/crypto v0.14.0
 ## explicit; go 1.17
 golang.org/x/crypto/pbkdf2
@@ -250,7 +232,6 @@ golang.org/x/net/trace
 golang.org/x/sys/cpu
 golang.org/x/sys/execabs
 golang.org/x/sys/unix
-golang.org/x/sys/windows
 # golang.org/x/text v0.13.0
 ## explicit; go 1.17
 golang.org/x/text/cases
