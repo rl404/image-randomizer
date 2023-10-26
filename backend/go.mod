@@ -5,16 +5,16 @@ go 1.21
 require (
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/google/uuid v1.3.1
+	github.com/google/uuid v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/newrelic/go-agent/v3 v3.27.0
-	github.com/rl404/fairy v0.24.0
+	github.com/rl404/fairy v0.25.0
 	github.com/spf13/cobra v1.7.0
 	github.com/swaggo/http-swagger/v2 v2.0.2
 	github.com/swaggo/swag v1.16.2
 	golang.org/x/text v0.13.0
-	gorm.io/driver/postgres v1.5.3
+	gorm.io/driver/postgres v1.5.4
 	gorm.io/gorm v1.25.5
 )
 
@@ -65,8 +65,8 @@ require (
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/tools v0.7.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20231009173412-8bfb1ae86b6c // indirect
-	google.golang.org/grpc v1.58.3 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231012201019-e917dd12ba7a // indirect
+	google.golang.org/grpc v1.59.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
