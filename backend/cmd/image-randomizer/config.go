@@ -12,7 +12,6 @@ import (
 	"github.com/rl404/image-randomizer/internal/errors"
 	"github.com/rl404/image-randomizer/internal/utils"
 	"github.com/rl404/image-randomizer/pkg/cache"
-	"github.com/rl404/image-randomizer/pkg/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -61,9 +60,9 @@ type jwtConfig struct {
 }
 
 type logConfig struct {
-	Level log.LogLevel `envconfig:"LEVEL" default:"-1"`
-	JSON  bool         `envconfig:"JSON" default:"false"`
-	Color bool         `envconfig:"COLOR" default:"true"`
+	Level utils.LogLevel `envconfig:"LEVEL" default:"-1"`
+	JSON  bool           `envconfig:"JSON" default:"false"`
+	Color bool           `envconfig:"COLOR" default:"true"`
 }
 
 type newrelicConfig struct {
@@ -102,9 +101,7 @@ func getConfig() (*config, error) {
 	}
 
 	// Init global log.
-	if err := utils.InitLog(cfg.Log.Level, cfg.Log.JSON, cfg.Log.Color); err != nil {
-		return nil, err
-	}
+	utils.InitLog(cfg.Log.Level, cfg.Log.JSON, cfg.Log.Color)
 
 	return &cfg, nil
 }
