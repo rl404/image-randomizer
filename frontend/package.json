@@ -15,16 +15,16 @@
     "@mui/lab": "^5.0.0-alpha.134",
     "@mui/material": "^5.13.6",
     "axios": "^1.4.0",
-    "next": "14.0.2",
+    "next": "14.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20.9.0",
+    "@types/node": "20.9.1",
     "@types/react": "18.2.37",
     "@types/react-dom": "18.2.15",
     "eslint": "8.53.0",
-    "eslint-config-next": "14.0.2",
+    "eslint-config-next": "14.0.3",
     "typescript": "5.2.2"
   }
 }
