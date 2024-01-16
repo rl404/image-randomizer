@@ -31,6 +31,17 @@ const FormLogin = () => {
 
   const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    if (formState.username === '') {
+      setFormState({ ...formState, error: 'required field username', loading: false });
+      return;
+    }
+
+    if (formState.password === '') {
+      setFormState({ ...formState, error: 'required field password', loading: false });
+      return;
+    }
+
     setFormState({ ...formState, loading: true });
     onLogin();
   };

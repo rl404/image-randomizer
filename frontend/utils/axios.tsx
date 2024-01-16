@@ -35,8 +35,12 @@ axios2.interceptors.response.use(
         saveAccessToken(resp.data.data.access_token);
         return axios2(originalRequest);
       })
-      .catch(() => {
+      .catch((err) => {
         deleteStorage();
+        if (err.response && err.response.status === 401) {
+          window.location.href = '/';
+          return Promise.reject(error);
+        }
         return Promise.reject(error);
       });
   },
