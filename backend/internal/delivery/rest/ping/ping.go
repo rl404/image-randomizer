@@ -19,6 +19,7 @@ func New() *Ping {
 func (p Ping) Register(r chi.Router) {
 	r.Get("/", p.handleRoot)
 	r.Get("/ping", p.handlePing)
+	r.Get("/robots.txt", p.handleRobots)
 	r.Get("/favicon.ico", p.handleFavIcon)
 	r.NotFound(http.HandlerFunc(p.handleNotFound))
 	r.MethodNotAllowed(http.HandlerFunc(p.handleMethodNotAllowed))
@@ -42,4 +43,9 @@ func (p Ping) handleMethodNotAllowed(w http.ResponseWriter, _ *http.Request) {
 
 func (p Ping) handleFavIcon(w http.ResponseWriter, _ *http.Request) {
 	utils.ResponseWithJSON(w, http.StatusOK, "ok", nil)
+}
+
+func (p Ping) handleRobots(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write([]byte("User-agent: *\nDisallow: /"))
 }
