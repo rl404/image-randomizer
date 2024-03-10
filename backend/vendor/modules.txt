@@ -328,7 +328,7 @@ google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit; go 1.15
 gopkg.in/yaml.v2
-# gorm.io/driver/postgres v1.5.6
+# gorm.io/driver/postgres v1.5.7
 ## explicit; go 1.18
 gorm.io/driver/postgres
 # gorm.io/gorm v1.25.7
