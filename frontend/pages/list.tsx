@@ -251,8 +251,11 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
           <Tooltip
             title={
               <>
-                Looks like you are hosting your image on Imgur. Your image may gets rate limitted by Imgur. Try to host
-                it on other site such as{' '}
+                {imageState.image.includes('imgur') &&
+                  'Looks like you are hosting your image on Imgur. Your image may gets rate limitted by Imgur. '}
+                {imageState.image.includes('discordapp') &&
+                  'Looks like you are hosting your image on Discord. Discord link is not permanent anymore and can be expired. '}
+                Try to host it on other site such as{' '}
                 <Link href="https://postimages.org/" target="_blank" rel="noopener noreferrer">
                   postimages
                 </Link>
@@ -260,20 +263,16 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
                 <Link href="https://imgbb.com/" target="_blank" rel="noopener noreferrer">
                   imgbb
                 </Link>
-                ,{' '}
+                , or{' '}
                 <Link href="https://github.com/" target="_blank" rel="noopener noreferrer">
                   github
-                </Link>
-                , or even{' '}
-                <Link href="https://discord.com/" target="_blank" rel="noopener noreferrer">
-                  discord
                 </Link>
                 .
               </>
             }
             placement="left"
             arrow
-            open={imageState.image.includes('imgur')}
+            open={imageState.image.includes('imgur') || imageState.image.includes('discordapp')}
           >
             <TextField
               placeholder="http://your.image.url.com"
