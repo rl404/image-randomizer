@@ -13,7 +13,7 @@ require (
 	github.com/spf13/cobra v1.8.0
 	github.com/swaggo/http-swagger/v2 v2.0.2
 	github.com/swaggo/swag v1.16.3
-	golang.org/x/text v0.15.0
+	golang.org/x/text v0.16.0
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.10
 )
@@ -58,11 +58,11 @@ require (
 	github.com/segmentio/go-snakecase v1.2.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/swaggo/files/v2 v2.0.0 // indirect
-	golang.org/x/crypto v0.21.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sync v0.4.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/tools v0.7.0 // indirect
+	golang.org/x/crypto v0.23.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231012201019-e917dd12ba7a // indirect
 	google.golang.org/grpc v1.59.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
