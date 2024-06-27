@@ -48,7 +48,7 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker
       - name: Build and push image backend
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./backend
           file: ./backend/build/package/Dockerfile
@@ -60,7 +60,7 @@ jobs:
             ghcr.io/rl404/image-randomizer:be-${{ env.IMG_TAG }}
             ${{ secrets.GCR_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/image-randomizer:be-${{ env.IMG_TAG }}
       - name: Build and push image frontend
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./frontend
           file: ./frontend/Dockerfile
