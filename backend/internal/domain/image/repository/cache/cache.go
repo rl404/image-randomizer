@@ -2,6 +2,8 @@ package cache
 
 import (
 	"context"
+	_errors "errors"
+	"io"
 	"net/http"
 
 	"github.com/rl404/fairy/cache"
@@ -73,4 +75,33 @@ func (c *Cache) Delete(ctx context.Context, data entity.Image) (int, error) {
 	}
 
 	return c.repo.Delete(ctx, data)
+}
+
+type errCache struct {
+	Code int
+	Err  string
+}
+
+// Download to download image.
+func (c *Cache) Download(ctx context.Context, path string) (io.ReadCloser, int, error) {
+	key := utils.GetKey("image", path)
+
+	var data errCache
+	if c.cacher.Get(ctx, key, &data) == nil {
+		return nil, data.Code, stack.Wrap(ctx, _errors.New(data.Err))
+	}
+
+	img, code, err := c.repo.Download(ctx, path)
+	if err == nil {
+		return img, code, nil
+	}
+
+	data.Code = code
+	data.Err = err.Error()
+
+	if err := c.cacher.Set(ctx, key, data); err != nil {
+		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
+	}
+
+	return nil, code, stack.Wrap(ctx, err)
 }

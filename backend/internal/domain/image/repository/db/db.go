@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"io"
 	"net/http"
 
 	"github.com/rl404/fairy/errors/stack"
@@ -71,4 +72,9 @@ func (db *DB) Delete(ctx context.Context, data entity.Image) (int, error) {
 	}
 
 	return http.StatusOK, nil
+}
+
+// Download is not implemented.
+func (db *DB) Download(ctx context.Context, path string) (io.ReadCloser, int, error) {
+	return nil, 0, nil
 }

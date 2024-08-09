@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"io"
 	"math/rand"
 	"net/http"
 	"time"
@@ -121,22 +122,27 @@ func (s *service) Login(ctx context.Context, data LoginRequest) (*Token, int, er
 }
 
 // GetRandomImage to get random image.
-func (s *service) GetRandomImage(ctx context.Context, username string) (string, int, error) {
+func (s *service) GetRandomImage(ctx context.Context, username string) (io.ReadCloser, int, error) {
 	user, code, err := s.user.GetByUsername(ctx, username)
 	if err != nil {
-		return "", code, stack.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	images, code, err := s.image.Get(ctx, user.ID)
 	if err != nil {
-		return "", code, stack.Wrap(ctx, err)
+		return nil, code, stack.Wrap(ctx, err)
 	}
 
 	if len(images) == 0 {
-		return "", http.StatusNotFound, stack.Wrap(ctx, errors.ErrNotFoundImage)
+		return nil, http.StatusNotFound, stack.Wrap(ctx, errors.ErrNotFoundImage)
 	}
 
 	randIndex := rand.New(rand.NewSource(time.Now().UnixNano())).Intn(len(images))
 
-	return images[randIndex].Image, http.StatusOK, nil
+	img, code, err := s.image.Download(ctx, images[randIndex].Image)
+	if err != nil {
+		return nil, code, stack.Wrap(ctx, err)
+	}
+
+	return img, http.StatusOK, nil
 }
