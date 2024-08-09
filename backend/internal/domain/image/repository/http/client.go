@@ -52,7 +52,7 @@ func (c *client) Delete(ctx context.Context, data entity.Image) (int, error) {
 
 // Download to download image.
 func (c *client) Download(ctx context.Context, path string) (io.ReadCloser, int, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, path, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, path+"asd", nil)
 	if err != nil {
 		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalServer)
 	}
@@ -63,7 +63,7 @@ func (c *client) Download(ctx context.Context, path string) (io.ReadCloser, int,
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, resp.StatusCode, stack.Wrap(ctx, fmt.Errorf("%s", http.StatusText(resp.StatusCode)))
+		return nil, http.StatusBadRequest, stack.Wrap(ctx, fmt.Errorf("%d %s", resp.StatusCode, http.StatusText(resp.StatusCode)), errors.ErrInvalidImage)
 	}
 
 	return resp.Body, http.StatusOK, nil
