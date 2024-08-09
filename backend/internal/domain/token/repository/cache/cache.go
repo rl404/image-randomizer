@@ -13,8 +13,7 @@ import (
 	"github.com/rl404/image-randomizer/internal/utils"
 )
 
-// Cache contains functions for token cache.
-type Cache struct {
+type client struct {
 	cacher         cache.Cacher
 	accessSecret   string
 	accessExpired  time.Duration
@@ -26,8 +25,8 @@ type Cache struct {
 func New(cacher cache.Cacher,
 	as string, ae time.Duration,
 	rs string, re time.Duration,
-) *Cache {
-	return &Cache{
+) *client {
+	return &client{
 		cacher:         cacher,
 		accessSecret:   as,
 		accessExpired:  ae,
@@ -37,7 +36,7 @@ func New(cacher cache.Cacher,
 }
 
 // CreateAccessToken to create new access token.
-func (c *Cache) CreateAccessToken(ctx context.Context, data entity.CreateAccessTokenRequest) (*entity.Token, int, error) {
+func (c *client) CreateAccessToken(ctx context.Context, data entity.CreateAccessTokenRequest) (*entity.Token, int, error) {
 	keyAccess := utils.GetKey("token", data.AccessUUID)
 	if err := c.cacher.Set(ctx, keyAccess, data.UserID, c.accessExpired); err != nil {
 		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
@@ -61,7 +60,7 @@ func (c *Cache) CreateAccessToken(ctx context.Context, data entity.CreateAccessT
 }
 
 // CreateRefreshToken to create new refresh token.
-func (c *Cache) CreateRefreshToken(ctx context.Context, data entity.CreateRefreshTokenRequest) (*entity.Token, int, error) {
+func (c *client) CreateRefreshToken(ctx context.Context, data entity.CreateRefreshTokenRequest) (*entity.Token, int, error) {
 	keyRefresh := utils.GetKey("token", data.RefreshUUID)
 	if err := c.cacher.Set(ctx, keyRefresh, data.UserID, c.refreshExpired); err != nil {
 		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
@@ -85,13 +84,13 @@ func (c *Cache) CreateRefreshToken(ctx context.Context, data entity.CreateRefres
 }
 
 // Get to get token from cache.
-func (c *Cache) Get(ctx context.Context, token string) (userID int64) {
+func (c *client) Get(ctx context.Context, token string) (userID int64) {
 	c.cacher.Get(ctx, utils.GetKey("token", token), &userID)
 	return
 }
 
 // Delete to delete token from cache.
-func (c *Cache) Delete(ctx context.Context, token string) (int, error) {
+func (c *client) Delete(ctx context.Context, token string) (int, error) {
 	if err := c.cacher.Delete(ctx, utils.GetKey("token", token)); err != nil {
 		return http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
 	}

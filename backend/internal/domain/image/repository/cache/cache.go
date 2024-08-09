@@ -14,22 +14,21 @@ import (
 	"github.com/rl404/image-randomizer/internal/utils"
 )
 
-// Cache contains functions for image cache.
-type Cache struct {
+type client struct {
 	cacher cache.Cacher
 	repo   repository.Repository
 }
 
 // New to create new image cache.
-func New(cacher cache.Cacher, repo repository.Repository) *Cache {
-	return &Cache{
+func New(cacher cache.Cacher, repo repository.Repository) *client {
+	return &client{
 		cacher: cacher,
 		repo:   repo,
 	}
 }
 
 // Get to get image.
-func (c *Cache) Get(ctx context.Context, userID int64) (data []*entity.Image, code int, err error) {
+func (c *client) Get(ctx context.Context, userID int64) (data []*entity.Image, code int, err error) {
 	key := utils.GetKey("images", "user_id", userID)
 	if c.cacher.Get(ctx, key, &data) == nil {
 		return data, http.StatusOK, nil
@@ -48,7 +47,7 @@ func (c *Cache) Get(ctx context.Context, userID int64) (data []*entity.Image, co
 }
 
 // Create to create image.
-func (c *Cache) Create(ctx context.Context, data entity.Image) (*entity.Image, int, error) {
+func (c *client) Create(ctx context.Context, data entity.Image) (*entity.Image, int, error) {
 	key := utils.GetKey("images", "user_id", data.UserID)
 	if err := c.cacher.Delete(ctx, key); err != nil {
 		return nil, http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
@@ -58,7 +57,7 @@ func (c *Cache) Create(ctx context.Context, data entity.Image) (*entity.Image, i
 }
 
 // Update to update image.
-func (c *Cache) Update(ctx context.Context, data entity.Image) (int, error) {
+func (c *client) Update(ctx context.Context, data entity.Image) (int, error) {
 	key := utils.GetKey("images", "user_id", data.UserID)
 	if err := c.cacher.Delete(ctx, key); err != nil {
 		return http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
@@ -68,7 +67,7 @@ func (c *Cache) Update(ctx context.Context, data entity.Image) (int, error) {
 }
 
 // Delete to delete image.
-func (c *Cache) Delete(ctx context.Context, data entity.Image) (int, error) {
+func (c *client) Delete(ctx context.Context, data entity.Image) (int, error) {
 	key := utils.GetKey("images", "user_id", data.UserID)
 	if err := c.cacher.Delete(ctx, key); err != nil {
 		return http.StatusInternalServerError, stack.Wrap(ctx, err, errors.ErrInternalCache)
@@ -83,7 +82,7 @@ type errCache struct {
 }
 
 // Download to download image.
-func (c *Cache) Download(ctx context.Context, path string) (io.ReadCloser, int, error) {
+func (c *client) Download(ctx context.Context, path string) (io.ReadCloser, int, error) {
 	key := utils.GetKey("image", path)
 
 	var data errCache
