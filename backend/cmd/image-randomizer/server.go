@@ -16,6 +16,7 @@ import (
 	imageRepository "github.com/rl404/image-randomizer/internal/domain/image/repository"
 	imageCache "github.com/rl404/image-randomizer/internal/domain/image/repository/cache"
 	imageDB "github.com/rl404/image-randomizer/internal/domain/image/repository/db"
+	imageHttp "github.com/rl404/image-randomizer/internal/domain/image/repository/http"
 	tokenRepository "github.com/rl404/image-randomizer/internal/domain/token/repository"
 	tokenCache "github.com/rl404/image-randomizer/internal/domain/token/repository/cache"
 	userRepository "github.com/rl404/image-randomizer/internal/domain/user/repository"
@@ -87,6 +88,7 @@ func server() error {
 	// Init image.
 	var image imageRepository.Repository
 	image = imageDB.New(db)
+	image = imageHttp.New(image)
 	image = imageCache.New(c, image)
 	image = imageCache.New(im, image)
 	utils.Info("repository image initialized")

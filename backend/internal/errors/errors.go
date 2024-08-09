@@ -19,6 +19,7 @@ var (
 	ErrRequiredToken        = errors.New("required token")
 	ErrInvalidToken         = errors.New("invalid token or already expired")
 	ErrNotFoundImage        = errors.New("image not found")
+	ErrInvalidImage         = errors.New("invalid image")
 )
 
 // ErrRequiredField is error for missing field.

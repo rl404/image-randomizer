@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"io"
 
 	imageRepository "github.com/rl404/image-randomizer/internal/domain/image/repository"
 	tokenRepository "github.com/rl404/image-randomizer/internal/domain/token/repository"
@@ -21,7 +22,7 @@ type Service interface {
 	UpdateImage(ctx context.Context, data UpdateImageRequest) (int, error)
 	DeleteImage(ctx context.Context, data DeleteImageRequest) (int, error)
 
-	GetRandomImage(ctx context.Context, username string) (string, int, error)
+	GetRandomImage(ctx context.Context, username string) (io.ReadCloser, int, error)
 }
 
 type service struct {

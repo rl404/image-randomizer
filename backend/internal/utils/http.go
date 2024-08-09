@@ -3,7 +3,6 @@ package utils
 import (
 	"context"
 	"encoding/json"
-	_errors "errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -45,22 +44,11 @@ func ResponseWithJSON(w http.ResponseWriter, code int, data interface{}, err err
 }
 
 // ResponseWithImage serve image as response.
-func ResponseWithImage(ctx context.Context, w http.ResponseWriter, image string) {
-	img, err := http.Get(image)
-	if err != nil {
-		ResponseWithJSON(w, http.StatusInternalServerError, nil, stack.Wrap(ctx, err, errors.ErrInternalServer))
-		return
-	}
-
-	if img.StatusCode != http.StatusOK {
-		ResponseWithJSON(w, img.StatusCode, nil, stack.Wrap(ctx, _errors.New(http.StatusText(img.StatusCode))))
-		return
-	}
-
-	defer img.Body.Close()
+func ResponseWithImage(ctx context.Context, w http.ResponseWriter, image io.ReadCloser) {
+	defer image.Close()
 	w.Header().Set("Content-Type", "image/jpeg")
 
-	if _, err := io.Copy(w, img.Body); err != nil {
+	if _, err := io.Copy(w, image); err != nil {
 		ResponseWithJSON(w, http.StatusInternalServerError, nil, stack.Wrap(ctx, err, errors.ErrInternalServer))
 	}
 }
