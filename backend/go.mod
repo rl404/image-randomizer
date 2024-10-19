@@ -12,7 +12,7 @@ require (
 	github.com/rl404/fairy v0.26.0
 	github.com/spf13/cobra v1.8.1
 	github.com/swaggo/http-swagger/v2 v2.0.2
-	github.com/swaggo/swag v1.16.3
+	github.com/swaggo/swag v1.16.4
 	golang.org/x/text v0.19.0
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.12
