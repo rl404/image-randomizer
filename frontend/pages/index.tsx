@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -38,7 +38,7 @@ const Home: NextPage = () => {
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#3f51b5" />
       </Head>
       <Grid container justifyContent="center" alignItems="center">
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <FormLogin />
         </Grid>
       </Grid>

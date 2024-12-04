@@ -1,14 +1,18 @@
-import { Grid, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
-import { useRouter } from 'next/router';
-import * as React from 'react';
-import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
+import PersonIcon from '@mui/icons-material/Person';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { LoadingButton } from '@mui/lab';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Grid from '@mui/material/Grid2';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import { saveAccessToken, saveRefreshToken, saveUsername } from '../../utils/storage';
+import { useRouter } from 'next/router';
+import * as React from 'react';
 import { Token } from '../../types/Types';
+import { saveAccessToken, saveRefreshToken, saveUsername } from '../../utils/storage';
 
 const FormLogin = () => {
   const router = useRouter();
@@ -100,7 +104,7 @@ const FormLogin = () => {
   return (
     <form>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <TextField
             label="Username"
             placeholder="username"
@@ -110,17 +114,25 @@ const FormLogin = () => {
             size="small"
             value={formState.username}
             onChange={onChangeField('username')}
-            inputProps={{ style: { WebkitBoxShadow: '0 0 0 1000px transparent inset' } }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonIcon />
-                </InputAdornment>
-              ),
+            sx={{
+              '& input:-webkit-autofill': {
+                boxShadow: '0 0 0 1000px #121212 inset !important',
+                WebkitTextFillColor: 'white !important',
+                borderRadius: 0,
+              },
+            }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonIcon />
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <TextField
             label="Password"
             placeholder="password"
@@ -131,30 +143,38 @@ const FormLogin = () => {
             size="small"
             value={formState.password}
             onChange={onChangeField('password')}
-            inputProps={{ style: { WebkitBoxShadow: '0 0 0 1000px transparent inset' } }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <KeyIcon />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={togglePassword} edge="end">
-                    {formState.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            sx={{
+              '& input:-webkit-autofill': {
+                boxShadow: '0 0 0 1000px #121212 inset',
+                WebkitTextFillColor: 'white',
+                borderRadius: 0,
+              },
+            }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <KeyIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={togglePassword} edge="end">
+                      {formState.showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <LoadingButton variant="contained" type="submit" fullWidth onClick={onSubmit} loading={formState.loading}>
             Login or Register
           </LoadingButton>
         </Grid>
         {formState.error !== '' && (
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Typography color="error">{formState.error}</Typography>
           </Grid>
         )}

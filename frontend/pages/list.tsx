@@ -1,14 +1,22 @@
-import { Button, Grid, IconButton, InputAdornment, Link, Stack, TextField, Tooltip, Typography } from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Visibility from '@mui/icons-material/Visibility';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid2';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { Image } from '../types/Types';
 import { axios2 } from '../utils/axios';
 import { getAccessToken, getUsername } from '../utils/storage';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import Visibility from '@mui/icons-material/Visibility';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { LoadingButton } from '@mui/lab';
 
 const List: NextPage = () => {
   const router = useRouter();
@@ -74,12 +82,12 @@ const List: NextPage = () => {
   return (
     <Grid container spacing={2}>
       {loading ? (
-        <Grid item>loading...</Grid>
+        <Grid>loading...</Grid>
       ) : error ? (
-        <Grid item>{error}</Grid>
+        <Grid>{error}</Grid>
       ) : (
         <>
-          <Grid item xs={12} sm={10} md={11}>
+          <Grid size={{ xs: 12, sm: 10, md: 11 }}>
             <Typography variant="h5">
               {`${username}'s images`} (
               <Link href={randomImgURL} target="_blank" rel="noopener noreferrer">
@@ -93,22 +101,22 @@ const List: NextPage = () => {
               </Tooltip>
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={2} md={1} sx={{ textAlign: 'right' }}>
+          <Grid size={{ xs: 12, sm: 2, md: 1 }} sx={{ textAlign: 'right' }}>
             <Button href="/logout" variant="outlined" fullWidth>
               Logout
             </Button>
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid size={{ xs: 12, sm: 3 }}>
             Preview
             {preview !== '' && (
               <img src={preview} alt="invalid image url" width="100%" style={{ position: 'sticky', top: 20 }} />
             )}
           </Grid>
-          <Grid item xs={12} sm={9} container spacing={2}>
+          <Grid size={{ xs: 12, sm: 9 }} container spacing={2}>
             {images.map((i) => {
               return <ImageRow key={i.id} image={i} setPreview={setPreview} />;
             })}
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Button fullWidth variant="outlined" onClick={addNewRow} ref={newRowRef}>
                 Add new image
               </Button>
@@ -245,7 +253,7 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
   }
 
   return (
-    <Grid item xs={12} sx={{ opacity: formState.deleted ? 0.3 : 1 }}>
+    <Grid size={12} sx={{ opacity: formState.deleted ? 0.3 : 1 }}>
       <form>
         <Stack direction="row" spacing={2}>
           <Tooltip
