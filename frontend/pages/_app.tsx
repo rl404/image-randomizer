@@ -3,7 +3,11 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Script from 'next/script';
 import * as gtag from '../lib/gtag';
-import { Container, CssBaseline, Divider, Grid, ThemeProvider } from '@mui/material';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid2';
+import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../components/theme';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -44,19 +48,19 @@ function MyApp({ Component, pageProps }: AppProps) {
         <CssBaseline />
         <Container>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Header />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Divider />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Component {...pageProps} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Divider />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Footer />
             </Grid>
           </Grid>
