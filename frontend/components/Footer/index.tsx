@@ -1,6 +1,6 @@
-import IconButton from '@mui/material/IconButton';
-import Grid from '@mui/material/Grid2';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import Grid from '@mui/material/Grid2';
+import IconButton from '@mui/material/IconButton';
 
 const Footer = () => {
   return (

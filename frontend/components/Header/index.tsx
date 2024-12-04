@@ -1,5 +1,5 @@
-import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid2';
+import Typography from '@mui/material/Typography';
 import React from 'react';
 
 const Header = () => {

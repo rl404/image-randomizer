@@ -1,16 +1,16 @@
-import type { AppProps } from 'next/app';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import Script from 'next/script';
-import * as gtag from '../lib/gtag';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '../components/theme';
-import Header from '../components/Header';
+import type { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
+import Script from 'next/script';
+import { useEffect } from 'react';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
+import { theme } from '../components/theme';
+import * as gtag from '../lib/gtag';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
