@@ -1,5 +1,5 @@
 # Golang base image
-FROM golang:1.23 as go_builder
+FROM golang:1.23 AS go_builder
 LABEL stage="image_randomizer_be_builder"
 WORKDIR /image-randomizer
 COPY . .
