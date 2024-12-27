@@ -121,9 +121,18 @@ func (s *service) Login(ctx context.Context, data LoginRequest) (*Token, int, er
 	}, http.StatusOK, nil
 }
 
+type usernameValidation struct {
+	Username string `validate:"required" mod:"trim,lcase"`
+}
+
 // GetRandomImage to get random image.
 func (s *service) GetRandomImage(ctx context.Context, username string) (io.ReadCloser, int, error) {
-	user, code, err := s.user.GetByUsername(ctx, username)
+	u := usernameValidation{Username: username}
+	if err := utils.Validate(&u); err != nil {
+		return nil, http.StatusBadRequest, stack.Wrap(ctx, err)
+	}
+
+	user, code, err := s.user.GetByUsername(ctx, u.Username)
 	if err != nil {
 		return nil, code, stack.Wrap(ctx, err)
 	}
