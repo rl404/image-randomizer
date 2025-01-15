@@ -21,9 +21,9 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.0.0",
-    "@types/node": "22.10.5",
-    "@types/react": "19.0.4",
-    "@types/react-dom": "19.0.2",
+    "@types/node": "22.10.6",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
     "eslint": "8.57.1",
     "eslint-config-next": "15.1.4",
     "typescript": "5.7.3"
