@@ -1,6 +1,8 @@
 module github.com/rl404/image-randomizer
 
-go 1.21
+go 1.22
+
+toolchain go1.24.0
 
 require (
 	github.com/go-chi/chi/v5 v5.2.1
@@ -8,7 +10,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/newrelic/go-agent/v3 v3.36.0
+	github.com/newrelic/go-agent/v3 v3.37.0
 	github.com/rl404/fairy v0.26.0
 	github.com/spf13/cobra v1.9.1
 	github.com/swaggo/http-swagger/v2 v2.0.2
