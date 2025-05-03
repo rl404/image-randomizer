@@ -5,7 +5,7 @@ export const axios2 = axios.create();
 
 axios2.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    config.headers && (config.headers.authorization = `Bearer ${getAccessToken()}`);
+    if (config.headers) config.headers.authorization = `Bearer ${getAccessToken()}`;
     return config;
   },
   (error) => {

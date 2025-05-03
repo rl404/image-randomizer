@@ -1,8 +1,8 @@
 import GitHubIcon from '@mui/icons-material/GitHub';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 
-const Footer = () => {
+export default function Footer() {
   return (
     <Grid container justifyContent="flex-end">
       <Grid>
@@ -12,6 +12,4 @@ const Footer = () => {
       </Grid>
     </Grid>
   );
-};
-
-export default Footer;
+}
