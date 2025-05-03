@@ -16,7 +16,7 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 
 export default function List() {
   const router = useRouter();
@@ -177,7 +177,7 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
     showButton: false,
   });
 
-  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
     setImageState({ image: e.target.value, showButton: e.target.value !== formState.image });
   };
 
@@ -185,7 +185,7 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
     setImageState({ image: formState.image, showButton: false });
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     setFormState({ ...formState, loading: true });

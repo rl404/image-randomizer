@@ -10,6 +10,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
 import { Roboto } from 'next/font/google';
+import { ReactNode } from 'react';
 import './globals.css';
 
 const title = 'Image Randomizer';
@@ -43,7 +44,7 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en" className={roboto.variable}>
