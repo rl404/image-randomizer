@@ -1,9 +1,13 @@
+'use client';
+
+import { Image } from '@/app/api/images/route';
+import { axios2 } from '@/src/utils/axios';
+import { getAccessToken, getUsername } from '@/src/utils/storage';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Visibility from '@mui/icons-material/Visibility';
-import LoadingButton from '@mui/lab/LoadingButton';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
@@ -11,25 +15,21 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import * as React from 'react';
-import { Image } from '../types/Types';
-import { axios2 } from '../utils/axios';
-import { getAccessToken, getUsername } from '../utils/storage';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
-const List: NextPage = () => {
+export default function List() {
   const router = useRouter();
 
-  var timeout: NodeJS.Timeout;
+  let timeout: NodeJS.Timeout;
 
-  const [username, setUsername] = React.useState<string>('');
-  const [images, setImages] = React.useState<Array<Image>>([]);
-  const [error, setError] = React.useState<string>('');
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [preview, setPreview] = React.useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [images, setImages] = useState<Image[]>([]);
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [preview, setPreview] = useState<string>('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!getAccessToken()) router.push('/');
 
     setUsername(getUsername());
@@ -37,7 +37,7 @@ const List: NextPage = () => {
     axios2
       .get('/api/images')
       .then((resp) => {
-        const data: Array<Image> = resp.data.data;
+        const data: Image[] = resp.data.data;
         setImages(data);
         setLoading(false);
       })
@@ -60,7 +60,7 @@ const List: NextPage = () => {
 
   const randomImgURL = `${process.env.NEXT_PUBLIC_API_HOST}/user/${username}/image.jpg`;
 
-  const [copied, setCopied] = React.useState<boolean>(false);
+  const [copied, setCopied] = useState<boolean>(false);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(randomImgURL);
@@ -72,7 +72,7 @@ const List: NextPage = () => {
     }, 1000);
   };
 
-  const newRowRef = React.useRef<HTMLButtonElement | null>(null);
+  const newRowRef = useRef<HTMLButtonElement | null>(null);
 
   const addNewRow = () => {
     setImages([...images, { id: 0, user_id: 0, image: '' }]);
@@ -126,14 +126,12 @@ const List: NextPage = () => {
       )}
     </Grid>
   );
-};
-
-export default List;
+}
 
 const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: string) => void }) => {
   const router = useRouter();
 
-  const [formState, setFormState] = React.useState({
+  const [formState, setFormState] = useState({
     id: image.id,
     image: image.image,
     error: '',
@@ -155,7 +153,7 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
 
     axios2
       .delete(`/api/images/${formState.id}`)
-      .then((resp) => {
+      .then(() => {
         setFormState({ ...formState, deleted: true, loading: false });
         setImageState({ ...imageState, showButton: false });
       })
@@ -174,7 +172,7 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
       });
   };
 
-  const [imageState, setImageState] = React.useState({
+  const [imageState, setImageState] = useState({
     image: image.image,
     showButton: false,
   });
@@ -204,7 +202,7 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
       .patch(`/api/images/${formState.id}`, {
         image: imageState.image,
       })
-      .then((resp) => {
+      .then(() => {
         setFormState({ ...formState, image: imageState.image, loading: false });
         setImageState({ ...imageState, showButton: false });
       })
@@ -312,12 +310,12 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
           </Tooltip>
           {imageState.showButton && (
             <>
-              <LoadingButton onClick={handleSubmit} type="submit" loading={formState.loading}>
+              <Button onClick={handleSubmit} type="submit" loading={formState.loading}>
                 Update
-              </LoadingButton>
-              <LoadingButton onClick={handleCancel} loading={formState.loading}>
+              </Button>
+              <Button onClick={handleCancel} loading={formState.loading}>
                 Cancel
-              </LoadingButton>
+              </Button>
             </>
           )}
         </Stack>

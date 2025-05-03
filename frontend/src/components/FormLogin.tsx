@@ -1,23 +1,25 @@
+'use client';
+
+import { Token } from '@/app/api/token/refresh/route';
+import { saveAccessToken, saveRefreshToken, saveUsername } from '@/src/utils/storage';
 import KeyIcon from '@mui/icons-material/Key';
 import PersonIcon from '@mui/icons-material/Person';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import LoadingButton from '@mui/lab/LoadingButton';
-import Grid from '@mui/material/Grid2';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import { useRouter } from 'next/router';
-import * as React from 'react';
-import { Token } from '../../types/Types';
-import { saveAccessToken, saveRefreshToken, saveUsername } from '../../utils/storage';
+import { useRouter } from 'next/navigation';
+import { ChangeEvent, MouseEvent, useState } from 'react';
 
-const FormLogin = () => {
+export default function FormLogin() {
   const router = useRouter();
 
-  const [formState, setFormState] = React.useState({
+  const [formState, setFormState] = useState({
     username: '',
     password: '',
     showPassword: false,
@@ -25,7 +27,7 @@ const FormLogin = () => {
     loading: false,
   });
 
-  const onChangeField = (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeField = (name: string) => (e: ChangeEvent<HTMLInputElement>) => {
     setFormState({ ...formState, [name]: e.target.value });
   };
 
@@ -33,7 +35,7 @@ const FormLogin = () => {
     setFormState({ ...formState, showPassword: !formState.showPassword });
   };
 
-  const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const onSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (formState.username === '') {
@@ -169,9 +171,9 @@ const FormLogin = () => {
           />
         </Grid>
         <Grid size={12}>
-          <LoadingButton variant="contained" type="submit" fullWidth onClick={onSubmit} loading={formState.loading}>
+          <Button variant="contained" type="submit" fullWidth onClick={onSubmit} loading={formState.loading}>
             Login or Register
-          </LoadingButton>
+          </Button>
         </Grid>
         {formState.error !== '' && (
           <Grid size={12}>
@@ -181,6 +183,4 @@ const FormLogin = () => {
       </Grid>
     </form>
   );
-};
-
-export default FormLogin;
+}

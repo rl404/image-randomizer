@@ -1,8 +1,7 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import React from 'react';
 
-const Header = () => {
+export default function Header() {
   return (
     <Grid container spacing={2} sx={{ marginTop: 3 }}>
       <Grid size={12}>
@@ -16,6 +15,4 @@ const Header = () => {
       </Grid>
     </Grid>
   );
-};
-
-export default Header;
+}
