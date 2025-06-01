@@ -7,7 +7,7 @@ WORKDIR /image-randomizer/cmd/image-randomizer
 RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o image-randomizer
 
 # New stage from scratch
-FROM alpine:3.21
+FROM alpine:3.22
 LABEL stage="image_randomizer_be_binary"
 RUN apk add --no-cache ca-certificates
 COPY --from=go_builder /image-randomizer/cmd/image-randomizer/image-randomizer /cmd/image-randomizer/image-randomizer
