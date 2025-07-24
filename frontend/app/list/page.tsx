@@ -107,10 +107,12 @@ export default function List() {
             </Button>
           </Grid>
           <Grid size={{ xs: 12, sm: 3 }}>
-            Preview
-            {preview !== '' && (
-              <img src={preview} alt="invalid image url" width="100%" style={{ position: 'sticky', top: 20 }} />
-            )}
+            <div>Preview</div>
+            <div>
+              {preview !== '' && (
+                <img src={preview} alt="invalid image url" width="100%" style={{ position: 'sticky', top: 20 }} />
+              )}
+            </div>
           </Grid>
           <Grid size={{ xs: 12, sm: 9 }} container spacing={2}>
             {images.map((i) => {
@@ -261,9 +263,15 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
                   'Looks like you are hosting your image on Imgur. Your image may gets rate limitted by Imgur. '}
                 {imageState.image.includes('discordapp') &&
                   'Looks like you are hosting your image on Discord. Discord link is not permanent anymore and can be expired. '}
+                {imageState.image.includes('postimg') &&
+                  'Looks like you are hosting your image on postimages. There may be error related with SSL certificates. '}
                 Try to host it on other site such as{' '}
-                <Link href="https://postimages.org/" target="_blank" rel="noopener noreferrer">
-                  postimages
+                <Link href="https://imgpx.com/en/" target="_blank" rel="noopener noreferrer">
+                  imgpx
+                </Link>
+                ,{' '}
+                <Link href="https://8upload.com/" target="_blank" rel="noopener noreferrer">
+                  8upload
                 </Link>
                 ,{' '}
                 <Link href="https://imgbb.com/" target="_blank" rel="noopener noreferrer">
@@ -278,7 +286,11 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
             }
             placement="left"
             arrow
-            open={imageState.image.includes('imgur') || imageState.image.includes('discordapp')}
+            open={
+              imageState.image.includes('imgur') ||
+              imageState.image.includes('discordapp') ||
+              imageState.image.includes('postimg')
+            }
           >
             <TextField
               placeholder="http://your.image.url.com"
@@ -288,23 +300,25 @@ const ImageRow = ({ image, setPreview }: { image: Image; setPreview: (link: stri
               disabled={formState.loading || formState.deleted}
               value={imageState.image}
               onChange={handleChangeImage}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Stack direction="row" spacing={1}>
-                      <Tooltip title="show preview" placement="left" arrow>
-                        <IconButton onClick={handlePreview} size="small" disabled={formState.deleted}>
-                          <Visibility fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="delete" placement="right" arrow>
-                        <IconButton onClick={handleDelete} edge="end" size="small" disabled={formState.deleted}>
-                          <DeleteIcon color="error" fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    </Stack>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Stack direction="row" spacing={1}>
+                        <Tooltip title="show preview" placement="left" arrow>
+                          <IconButton onClick={handlePreview} size="small" disabled={formState.deleted}>
+                            <Visibility fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="delete" placement="right" arrow>
+                          <IconButton onClick={handleDelete} edge="end" size="small" disabled={formState.deleted}>
+                            <DeleteIcon color="error" fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           </Tooltip>
