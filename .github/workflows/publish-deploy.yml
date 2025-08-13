@@ -13,7 +13,7 @@ jobs:
       img_tag: ${{ steps.tag.outputs.img_tag }}
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Remove 'v' from tag
         id: tag
         env:
@@ -78,7 +78,7 @@ jobs:
       run:
         working-directory: ./backend/deployment/terraform
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Auth gcloud
         uses: google-github-actions/auth@v2
         with:
