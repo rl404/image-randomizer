@@ -19,7 +19,7 @@ github.com/gabriel-vasile/mimetype
 github.com/gabriel-vasile/mimetype/internal/charset
 github.com/gabriel-vasile/mimetype/internal/json
 github.com/gabriel-vasile/mimetype/internal/magic
-# github.com/go-chi/chi/v5 v5.2.2
+# github.com/go-chi/chi/v5 v5.2.3
 ## explicit; go 1.20
 github.com/go-chi/chi/v5
 github.com/go-chi/chi/v5/middleware
@@ -367,7 +367,7 @@ gopkg.in/yaml.v2
 # gorm.io/driver/postgres v1.6.0
 ## explicit; go 1.20
 gorm.io/driver/postgres
-# gorm.io/gorm v1.30.1
+# gorm.io/gorm v1.30.2
 ## explicit; go 1.18
 gorm.io/gorm
 gorm.io/gorm/callbacks
