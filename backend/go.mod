@@ -3,7 +3,7 @@ module github.com/rl404/image-randomizer
 go 1.24.5
 
 require (
-	github.com/go-chi/chi/v5 v5.2.2
+	github.com/go-chi/chi/v5 v5.2.3
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
@@ -15,7 +15,7 @@ require (
 	github.com/swaggo/swag v1.16.6
 	golang.org/x/text v0.28.0
 	gorm.io/driver/postgres v1.6.0
-	gorm.io/gorm v1.30.1
+	gorm.io/gorm v1.30.2
 )
 
 require (
