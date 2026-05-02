@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 
 export default function Footer() {
   return (
-    <Grid container justifyContent="flex-end">
+    <Grid container sx={{ justifyContent: 'flex-end' }}>
       <Grid>
         <IconButton href="https://github.com/rl404/image-randomizer" target="_blank">
           <GitHubIcon />
