@@ -70,8 +70,8 @@ jobs:
             rl404/image-randomizer:fe-${{ env.IMG_TAG }}
             ghcr.io/rl404/image-randomizer:fe-latest
             ghcr.io/rl404/image-randomizer:fe-${{ env.IMG_TAG }}
-  deploy:
-    name: Deploy
+  backend_deploy:
+    name: Deploy Backend
     needs: publish_image
     runs-on: ubuntu-latest
     defaults:
@@ -123,3 +123,27 @@ jobs:
         run: terraform apply -auto-approve -input=false
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+  vercel_deploy:
+    name: Deploy Frontend to Vercel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+      - name: Merge to branch vercel
+        uses: devmasx/merge-branch@1.4.0
+        with:
+          type: now
+          target_branch: vercel
+          github_token: ${{ secrets.CR_PAT }}
+  netlify_deploy:
+    name: Deploy Frontend to Netlify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+      - name: Merge to branch netlify
+        uses: devmasx/merge-branch@1.4.0
+        with:
+          type: now
+          target_branch: netlify
+          github_token: ${{ secrets.CR_PAT }}
