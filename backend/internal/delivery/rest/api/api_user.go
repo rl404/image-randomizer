@@ -63,5 +63,5 @@ func (api *API) handleRandomImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.ResponseWithImage(r.Context(), w, image)
+	utils.ResponseWithImage(r.Context(), w, code, image)
 }

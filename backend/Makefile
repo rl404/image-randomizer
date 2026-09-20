@@ -68,7 +68,6 @@ run: build
 	@cd $(CMD_PATH); \
 	./$(BINARY_NAME) server
 
-
 # Docker base command.
 DOCKER_CMD   := docker
 DOCKER_IMAGE := $(DOCKER_CMD) image

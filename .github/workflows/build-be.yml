@@ -1,11 +1,17 @@
-name: build
+name: build be
 
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - "backend/**"
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
       - name: Check out code
         uses: actions/checkout@v7
@@ -17,5 +23,5 @@ jobs:
           go-version: "1.27"
       - name: Build
         run: |
-          cd backend/cmd/image-randomizer
+          cd cmd/image-randomizer
           CGO_ENABLED=0 go build -a -installsuffix cgo -mod vendor -o image-randomizer
