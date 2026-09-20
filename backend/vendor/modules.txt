@@ -10,14 +10,16 @@ github.com/allegro/bigcache/v3/queue
 github.com/cespare/xxhash/v2
 # github.com/dlclark/regexp2 v1.10.0
 ## explicit; go 1.13
-# github.com/gabriel-vasile/mimetype v1.4.13
+# github.com/gabriel-vasile/mimetype v1.4.15
 ## explicit; go 1.21
 github.com/gabriel-vasile/mimetype
+github.com/gabriel-vasile/mimetype/internal/cdf
 github.com/gabriel-vasile/mimetype/internal/charset
 github.com/gabriel-vasile/mimetype/internal/csv
 github.com/gabriel-vasile/mimetype/internal/json
 github.com/gabriel-vasile/mimetype/internal/magic
 github.com/gabriel-vasile/mimetype/internal/markup
+github.com/gabriel-vasile/mimetype/internal/mp3
 github.com/gabriel-vasile/mimetype/internal/scan
 # github.com/go-chi/chi/v5 v5.3.2
 ## explicit; go 1.23
@@ -47,7 +49,7 @@ github.com/go-playground/mold/v4/modifiers
 # github.com/go-playground/universal-translator v0.18.1
 ## explicit; go 1.18
 github.com/go-playground/universal-translator
-# github.com/go-playground/validator/v10 v10.30.3
+# github.com/go-playground/validator/v10 v10.30.4
 ## explicit; go 1.25.0
 github.com/go-playground/validator/v10
 # github.com/golang-jwt/jwt v3.2.2+incompatible
@@ -111,8 +113,8 @@ github.com/josharian/intern
 # github.com/kelseyhightower/envconfig v1.4.0
 ## explicit
 github.com/kelseyhightower/envconfig
-# github.com/leodido/go-urn v1.4.0
-## explicit; go 1.18
+# github.com/leodido/go-urn v1.5.0
+## explicit; go 1.24.0
 github.com/leodido/go-urn
 github.com/leodido/go-urn/scim/schema
 # github.com/mailru/easyjson v0.7.6
@@ -157,8 +159,8 @@ github.com/redis/go-redis/v9/internal/routing
 github.com/redis/go-redis/v9/internal/util
 github.com/redis/go-redis/v9/maintnotifications
 github.com/redis/go-redis/v9/push
-# github.com/rl404/fairy v0.27.0
-## explicit; go 1.25.8
+# github.com/rl404/fairy v0.27.1
+## explicit; go 1.26.0
 github.com/rl404/fairy/cache
 github.com/rl404/fairy/cache/inmemory
 github.com/rl404/fairy/cache/nop
@@ -264,7 +266,7 @@ golang.org/x/tools/internal/gopathwalk
 golang.org/x/tools/internal/imports
 golang.org/x/tools/internal/modindex
 golang.org/x/tools/internal/stdlib
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20260807164820-c8921c73eeea
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20260819154853-08b0e4226688
 ## explicit; go 1.25.0
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.83.2
@@ -333,7 +335,7 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
-# google.golang.org/protobuf v1.36.11
+# google.golang.org/protobuf v1.36.12
 ## explicit; go 1.23
 google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext

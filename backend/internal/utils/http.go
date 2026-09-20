@@ -44,9 +44,10 @@ func ResponseWithJSON(w http.ResponseWriter, code int, data interface{}, err err
 }
 
 // ResponseWithImage serve image as response.
-func ResponseWithImage(ctx context.Context, w http.ResponseWriter, image io.ReadCloser) {
+func ResponseWithImage(ctx context.Context, w http.ResponseWriter, code int, image io.ReadCloser) {
 	defer image.Close()
 	w.Header().Set("Content-Type", "image/jpeg")
+	w.WriteHeader(code)
 
 	if _, err := io.Copy(w, image); err != nil {
 		ResponseWithJSON(w, http.StatusInternalServerError, nil, stack.Wrap(ctx, err, errors.ErrInternalServer))
