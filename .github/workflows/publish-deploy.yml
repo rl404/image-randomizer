@@ -58,6 +58,7 @@ jobs:
             rl404/image-randomizer:be-${{ env.IMG_TAG }}
             ghcr.io/rl404/image-randomizer:be-latest
             ghcr.io/rl404/image-randomizer:be-${{ env.IMG_TAG }}
+            ${{ secrets.GCR_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/image-randomizer:be-latest
             ${{ secrets.GCR_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/image-randomizer:be-${{ env.IMG_TAG }}
       - name: Build and push image frontend
         uses: docker/build-push-action@v7
@@ -70,80 +71,5 @@ jobs:
             rl404/image-randomizer:fe-${{ env.IMG_TAG }}
             ghcr.io/rl404/image-randomizer:fe-latest
             ghcr.io/rl404/image-randomizer:fe-${{ env.IMG_TAG }}
-  backend_deploy:
-    name: Deploy Backend
-    needs: publish_image
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend/deployment/terraform
-    steps:
-      - uses: actions/checkout@v7
-      - name: Auth gcloud
-        uses: google-github-actions/auth@v3
-        with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
-      - name: Setup Terraform Variables
-        run: |-
-          cat > pipeline.auto.tfvars <<EOF
-          gcp_project_id          = "${{ secrets.GCP_PROJECT_ID }}"
-          gcp_region              = "${{ secrets.GCP_REGION }}"
-          gcr_image_name          = "${{ secrets.GCR_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/image-randomizer:be-${{ needs.publish_image.outputs.img_tag }}"
-          cloud_run_name          = "${{ secrets.CLOUD_RUN_NAME }}"
-          cloud_run_location      = "${{ secrets.CLOUD_RUN_LOCATION }}"
-          ir_cache_dialect        = "${{ secrets.IR_CACHE_DIALECT }}"
-          ir_cache_address        = "${{ secrets.IR_CACHE_ADDRESS }}"
-          ir_cache_password       = "${{ secrets.IR_CACHE_PASSWORD }}"
-          ir_cache_time           = "${{ secrets.IR_CACHE_TIME }}"
-          ir_db_address           = "${{ secrets.IR_DB_ADDRESS }}"
-          ir_db_name              = "${{ secrets.IR_DB_NAME }}"
-          ir_db_user              = "${{ secrets.IR_DB_USER }}"
-          ir_db_password          = "${{ secrets.IR_DB_PASSWORD }}"
-          ir_jwt_access_secret    = "${{ secrets.IR_JWT_ACCESS_SECRET }}"
-          ir_jwt_access_expired   = "${{ secrets.IR_JWT_ACCESS_EXPIRED }}"
-          ir_jwt_refresh_secret   = "${{ secrets.IR_JWT_REFRESH_SECRET }}"
-          ir_jwt_refresh_expired  = "${{ secrets.IR_JWT_REFRESH_EXPIRED }}"
-          ir_log_json             = "${{ secrets.IR_LOG_JSON }}"
-          ir_log_level            = "${{ secrets.IR_LOG_LEVEL }}"
-          ir_newrelic_license_key = "${{ secrets.IR_NEWRELIC_LICENSE_KEY }}"
-          EOF
-      - name: Init Terraform
-        run: terraform init -backend-config "bucket=${{ secrets.GCS_BUCKET }}"
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-      - name: Format Terraform
-        run: terraform fmt -check
-      - name: Plan Terraform
-        run: terraform plan -input=false
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-      - name: Apply Terraform
-        run: terraform apply -auto-approve -input=false
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-  vercel_deploy:
-    name: Deploy Frontend to Vercel
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v7
-      - name: Merge to branch vercel
-        uses: devmasx/merge-branch@1.4.0
-        with:
-          type: now
-          target_branch: vercel
-          github_token: ${{ secrets.CR_PAT }}
-  netlify_deploy:
-    name: Deploy Frontend to Netlify
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v7
-      - name: Merge to branch netlify
-        uses: devmasx/merge-branch@1.4.0
-        with:
-          type: now
-          target_branch: netlify
-          github_token: ${{ secrets.CR_PAT }}
+            ${{ secrets.GCR_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/image-randomizer:fe-latest
+            ${{ secrets.GCR_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/image-randomizer:fe-${{ env.IMG_TAG }}

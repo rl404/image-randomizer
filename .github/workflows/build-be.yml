@@ -1,6 +1,9 @@
-name: build
+name: build be
 
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - "backend/**"
 
 jobs:
   build:
