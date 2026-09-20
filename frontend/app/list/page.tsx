@@ -24,6 +24,7 @@ export default function List() {
   let timeout: NodeJS.Timeout;
 
   const [username, setUsername] = useState<string>('');
+  const [link, setLink] = useState<string>('');
   const [images, setImages] = useState<Image[]>([]);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
@@ -58,12 +59,14 @@ export default function List() {
       });
   }, []);
 
-  const randomImgURL = `${process.env.NEXT_PUBLIC_API_HOST}/user/${username}/image.jpg`;
+  useEffect(() => {
+    axios2.get(`/api/link/${username}`).then((resp) => setLink(resp.data));
+  }, [username]);
 
   const [copied, setCopied] = useState<boolean>(false);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(randomImgURL);
+    navigator.clipboard.writeText(link);
     setCopied(true);
 
     clearTimeout(timeout);
@@ -90,8 +93,8 @@ export default function List() {
           <Grid size={{ xs: 12, sm: 10, md: 11 }}>
             <Typography variant="h5">
               {`${username}'s images`} (
-              <Link href={randomImgURL} target="_blank" rel="noopener noreferrer">
-                {randomImgURL}
+              <Link href={link} target="_blank" rel="noopener noreferrer">
+                {link}
               </Link>
               ){' '}
               <Tooltip title={!copied ? 'copy link' : 'copied!'} placement="right" arrow>
