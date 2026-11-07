@@ -10,7 +10,7 @@ import (
 
 // GenerateUUID to generate random uuid.
 func GenerateUUID() string {
-	return strings.Replace(uuid.New().String(), "-", "", -1)
+	return strings.ReplaceAll(uuid.New().String(), "-", "")
 }
 
 const passwordPepper string = "yagoobestgirl"

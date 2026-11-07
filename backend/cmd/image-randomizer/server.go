@@ -6,7 +6,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/newrelic/go-agent/v3/newrelic"
 	_nr "github.com/rl404/fairy/log/newrelic"
 	nrCache "github.com/rl404/fairy/monitoring/newrelic/cache"
@@ -116,7 +115,6 @@ func server() error {
 	utils.Info("http server initialized")
 
 	r := httpServer.Router()
-	r.Use(middleware.RealIP)
 	r.Use(utils.Recoverer)
 	utils.Info("http server middleware initialized")
 
