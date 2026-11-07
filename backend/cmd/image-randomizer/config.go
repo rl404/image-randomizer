@@ -70,7 +70,7 @@ type newrelicConfig struct {
 	LicenseKey string `envconfig:"LICENSE_KEY"`
 }
 
-const envPath = "../../.env"
+const envPath = ".env"
 const envPrefix = "IR"
 
 var cacheType = map[string]cache.CacheType{
