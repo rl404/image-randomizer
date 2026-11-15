@@ -19,7 +19,7 @@ jobs:
       - uses: docker/build-push-action@v7
         with:
           context: ./frontend
-          file: ./frontend/build/package/Dockerfile
+          file: ./Dockerfile
           build-args: |
             NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_ID }}
           push: false
