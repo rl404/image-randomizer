@@ -14,7 +14,7 @@ services:
     build:
       context: ./backend
       dockerfile: ./build/package/Dockerfile
-    command: ./image-randomizer server
+    command: server
     restart: unless-stopped
-    network_mode: host
     env_file: ./backend/.env
+    network_mode: host
