@@ -51,7 +51,7 @@ jobs:
           images: rl404/image-randomizer
           tags: |
             type=semver,pattern={{version}},prefix=be-
-            type=raw,value=be-latest
+            type=raw,value=latest,prefix=be-
       - name: Tag and push
         env:
           TAGS: ${{ steps.meta.outputs.tags }}
@@ -85,7 +85,7 @@ jobs:
           images: ghcr.io/rl404/image-randomizer
           tags: |
             type=semver,pattern={{version}},prefix=be-
-            type=raw,value=be-latest
+            type=raw,value=latest,prefix=be-
       - name: Tag and push
         env:
           TAGS: ${{ steps.meta.outputs.tags }}
@@ -121,7 +121,7 @@ jobs:
           images: ${{ secrets.GCR_HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/image-randomizer
           tags: |
             type=semver,pattern={{version}},prefix=be-
-            type=raw,value=be-latest
+            type=raw,value=latest,prefix=be-
       - name: Tag and push
         env:
           TAGS: ${{ steps.meta.outputs.tags }}
