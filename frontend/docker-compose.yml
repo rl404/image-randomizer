@@ -1,0 +1,11 @@
+services:
+  image-randomizer-fe:
+    container_name: image-randomizer-fe
+    image: rl404/image-randomizer:fe-latest
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID}
+    restart: unless-stopped
+    env_file: .env
+    network_mode: host
